@@ -1,0 +1,180 @@
+import { describe, expect, test } from 'bun:test';
+import { fromBackup, normalize, toBackup } from '../src/core/backup';
+import { dn, dowOf, isoOf, kwOf, monOf, toMin, weekKey } from '../src/core/dates';
+import { makeExam, newAppData } from '../src/core/defaults';
+import { exampleData } from '../src/core/example';
+import { easterSunday, holidayOn } from '../src/core/holidays';
+import { applyICS, previewICS } from '../src/core/ics';
+import { planToICS } from '../src/core/icsExport';
+import { mergeIv, placeFirst, subtractIv } from '../src/core/intervals';
+import { buildPlan, dayView, streak, weekTotals } from '../src/core/planner';
+import { dayInfo } from '../src/core/timetable';
+
+const T = dn('2026-10-05'); // a Monday
+
+describe('dates', () => {
+  test('ISO weeks and Mondays', () => {
+    expect(weekKey(dn('2026-10-05'))).toBe('2026-W41');
+    expect(weekKey(dn('2027-01-01'))).toBe('2026-W53');
+    expect(kwOf(dn('2027-01-04'))).toBe(1);
+    expect(isoOf(monOf(dn('2026-10-11')))).toBe('2026-10-05');
+    expect(dowOf(T)).toBe(1);
+  });
+});
+
+describe('intervals', () => {
+  test('merge, subtract, place', () => {
+    expect(mergeIv([[60, 120], [100, 180], [200, 210]])).toEqual([[60, 180], [200, 210]]);
+    expect(subtractIv([0, 300], [[60, 180]])).toEqual([[0, 60], [180, 300]]);
+    const free: [number, number][] = [[0, 100], [200, 400]];
+    expect(placeFirst(free, 90, { gap: 15 })).toEqual([0, 90]);
+    expect(placeFirst(free, 90)).toEqual([200, 290]);
+  });
+});
+
+describe('holidays', () => {
+  test('Easter and regional days', () => {
+    expect(isoOf(easterSunday(2027))).toBe('2027-03-28');
+    expect(isoOf(easterSunday(2026))).toBe('2026-04-05');
+    expect(holidayOn('AT', dn('2026-10-26'))).toBe('austrianNational');
+    expect(holidayOn('DE', dn('2026-10-03'))).toBe('germanUnity');
+    expect(holidayOn('DE', dn('2026-10-26'))).toBe(null);
+    expect(holidayOn('AT', dn('2027-03-29'))).toBe('easterMonday');
+    expect(holidayOn('none', dn('2026-12-25'))).toBe(null);
+  });
+});
+
+describe('planner', () => {
+  const data = exampleData('en', 'AT', T);
+  const plan = buildPlan(data, T);
+
+  test('blocks never overlap classes, meals or each other and stay inside the study window', () => {
+    for (const d of plan.days.values()) {
+      const st = data.settings;
+      const win = d.info.weekend ? [toMin(st.weekendStart), toMin(st.weekendEnd)] : [toMin(st.dayStart), toMin(st.dayEnd)];
+      const timed = d.mods.filter((m) => m.s != null).map((m) => [m.s!, m.e!] as [number, number]).sort((a, b) => a[0] - b[0]);
+      for (let i = 1; i < timed.length; i++) expect(timed[i][0]).toBeGreaterThanOrEqual(timed[i - 1][1]);
+      for (const [s, e] of timed) {
+        expect(s).toBeGreaterThanOrEqual(win[0]);
+        expect(e).toBeLessThanOrEqual(win[1]);
+        for (const [bs, be] of d.info.busy) expect(e <= bs || s >= be).toBe(true);
+      }
+    }
+  });
+
+  test('exams get most of their hours and a status', () => {
+    const pm4 = plan.stats['ex-pm4'];
+    expect(pm4.status === 'ok' || pm4.status === 'tight').toBe(true);
+    expect(pm4.projected).toBeGreaterThan(pm4.need * 0.8);
+    expect(plan.stats['ex-bioch'].status).toBe('nodate');
+  });
+
+  test('exam day has no study blocks, the day before a final review', () => {
+    const ex = plan.upcoming[0];
+    const dayOf = plan.days.get(ex.dn)!;
+    expect(dayOf.mods.some((m) => m.type === 'deep' || m.type === 'focus')).toBe(false);
+    const before = plan.days.get(ex.dn - 1)!;
+    expect(before.mods.some((m) => m.type === 'final')).toBe(true);
+  });
+
+  test('ids are unique and stable', () => {
+    const ids = new Set<string>();
+    for (const d of plan.days.values()) for (const m of d.mods) {
+      expect(ids.has(m.id)).toBe(false);
+      ids.add(m.id);
+    }
+    const again = buildPlan(data, T);
+    expect([...again.days.get(T + 3)!.mods.map((m) => m.id)]).toEqual([...plan.days.get(T + 3)!.mods.map((m) => m.id)]);
+  });
+
+  test('day views, week totals, streak', () => {
+    const v = dayView(data, plan, T);
+    expect(v.mods.length).toBeGreaterThan(0);
+    const past = dayView(data, plan, T - 1);
+    expect(past.mods.every((m) => m.done)).toBe(true);
+    const wk = weekTotals(data, plan, monOf(T));
+    expect(wk.study).toBeGreaterThan(0);
+    expect(streak(data, T)).toBe(4);
+  });
+
+  test('without flashcards there are no card blocks', () => {
+    const d2 = structuredClone(data);
+    d2.settings.cards.on = false;
+    const p2 = buildPlan(d2, T);
+    for (const d of p2.days.values()) expect(d.mods.some((m) => m.type === 'rev' || m.type === 'new')).toBe(false);
+  });
+
+  test('an empty plan works', () => {
+    const empty = newAppData('DE');
+    const p = buildPlan(empty, T);
+    expect(p.days.size).toBeGreaterThan(60);
+    expect(Object.keys(p.stats).length).toBe(0);
+  });
+
+  test('holidays and breaks drop typical-week classes', () => {
+    const info = dayInfo(data, dn('2026-10-26'));
+    expect(info.holiday).toBe('austrianNational');
+    expect(info.classMin).toBe(0);
+  });
+});
+
+describe('ics', () => {
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'BEGIN:VEVENT',
+    'DTSTART;TZID=Europe/Vienna:20261006T081500',
+    'DTEND;TZID=Europe/Vienna:20261006T100000',
+    'SUMMARY:ANAT VO Anatomie',
+    'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=TU,TH',
+    'END:VEVENT',
+    'BEGIN:VEVENT',
+    'DTSTART:20261008T130000',
+    'DTEND:20261008T150000',
+    'SUMMARY:Seminar Zoom',
+    'LOCATION:Online (Zoom)',
+    'STATUS:TENTATIVE',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+
+  test('parse, expand and apply', () => {
+    const p = previewICS(ics)!;
+    expect(p.events.length).toBe(4);
+    expect(p.codes).toContain('ANAT');
+    const seminar = p.events.find((x) => x.t.startsWith('Seminar'))!;
+    expect(seminar.on).toBe(true);
+    expect(seminar.tent).toBe(true);
+    const data = newAppData('AT');
+    data.weeks[weekKey(dn('2026-10-06'))] = { items: [{ d: '2026-10-07', s: '10:00', e: '11:00', t: 'Dentist', m: true }] };
+    const after = applyICS(data, p);
+    expect(after.settings.knownUntil).toBe(isoOf(p.last));
+    expect(after.weeks[weekKey(dn('2026-10-06'))].items.some((x) => x.m)).toBe(true);
+  });
+
+  test('export', () => {
+    const data = exampleData('de', 'AT', T);
+    const plan = buildPlan(data, T);
+    const text = planToICS(plan, { from: T, to: T + 6, includeCards: false, title: (m) => m.type, description: () => 'x', calendarName: 'Plan' });
+    expect(text.startsWith('BEGIN:VCALENDAR')).toBe(true);
+    expect(text.includes('BEGIN:VEVENT')).toBe(true);
+    expect(text.includes('rev')).toBe(false);
+  });
+});
+
+describe('backup', () => {
+  test('round trip and legacy shapes', () => {
+    const data = exampleData('en', 'AT', T);
+    const back = fromBackup(toBackup(data));
+    expect(back.exams.length).toBe(data.exams.length);
+    expect(back.settings.cards.generalNew).toBe(10);
+    const legacy = normalize({
+      settings: { anki: { generalNew: 12, reviewBase: 25 }, template: { '1': [['08:15', '12:00']] } },
+      exams: [{ id: 'fp1', name: 'X', date: '2026-11-05', size: 'L', hours: 60, weeks: 8, color: 'lav' }],
+    });
+    expect(legacy.settings.cards.on).toBe(true);
+    expect(legacy.settings.cards.generalNew).toBe(12);
+    expect(legacy.settings.template['1'][0]).toEqual({ from: '08:15', to: '12:00' });
+    expect(() => fromBackup('nope')).toThrow();
+    expect(makeExam([]).color).toBe('lav');
+  });
+});

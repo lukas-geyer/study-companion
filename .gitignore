@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-preview/
+shots/
+preview/
+legacy/
+*.log
+.env*
+.claude/settings.local.json
+.DS_Store
