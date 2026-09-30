@@ -9,32 +9,6 @@ title; the name lives in `src/config.ts`, `index.html` and `public/manifest.webm
 The owner isn't a professional developer. Explain changes in plain language. When something needs his
 GitHub account (a setting, merging a pull request), tell him exactly what to click.
 
-## First session (one-time – delete this section once it is done)
-
-The code arrived as `study-companion-repo.zip`, uploaded through the GitHub website. It was written in a
-sandbox without npm access. The TypeScript check only ran against small hand-written React type stubs, and
-the code has never run in CI.
-
-1. Unpack and remove the zip. Its top level is the repository root:
-   `unzip -o study-companion-repo.zip -d . && git rm -q study-companion-repo.zip`
-2. Install dependencies with `npm install`, and commit `package-lock.json`.
-3. Run `bun run typecheck` against the real `@types/react` and `@types/bun`. Fix whatever it reports
-   without changing behaviour.
-4. Run `bun test` (engine tests) and `bun run build`.
-5. Serve `dist/` under a sub-path, as GitHub Pages will. For example, copy it to
-   `/tmp/site/study-companion/` and run `python3 -m http.server 8765` in `/tmp/site`. Then open
-   `/study-companion/` in Chromium (Playwright) and click through:
-   - welcome → "Explore an example first" → Today, Week, Year and Setup
-   - dark mode
-   - a 390 px wide viewport
-
-   There should be no console errors and no 404s.
-6. Commit and push to `main`. If pushing to `main` isn't possible, open a pull request and ask the owner
-   to merge it.
-7. Check the Actions run. If deploying fails because Pages is off, ask the owner to set
-   **Settings → Pages → Build and deployment → Source: GitHub Actions**, then re-run the workflow. The
-   app is served at `https://<owner>.github.io/<repo>/`.
-
 ## Commands
 
 ```bash
