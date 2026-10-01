@@ -440,7 +440,8 @@ export const de: Dict = {
     'Rechtsgrundlage ist das berechtigte Interesse an einer sicheren und zuverlässigen Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO). Dabei können Daten in die USA übermittelt werden; GitHub ist nach dem EU-US Data Privacy Framework zertifiziert, für das ein Angemessenheitsbeschluss der Europäischen Kommission besteht (Art. 45 DSGVO). Mehr dazu in der',
   'pv.host3Link': 'Datenschutzerklärung von GitHub',
   'pv.mailH': 'Kontakt per E-Mail',
-  'pv.mail': 'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO).',
+  'pv.mail':
+    'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO). E-Mails werden über iCloud Mail empfangen und gespeichert, einen Dienst der Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland. Apple kann sie auch außerhalb der EU verarbeiten und stützt solche Übermittlungen auf die Standardvertragsklauseln der EU (Art. 46 DSGVO).',
   'pv.rightsH': 'Deine Rechte',
   'pv.rights1':
     'Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO); schreib dafür einfach an die oben genannte E-Mail-Adresse. Deinen Plan selbst verwaltest du auf deinem Gerät; der Betreiber kann ihn weder einsehen noch löschen.',

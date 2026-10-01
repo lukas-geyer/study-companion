@@ -436,7 +436,8 @@ export const en = {
     'The legal basis is the legitimate interest in delivering the website securely and reliably (Art. 6(1)(f) GDPR). Data may be transferred to the USA; GitHub is certified under the EU–US Data Privacy Framework, for which there is an adequacy decision of the European Commission (Art. 45 GDPR). More in',
   'pv.host3Link': 'GitHub’s privacy statement',
   'pv.mailH': 'Contact by e-mail',
-  'pv.mail': 'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR).',
+  'pv.mail':
+    'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR). E-mails are received and stored by iCloud Mail, a service of Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Ireland. Apple may also process them outside the EU; it bases such transfers on the EU standard contractual clauses (Art. 46 GDPR).',
   'pv.rightsH': 'Your rights',
   'pv.rights1':
     'You have the right of access, rectification, erasure, restriction of processing, data portability and objection (Art. 15–21 GDPR); just write to the e-mail address above. Your plan itself is only on your device: you manage it yourself, and the operator can neither see nor delete it.',
