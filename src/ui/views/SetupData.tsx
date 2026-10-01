@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { APP_ID, APP_NAME } from '../../config';
+import { APP_NAME } from '../../config';
 import { fromBackup, toBackup } from '../../core/backup';
 import { isoOf } from '../../core/dates';
 import { GLYPH } from '../../core/defaults';
@@ -11,6 +11,8 @@ import { useCtx } from '../ctx';
 import { LegalLink } from '../Legal';
 import { av, Toggle } from '../parts/common';
 import { modTip, modTitle } from '../parts/labels';
+
+const FILE_PREFIX = APP_NAME.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
 type SaveNs = { save(r: { filename: string; data: string }): Promise<unknown> } | null;
 type ClaudeWin = { claude?: { use?: (n: string) => Promise<unknown> } };
@@ -63,7 +65,7 @@ export function DataSection() {
   const storeName = ui.storage === 'idb' ? t('store.idb') : ui.storage === 'local' ? t('store.local') : ui.storage === 'memory' ? t('store.memory') : '…';
 
   const backup = () => {
-    void download(`${APP_ID}-backup-${isoOf(T)}.json`, toBackup(data), 'application/json').then((r) => report(r, 'toast.backedUp'));
+    void download(`${FILE_PREFIX}-backup-${isoOf(T)}.json`, toBackup(data), 'application/json').then((r) => report(r, 'toast.backedUp'));
   };
   const onRestoreFile = async (fl: File | undefined) => {
     if (!fl) return;
@@ -85,7 +87,7 @@ export function DataSection() {
         return `${lead ? lead + ' ' : ''}${tip}`;
       },
     });
-    void download(`${APP_ID}-${isoOf(T)}.ics`, text, 'text/calendar').then((r) => report(r, 'toast.exported'));
+    void download(`${FILE_PREFIX}-${isoOf(T)}.ics`, text, 'text/calendar').then((r) => report(r, 'toast.exported'));
   };
 
   const confirmBox = (q: string, yes: string, onYes: () => void) => (

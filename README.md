@@ -1,11 +1,11 @@
-# Study Companion
+# Semestra
 
 A study planner that works around your week. You enter your exams and your classes; the app fills your
 free time with focused study blocks, keeps flashcards (e.g. Anki) going every day, and re-plans as soon as
 something changes. It runs in the browser, can be installed on a phone like an app, works offline, and keeps
 all data on the device.
 
-"Study Companion" is a working title. The name lives in `src/config.ts`, `index.html` (title tags) and
+The app is called Semestra (semestra.at). The name lives in `src/config.ts`, `index.html` (title tags) and
 `public/manifest.webmanifest`.
 
 ## What it does
@@ -110,7 +110,7 @@ The rough path (on a Mac with Xcode installed):
 ```bash
 npm install @capacitor/core @capacitor/ios
 npm install -D @capacitor/cli
-npx cap init "Study Companion" com.example.studycompanion --web-dir dist
+npx cap init "Semestra" at.semestra.app --web-dir dist
 bun run build && npx cap add ios
 npx cap open ios         # opens Xcode: run it in the simulator or on your iPhone
 # after each change: bun run build && npx cap sync

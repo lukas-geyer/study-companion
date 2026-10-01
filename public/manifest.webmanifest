@@ -1,6 +1,6 @@
 {
-  "name": "Study Companion",
-  "short_name": "Study",
+  "name": "Semestra",
+  "short_name": "Semestra",
   "description": "Plan your exams around your week.",
   "start_url": "./",
   "scope": "./",

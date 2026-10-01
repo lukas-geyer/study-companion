@@ -78,7 +78,7 @@ if (!single) {
   }
   let js = '';
   for (const m of html.matchAll(/<script type="module"[^>]*src="([^"]+)"[^>]*><\/script>/g)) js += (await readFile(join(out, m[1]), 'utf8')).replace(/<\/script/gi, '<\\/script');
-  const title = (html.match(/<title>([^<]*)<\/title>/) || ['', 'Study Companion'])[1];
+  const title = (html.match(/<title>([^<]*)<\/title>/) || ['', 'Semestra'])[1];
   html = `<title>${title}</title>\n<style>${css}\n.app{padding-top:16px}</style>\n<div id="root"></div>\n<script type="module">${js}</script>\n`;
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
