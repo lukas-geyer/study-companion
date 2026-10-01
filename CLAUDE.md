@@ -5,8 +5,8 @@ with Capacitor. Users enter their exams and their week (classes from an .ics imp
 The engine fills the free time with study blocks and flashcard sessions, and re-plans whenever something
 changes. There are no accounts and no server: all data stays on the device. The app is called Semestra (domain
 semestra.at; "Study Companion" was the working title). The name lives in `src/config.ts`, `index.html` and
-`public/manifest.webmanifest`. `APP_ID`, `DB_NAME` and the service-worker cache prefix keep the old
-`study-companion` on purpose (see Invariants).
+`public/manifest.webmanifest`. Internally it is `semestra` too (`APP_ID`, `DB_NAME`, the service-worker
+cache prefix); the switch from `study-companion` in October 2026 deliberately dropped the owner's test data.
 
 The owner isn't a professional developer. Explain changes in plain language. When something needs his
 GitHub account (a setting, merging a pull request), tell him exactly what to click.
@@ -80,7 +80,7 @@ python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ →
   must bump it and migrate the old shape in `normalize()` in `backup.ts`, with a test.
 - Ticked blocks are stored by id (`${iso}_${type}_${exam || 'x'}_${k}`). Changing that scheme silently
   un-ticks everyone's history.
-- Never rename `DB_NAME`, `STORE_KEY` or `APP_ID`: that loses everyone's data.
+- Never rename `DB_NAME`, `STORE_KEY` or `APP_ID` again: that loses everyone's data.
 - No network requests, analytics, external fonts or CDNs. The app must work offline, and nothing leaves
   the device.
 - The privacy notice (`pv.*` texts, `Legal.tsx`) says exactly what happens to data. Anything that changes
