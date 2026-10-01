@@ -399,6 +399,49 @@ export const en = {
   'ob.doneTitle': 'Your plan is ready',
   'ob.doneSub': 'Tick blocks off as you go. Unfinished work moves to the next days automatically. Everything can be changed in Setup.',
   'ob.install': 'Tip: add the app to your home screen (Share → “Add to Home Screen” on iPhone, or the install button in your browser) to open it like an app.',
+  // imprint & privacy notice (Legal.tsx): must match the app's real data flows
+  'legal.imprint': 'Imprint',
+  'legal.privacy': 'Privacy',
+  'legal.kicker': 'Legal',
+  'legal.links': 'Imprint and privacy',
+  'legal.updated': 'Last updated: October 2026',
+  'imp.law': 'Information under § 5 of the Austrian E-Commerce Act (ECG) and disclosure under § 25 of the Austrian Media Act (MedienG).',
+  'imp.owner': 'Media owner and operator',
+  'imp.contact': 'Contact',
+  'imp.fonts': 'Fonts',
+  'imp.fontsText': 'Source Sans 3, Nunito Sans and Poppins, used under the',
+  'pv.title': 'Privacy notice',
+  'pv.shortLabel': 'In short',
+  'pv.short': (app: string) =>
+    `Your plan stays on your device. ${app} has no accounts, sets no cookies, uses no tracking or analytics and shows no ads. Nothing you enter is sent to the operator or to anyone else.`,
+  'pv.ctrlH': 'Who is responsible',
+  'pv.ctrl': 'The controller under the GDPR is the operator named in the imprint:',
+  'pv.localH': 'Your plan stays on your device',
+  'pv.local1':
+    'Everything you enter – exams, timetable, appointments, ticked blocks, logged study time and settings – is saved only in your browser’s storage on this device (IndexedDB, or local storage as a fallback). It is not transferred to the operator or to third parties, and the operator has no access to it. There is no account and no server that receives your plan.',
+  'pv.local2':
+    'This storage is strictly necessary for the planner you are using, so it needs no separate consent (§ 165(3) Austrian Telecommunications Act 2021). So that the browser doesn’t clear your plan when space runs low, the app asks it to keep the storage permanently; some browsers ask you to confirm this.',
+  'pv.local3':
+    'Backups (.json) and calendar exports (.ics) are created on your device; where you save or share these files is up to you. Calendar files you import are only read on your device. To work offline, the app keeps its own program files in the browser cache; they contain no personal data.',
+  'pv.local4': (setup: string, data: string) =>
+    `You can back up or delete your plan at any time under ${setup} → ${data}. Clearing this website’s data in your browser settings deletes it too.`,
+  'pv.noneH': 'No cookies, no tracking',
+  'pv.none':
+    'The app sets no cookies, uses no analytics or tracking tools, shows no ads and loads nothing from other providers: fonts and icons come with the app. Apart from loading the app itself (see Hosting), it sends nothing over the internet.',
+  'pv.hostH': 'Hosting',
+  'pv.host1': (app: string) =>
+    `${app} is served by GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. When you open the website, GitHub processes the connection data needed to deliver it – in particular your IP address, the date and time, the file requested and details of your browser – and, according to GitHub, logs the IP address for security purposes. Your plan is not part of this data.`,
+  'pv.host2': 'After the first visit the app also works offline. When you open it while online, it checks for a newer version, which creates the same connection data.',
+  'pv.host3':
+    'The legal basis is the legitimate interest in delivering the website securely and reliably (Art. 6(1)(f) GDPR). Data may be transferred to the USA; GitHub is certified under the EU–US Data Privacy Framework, for which there is an adequacy decision of the European Commission (Art. 45 GDPR). More in',
+  'pv.host3Link': 'GitHub’s privacy statement',
+  'pv.mailH': 'Contact by e-mail',
+  'pv.mail': 'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR).',
+  'pv.rightsH': 'Your rights',
+  'pv.rights1':
+    'You have the right of access, rectification, erasure, restriction of processing, data portability and objection (Art. 15–21 GDPR); just write to the e-mail address above. Your plan itself is only on your device: you manage it yourself, and the operator can neither see nor delete it.',
+  'pv.rights2':
+    'If you believe the processing of your data breaks data protection law, you can complain to a supervisory authority – in Austria, the Data Protection Authority (Datenschutzbehörde), Barichgasse 40–42, 1030 Vienna,',
 } as const;
 
 export type Dict = { [K in keyof typeof en]: (typeof en)[K] extends (...a: infer A) => string ? (...a: A) => string : string };

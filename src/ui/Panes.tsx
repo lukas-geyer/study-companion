@@ -1,21 +1,23 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { APP_NAME } from '../config';
 import { dn, hm, isISO, isoOf, toMin } from '../core/dates';
 import { GLYPH } from '../core/defaults';
 import { dayView } from '../core/planner';
 import * as A from '../state/actions';
-import { setUI, toast } from '../state/store';
+import { setUI, toast, type LegalDoc } from '../state/store';
 import { useCtx } from './ctx';
+import { LegalText } from './Legal';
 import { exLabel, exName, Fld, statusText, Toggle, xv } from './parts/common';
 import { examById, modClass, modTip, modTitle } from './parts/labels';
 
 const close = () => setUI({ pane: null });
 
-function Shell({ children, label }: { children: ReactNode; label: string }) {
+function Shell({ children, label, focus = '[autofocus], input, select, button' }: { children: ReactNode; label: string; focus?: string }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const t = setTimeout(() => {
-      const el = ref.current?.querySelector<HTMLElement>('[autofocus], input, select, button');
+      const el = ref.current?.querySelector<HTMLElement>(focus);
       el?.focus();
     }, 30);
     const onKey = (ev: KeyboardEvent) => {
@@ -46,6 +48,7 @@ export function Panes() {
   if (p.k === 'cls') return <ClsPane />;
   if (p.k === 'log') return <LogPane />;
   if (p.k === 'appt') return <ApptPane />;
+  if (p.k === 'legal') return <LegalPane doc={p.doc} />;
   return null;
 }
 
@@ -271,6 +274,42 @@ function ApptPane() {
           </button>
         </div>
       </form>
+    </Shell>
+  );
+}
+
+function LegalPane({ doc }: { doc: LegalDoc }) {
+  const { i18n } = useCtx();
+  const { t } = i18n;
+  const head = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    head.current?.closest('.pane')?.scrollTo({ top: 0 });
+  }, [doc]);
+  const title = doc === 'imprint' ? t('legal.imprint') : t('pv.title');
+  return (
+    <Shell label={title} focus='[aria-selected="true"]'>
+      <div className="pane-head" ref={head}>
+        <span className="pane-ico">§</span>
+        <div>
+          <div className="kicker">
+            {APP_NAME} · {t('legal.kicker')}
+          </div>
+          <h3 className="pane-title">{title}</h3>
+        </div>
+      </div>
+      <div className="tabs legal-tabs" role="tablist" aria-label={t('legal.links')}>
+        {(['imprint', 'privacy'] as const).map((d) => (
+          <button key={d} className="tab" role="tab" aria-selected={d === doc} aria-controls="legal-doc" onClick={() => setUI({ pane: { k: 'legal', doc: d } })}>
+            {d === 'imprint' ? t('legal.imprint') : t('legal.privacy')}
+          </button>
+        ))}
+      </div>
+      <LegalText doc={doc} />
+      <div className="row-actions">
+        <button className="btn soft" onClick={close}>
+          {t('pane.close')}
+        </button>
+      </div>
     </Shell>
   );
 }

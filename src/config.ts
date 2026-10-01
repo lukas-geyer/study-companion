@@ -6,3 +6,9 @@ export const APP_VERSION = '0.1.0';
 export const DB_NAME = 'study-companion';
 export const STORE_KEY = 'app-data';
 export const DATA_VERSION = 1;
+// Imprint and privacy contact (Austria: § 5 ECG, § 25 MedienG; GDPR Art. 13), shown under Imprint and Privacy.
+export const IMPRINT = {
+  name: '',
+  address: [] as string[], // lines, e.g. ['Musterstraße 1', '8010 Graz', 'Österreich']
+  email: '',
+};

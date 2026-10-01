@@ -403,4 +403,47 @@ export const de: Dict = {
   'ob.doneTitle': 'Dein Plan ist fertig',
   'ob.doneSub': 'Hak Blöcke ab, wenn du sie erledigt hast. Unerledigtes wandert automatisch auf die nächsten Tage. Alles lässt sich in den Einstellungen ändern.',
   'ob.install': 'Tipp: Füge die App zum Home-Bildschirm hinzu (auf dem iPhone Teilen → „Zum Home-Bildschirm“, sonst über die Installieren-Schaltfläche im Browser), dann öffnet sie sich wie eine App.',
+  // Impressum & Datenschutzerklärung (Legal.tsx): muss zu den tatsächlichen Datenflüssen der App passen
+  'legal.imprint': 'Impressum',
+  'legal.privacy': 'Datenschutz',
+  'legal.kicker': 'Rechtliches',
+  'legal.links': 'Impressum und Datenschutz',
+  'legal.updated': 'Stand: Oktober 2026',
+  'imp.law': 'Informationen nach § 5 E-Commerce-Gesetz (ECG) und Offenlegung nach § 25 Mediengesetz (MedienG).',
+  'imp.owner': 'Medieninhaber und Betreiber',
+  'imp.contact': 'Kontakt',
+  'imp.fonts': 'Schriften',
+  'imp.fontsText': 'Source Sans 3, Nunito Sans und Poppins, verwendet unter der',
+  'pv.title': 'Datenschutzerklärung',
+  'pv.shortLabel': 'Kurz gesagt',
+  'pv.short': (app: string) =>
+    `Dein Plan bleibt auf deinem Gerät. ${app} hat keine Konten, setzt keine Cookies, verwendet kein Tracking und keine Analyse-Tools und zeigt keine Werbung. Nichts, was du eingibst, wird an den Betreiber oder an Dritte übertragen.`,
+  'pv.ctrlH': 'Verantwortlich',
+  'pv.ctrl': 'Verantwortlich im Sinne der DSGVO ist der im Impressum genannte Betreiber:',
+  'pv.localH': 'Dein Plan bleibt auf deinem Gerät',
+  'pv.local1':
+    'Alles, was du eingibst – Prüfungen, Stundenplan, Termine, abgehakte Blöcke, eingetragene Lernzeit und Einstellungen –, wird nur im Speicher deines Browsers auf diesem Gerät abgelegt (IndexedDB, ersatzweise im lokalen Speicher). Es wird weder an den Betreiber noch an Dritte übertragen, und der Betreiber hat keinen Zugriff darauf. Es gibt kein Konto und keinen Server, der deinen Plan empfängt.',
+  'pv.local2':
+    'Diese Speicherung ist für den Lernplaner, den du nutzt, unbedingt erforderlich und braucht daher keine gesonderte Einwilligung (§ 165 Abs. 3 TKG 2021). Damit der Browser deinen Plan nicht löscht, wenn der Speicherplatz knapp wird, bittet die App ihn, den Speicher dauerhaft zu behalten; manche Browser fragen dafür kurz nach.',
+  'pv.local3':
+    'Sicherungen (.json) und Kalender-Exporte (.ics) entstehen auf deinem Gerät; wo du diese Dateien speicherst oder an wen du sie weitergibst, entscheidest du selbst. Importierte Kalenderdateien werden nur auf deinem Gerät gelesen. Damit die App offline funktioniert, legt sie ihre eigenen Programmdateien im Browser-Cache ab; darin sind keine personenbezogenen Daten enthalten.',
+  'pv.local4': (setup: string, data: string) =>
+    `Du kannst deinen Plan jederzeit unter ${setup} → ${data} sichern oder löschen. Löschst du die Websitedaten in den Browser-Einstellungen, wird er ebenfalls gelöscht.`,
+  'pv.noneH': 'Keine Cookies, kein Tracking',
+  'pv.none':
+    'Die App setzt keine Cookies, verwendet keine Analyse- oder Tracking-Werkzeuge, zeigt keine Werbung und lädt nichts von anderen Anbietern nach: Schriften und Symbole sind Teil der App. Abgesehen vom Laden der App selbst (siehe Hosting) sendet sie nichts über das Internet.',
+  'pv.hostH': 'Hosting',
+  'pv.host1': (app: string) =>
+    `${app} wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Wenn du die Website aufrufst, verarbeitet GitHub die dafür nötigen Verbindungsdaten – insbesondere deine IP-Adresse, Datum und Uhrzeit, die abgerufene Datei und Angaben zu deinem Browser – und speichert die IP-Adresse nach eigenen Angaben aus Sicherheitsgründen. Dein Plan ist darin nicht enthalten.`,
+  'pv.host2': 'Nach dem ersten Besuch funktioniert die App auch offline. Öffnest du sie mit Internetverbindung, prüft sie, ob es eine neue Version gibt; dabei fallen dieselben Verbindungsdaten an.',
+  'pv.host3':
+    'Rechtsgrundlage ist das berechtigte Interesse an einer sicheren und zuverlässigen Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO). Dabei können Daten in die USA übermittelt werden; GitHub ist nach dem EU-US Data Privacy Framework zertifiziert, für das ein Angemessenheitsbeschluss der Europäischen Kommission besteht (Art. 45 DSGVO). Mehr dazu in der',
+  'pv.host3Link': 'Datenschutzerklärung von GitHub',
+  'pv.mailH': 'Kontakt per E-Mail',
+  'pv.mail': 'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO).',
+  'pv.rightsH': 'Deine Rechte',
+  'pv.rights1':
+    'Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO); schreib dafür einfach an die oben genannte E-Mail-Adresse. Deinen Plan selbst verwaltest du auf deinem Gerät; der Betreiber kann ihn weder einsehen noch löschen.',
+  'pv.rights2':
+    'Wenn du meinst, dass die Verarbeitung deiner Daten gegen das Datenschutzrecht verstößt, kannst du dich bei einer Aufsichtsbehörde beschweren – in Österreich bei der Datenschutzbehörde, Barichgasse 40–42, 1030 Wien,',
 };

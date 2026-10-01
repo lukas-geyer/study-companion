@@ -8,6 +8,7 @@ import type { AppData } from '../../core/types';
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
+import { LegalLink } from '../Legal';
 import { av, Toggle } from '../parts/common';
 import { modTip, modTitle } from '../parts/labels';
 
@@ -132,7 +133,7 @@ export function DataSection() {
         </div>
       )}
       <p className="small muted" style={{ margin: '10px 0 0' }}>
-        {t('data.storage', storeName)}
+        {t('data.storage', storeName)} · <LegalLink doc="privacy">{t('pv.title')}</LegalLink>
       </p>
 
       <div className="grp">

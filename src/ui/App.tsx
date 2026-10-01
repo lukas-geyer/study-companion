@@ -6,6 +6,7 @@ import { makeI18n, resolveLang } from '../i18n';
 import * as A from '../state/actions';
 import { setUI, useApp, type View } from '../state/store';
 import { CtxR, useCtx, type Ctx } from './ctx';
+import { LegalLinks } from './Legal';
 import { Onboarding } from './Onboarding';
 import { Panes } from './Panes';
 import { av, exLabel, Html } from './parts/common';
@@ -62,13 +63,15 @@ export function App() {
     }
     else document.documentElement.setAttribute('data-theme', th);
   }, [lang, data.settings.theme]);
+  // The hash names the view, or the open imprint/privacy notice, so each can be linked to.
+  const hash = ui.pane?.k === 'legal' ? ui.pane.doc : ui.view;
   useEffect(() => {
     try {
-      history.replaceState(null, '', `#${ui.view}`);
+      history.replaceState(null, '', `#${hash}`);
     } catch {
       /* sandboxed */
     }
-  }, [ui.view]);
+  }, [hash]);
   const ctx: Ctx = { data, ui, plan, T, now, i18n };
   if (!ready) return <div className="app boot" aria-busy="true" />;
   const wizard = !data.meta.onboarded || ui.wizard;
@@ -155,6 +158,7 @@ function Main() {
         {ui.view === 'week' ? <WeekView /> : ui.view === 'year' ? <YearView /> : ui.view === 'setup' ? <SetupView /> : <TodayView />}
       </main>
       <p className="foot">{t('foot')}</p>
+      <LegalLinks />
     </div>
   );
 }

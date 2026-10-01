@@ -4,6 +4,7 @@ import { fromBackup } from '../core/backup';
 import { toast } from '../state/store';
 import * as A from '../state/actions';
 import { useCtx } from './ctx';
+import { LegalLinks } from './Legal';
 import { av, Fld, numOr, CommitInput, PickInput } from './parts/common';
 import { CardsFields, ExamsSection, IcsImport, LangRegion, TemplateWeek } from './views/Setup';
 
@@ -175,6 +176,7 @@ export function Onboarding() {
           </div>
         )}
       </div>
+      <LegalLinks />
     </div>
   );
 }

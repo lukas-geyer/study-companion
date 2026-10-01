@@ -65,6 +65,8 @@ python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ →
   - `views/`.
   - `Panes.tsx`: dialogs.
   - `Onboarding.tsx`: the setup assistant.
+  - `Legal.tsx`: imprint and privacy notice (quiet footer links, the legal pane; direct links `#imprint` and
+    `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`.
   - `parts/common.tsx`: `Box`, input components, and the colour-variable helpers `xv()`/`av()`.
 - `scripts/build.ts`: Bun.build of `index.html`. It generates `sw.js` from `scripts/sw.template.js`
   (cache-first for hashed assets, network-first for the page). All URLs are relative, so the app works in
@@ -79,6 +81,9 @@ python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ →
 - Never rename `DB_NAME`, `STORE_KEY` or `APP_ID`: that loses everyone's data.
 - No network requests, analytics, external fonts or CDNs. The app must work offline, and nothing leaves
   the device.
+- The privacy notice (`pv.*` texts, `Legal.tsx`) says exactly what happens to data. Anything that changes
+  that (a network request, a new kind of stored data, another host than GitHub Pages) must update it and
+  `legal.updated` in the same change.
 
 ## Design ("Pastell-Parameter") – keep it constant
 

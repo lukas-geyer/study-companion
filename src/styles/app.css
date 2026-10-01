@@ -42,3 +42,15 @@ body{min-height:100vh;min-height:100dvh}
 .ob-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 .ob .h2{margin-top:6px}
 .ob .ex-row:first-child{border-top:0}
+
+/* imprint & privacy: quiet footer links, the legal pane */
+.legal-links{margin-top:6px;color:var(--ink-soft)}
+.ob .legal-links{max-width:none;margin-top:14px;text-align:center}
+.legal-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:3px}
+.legal-link:hover{text-decoration-color:currentColor}
+.legal-tabs{position:static;margin:4px 0 14px}
+.legal-tabs .tab{min-height:34px}
+.legal h4{margin:18px 0 4px}
+.legal address{margin:8px 0;font-style:normal;font-size:15px}
+.legal a{color:var(--lav);text-underline-offset:3px;overflow-wrap:anywhere}
+.legal .box-body p{margin:0 0 8px;font-size:14.5px}

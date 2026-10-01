@@ -11,11 +11,13 @@ import type { Key } from '../i18n';
 import { askPersistentStorage, openPersist, type Persist, type StoreKind } from './persist';
 
 export type View = 'today' | 'week' | 'year' | 'setup';
+export type LegalDoc = 'imprint' | 'privacy';
 export type Pane =
   | { k: 'mod'; id: string; n: number }
   | { k: 'cls'; cls: DisplayClass; n: number }
   | { k: 'log' }
   | { k: 'appt' }
+  | { k: 'legal'; doc: LegalDoc }
   | null;
 
 export interface Toast { id: number; key?: Key; msg?: string }
@@ -47,11 +49,21 @@ const initialView = (): View => {
   }
   return 'today';
 };
+// #imprint and #privacy open the legal notice directly (e.g. a link from an app store listing).
+const initialPane = (): Pane => {
+  try {
+    const h = location.hash.slice(1);
+    if (h === 'imprint' || h === 'privacy') return { k: 'legal', doc: h };
+  } catch {
+    /* no location */
+  }
+  return null;
+};
 
 const T0 = todayDn();
 let state: AppState = {
   data: newAppData(guessRegion()),
-  ui: { view: initialView(), dayN: T0, weekMon: monOf(T0), pane: null, toast: null, storage: 'loading', wizard: false, anchor: '' },
+  ui: { view: initialView(), dayN: T0, weekMon: monOf(T0), pane: initialPane(), toast: null, storage: 'loading', wizard: false, anchor: '' },
   ready: false,
 };
 

@@ -69,6 +69,9 @@ uploaded and there is no account. Setup → "Your data" has a backup download an
 to move a plan to another device. On iPhone, the home-screen app keeps its own storage, separate from
 Safari.
 
+The imprint and privacy notice are linked quietly at the bottom of every page (direct links: add `#imprint`
+or `#privacy` to the address). Your name, address and e-mail for them are in `src/config.ts` (`IMPRINT`).
+
 ## How the planning works
 
 1. **Fixed daily blocks:** flashcard reviews first, new cards after lunch, a follow-up after long class
@@ -120,7 +123,7 @@ Before submitting to the App Store:
 - Store data with `@capacitor/preferences` or a file (iOS may clear web storage of apps under storage
   pressure); the storage layer is one small file, `src/state/persist.ts`.
 - You need an Apple Developer Program membership, an App Store Connect entry, screenshots and a privacy
-  policy (easy here: no data leaves the device).
+  policy URL: use the app's own notice, `https://<your-domain>/#privacy`.
 
 ## Ideas for later
 
