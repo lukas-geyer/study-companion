@@ -76,3 +76,8 @@ body{min-height:100vh;min-height:100dvh}
   .tplw-slot input[type=text]{grid-column:1/4;width:100%}
   .co-row{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Safari (iPhone, iPad, Mac) draws date and time fields at their natural width and ignores the width they are
+   given, so neighbouring fields overlapped. Without the native look they size like any other input. */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%}
+input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
