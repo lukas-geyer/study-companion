@@ -1,11 +1,11 @@
 // Everything the UI can change. Each action edits a copy of the data and triggers a save.
-import { dn, isISO, isoOf, monOf, todayDn, toMin, weekKey } from '../core/dates';
+import { dn, hm, isISO, isoOf, monOf, todayDn, toMin, weekKey } from '../core/dates';
 import { defaultSettings, makeExam, newAppData, SIZES } from '../core/defaults';
 import { exampleData } from '../core/example';
 import { applyICS, type IcsPreview } from '../core/ics';
 import type { Mod } from '../core/planner';
 import type { AppData, Exam, Lang, Region, Size, TtItem } from '../core/types';
-import { getState, setUI, toast, updateData, wipeStorage } from './store';
+import { getState, setUI, updateData, wipeStorage } from './store';
 
 export function toggleDone(m: Mod, n: number): void {
   const iso = m.d;
@@ -73,7 +73,7 @@ export function addTplSlot(dow: number): void {
     const last = arr[arr.length - 1];
     const from = last ? last.to : '09:00';
     const f = toMin(from);
-    const to = Number.isFinite(f) ? `${String(Math.min(23, Math.floor((f + 90) / 60))).padStart(2, '0')}:${String((f + 90) % 60).padStart(2, '0')}` : '10:30';
+    const to = Number.isFinite(f) ? hm(Math.min(f + 90, 23 * 60 + 59)) : '10:30';
     arr.push({ from, to, title: '' });
   });
 }
@@ -177,12 +177,8 @@ export function startFresh(): void {
 }
 
 export async function wipeAll(): Promise<void> {
-  const s = getState().data.settings;
   await wipeStorage();
   startFresh();
-  updateData((d) => {
-    d.settings.region = s.region;
-  });
 }
 
 export function finishOnboarding(): void {
@@ -194,4 +190,3 @@ export function finishOnboarding(): void {
   setUI({ wizard: false, view: 'today', dayN: T, weekMon: monOf(T) });
 }
 
-export { toast, setUI };

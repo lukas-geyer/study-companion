@@ -38,8 +38,8 @@ export function exampleData(lang: Lang, region: Region, T: number): AppData {
 
   const exams: Exam[] = [];
   const add = (init: Partial<Exam>) => exams.push(makeExam(exams, init));
-  add({ id: 'ex-pm4', name: de ? 'PM IV · Bewegungsapparat' : 'PM IV · Musculoskeletal system', short: 'PM IV', date: isoOf(midweek(T + 49)), size: 'L', hours: 60, weeks: 8, cards: 1200 });
-  add({ id: 'ex-pm5', name: de ? 'PM V · Nervensystem' : 'PM V · Nervous system', short: 'PM V', date: isoOf(midweek(T + 98)), size: 'L', hours: 60, weeks: 8 });
+  add({ id: 'ex-pm4', name: de ? 'Bewegungsapparat' : 'Musculoskeletal system', short: 'PM IV', date: isoOf(midweek(T + 49)), size: 'L', hours: 60, weeks: 8, cards: 1200 });
+  add({ id: 'ex-pm5', name: de ? 'Nervensystem' : 'Nervous system', short: 'PM V', date: isoOf(midweek(T + 98)), size: 'L', hours: 60, weeks: 8 });
   add({ id: 'ex-histo', name: de ? 'Histologie' : 'Histology', short: 'HISTO', date: isoOf(midweek(T + 133)), size: 'M', hours: 40, weeks: 5 });
   add({ id: 'ex-bioch', name: de ? 'Biochemie' : 'Biochemistry', short: 'BIOCH', date: '', size: 'M', hours: 40, weeks: 5 });
   d.exams = exams;

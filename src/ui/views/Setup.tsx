@@ -8,7 +8,7 @@ import type { Exam, Size } from '../../core/types';
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
-import { av, Box, CommitInput, esc, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
+import { av, Box, CommitInput, esc, exFull, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
 import { DataSection } from './SetupData';
 
 const DOWS = [1, 2, 3, 4, 5, 6, 0];
@@ -340,8 +340,7 @@ function TimetableSection() {
                   <option value="">{t('tt.noExam')}</option>
                   {data.exams.map((e) => (
                     <option key={e.id} value={e.id}>
-                      {exLabel(e, t)}
-                      {e.name && e.name !== e.short ? ` · ${e.name}` : ''}
+                      {exFull(e, t)}
                     </option>
                   ))}
                 </select>

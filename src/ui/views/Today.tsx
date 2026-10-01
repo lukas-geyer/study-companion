@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { hm, isoOf, kwOf, nowMin, num, toMin } from '../../core/dates';
+import { dn, hm, isoOf, kwOf, nowMin, num, toMin } from '../../core/dates';
 import { cardsAt, dayView, type DayView, type Mod } from '../../core/planner';
 import { displayClasses, type DisplayClass } from '../../core/timetable';
 import { toggleDone } from '../../state/actions';
@@ -97,7 +97,7 @@ export function TodayView() {
           )}
           {v.info.cls.est && (
             <Box kind="hinweis" label={t('note.est')}>
-              <p>{t('note.estBody', st.knownUntil ? f.short(toDn(st.knownUntil)) : '—')}</p>
+              <p>{t('note.estBody', st.knownUntil ? f.short(dn(st.knownUntil)) : '—')}</p>
             </Box>
           )}
           {v.info.holiday && !v.exam && (
@@ -147,11 +147,6 @@ export function TodayView() {
     </div>
   );
 }
-
-const toDn = (iso: string) => {
-  const [y, m, d] = iso.split('-').map(Number);
-  return Math.round(Date.UTC(y, m - 1, d) / 864e5);
-};
 
 type Row =
   | { k: 'cls'; s: number; e: number; b: DisplayClass; o: number }
@@ -313,7 +308,7 @@ function CardsCard({ v }: { v: DayView }) {
       <ul className="kv">
         <li>
           <span>{t('cards.reviews')}</span>
-          <b>~{a.reviews} min</b>
+          <b>~{f.dur(a.reviews)}</b>
         </li>
         {(st.generalNew > 0 || a.gen > 0) && (
           <li>

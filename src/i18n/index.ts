@@ -1,4 +1,4 @@
-import { dateOf, dnOf, yearOf, monthOf } from '../core/dates';
+import { dateOf, dnOf } from '../core/dates';
 import type { HolidayKey } from '../core/holidays';
 import type { Lang, Region } from '../core/types';
 import { de } from './de';
@@ -100,5 +100,3 @@ export function makeI18n(lang: Lang, region: Region = 'none'): I18n {
     holiday: (k, region) => (lang === 'de' && HOL_REGIONAL[region]?.[k]) || HOL[lang][k],
   };
 }
-
-export const yearMonth = (n: number) => ({ y: yearOf(n), m: monthOf(n) });

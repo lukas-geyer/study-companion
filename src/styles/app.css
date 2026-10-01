@@ -54,3 +54,25 @@ body{min-height:100vh;min-height:100dvh}
 .legal address{margin:8px 0;font-style:normal;font-size:15px}
 .legal a{color:var(--lav);text-underline-offset:3px;overflow-wrap:anywhere}
 .legal .box-body p{margin:0 0 8px;font-size:14.5px}
+
+/* narrow screens: tighter week blocks, roomier agenda cards, and setup rows that fit a phone */
+.blk.sm{padding:0 4px;justify-content:center}
+.blk.sm span{font-size:9.5px;line-height:1}
+.h2 + .fgrid{margin-top:14px}
+@media (max-width:560px){
+  .ag{grid-template-columns:44px minmax(0,1fr);gap:8px}
+  .ag-group{padding-left:52px}
+  .modcard{grid-template-columns:auto minmax(0,1fr);padding-right:10px}
+  .modcard .md{grid-column:2;margin:-4px 0 8px}
+  .ex-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". short size ." ". date date ." ". hours weeks ." ". cards newd ."}
+  .brk-row{grid-template-columns:minmax(0,1fr) 38px}
+  .brk-row .fld:first-child{grid-column:1/-1}
+  .brk-row .fld:nth-child(3){grid-column:1}
+  .brk-row .iconbtn{grid-column:2;grid-row:2/4;align-self:end}
+  .tplw-day{grid-template-columns:minmax(0,1fr);gap:6px}
+  .tplw-name{padding-top:0}
+  .tplw-slot{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;width:100%}
+  .tplw-slot input[type=time]{width:100%;min-width:0}
+  .tplw-slot input[type=text]{grid-column:1/4;width:100%}
+  .co-row{grid-template-columns:minmax(0,1fr)}
+}

@@ -7,7 +7,7 @@ import * as A from '../state/actions';
 import { setUI, toast, type LegalDoc } from '../state/store';
 import { useCtx } from './ctx';
 import { LegalText } from './Legal';
-import { exLabel, exName, Fld, statusText, Toggle, xv } from './parts/common';
+import { exFull, exName, Fld, statusText, Toggle, xv } from './parts/common';
 import { examById, modClass, modTip, modTitle } from './parts/labels';
 
 const close = () => setUI({ pane: null });
@@ -131,8 +131,7 @@ function ClsPane() {
               <option value="">{t('tt.noExam')}</option>
               {data.exams.map((e) => (
                 <option key={e.id} value={e.id}>
-                  {exLabel(e, t)}
-                  {e.name && e.name !== e.short ? ` · ${e.name}` : ''}
+                  {exFull(e, t)}
                 </option>
               ))}
             </select>
@@ -194,8 +193,7 @@ function LogPane() {
           <select id="lg-exam" value={exam} onChange={(ev) => setExam(ev.target.value)}>
             {data.exams.map((e) => (
               <option key={e.id} value={e.id}>
-                {exLabel(e, t)}
-                {e.name && e.name !== e.short ? ` · ${e.name}` : ''}
+                {exFull(e, t)}
               </option>
             ))}
           </select>

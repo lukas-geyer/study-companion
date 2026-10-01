@@ -4,6 +4,8 @@ import type { Dict } from './en';
 const pl = (n: number, one: string, many: string) => (n === 1 ? one : many);
 const tage = (d: number) => `${d} ${pl(d, 'Tag', 'Tage')}`;
 const tagen = (d: number) => `${d} ${pl(d, 'Tag', 'Tagen')}`;
+/** Ends a sentence after a date without doubling the dot of „12. Nov.“. */
+const dot = (s: string) => (s.endsWith('.') ? s : `${s}.`);
 
 export const de: Dict = {
   'app.lede': (exams: number) =>
@@ -97,7 +99,7 @@ export const de: Dict = {
   'note.addExamsBody': 'Der Plan füllt deine freien Zeiten mit Prüfungsvorbereitung, sobald deine Prüfungstermine eingetragen sind.',
   'note.addExamsBtn': 'Termine eintragen',
   'note.est': 'Geschätzte LV',
-  'note.estBody': (d: string) => `Dein importierter Stundenplan endet am ${d}. Dieser Tag nutzt deine typische Woche. Importiere eine neuere Kalenderdatei, um ihn genau zu machen.`,
+  'note.estBody': (d: string) => `Dein importierter Stundenplan endet am ${dot(d)} Dieser Tag nutzt deine typische Woche. Importiere eine neuere Kalenderdatei, um ihn genau zu machen.`,
   'note.holiday': 'Feiertag',
   'note.holidayBody': (h: string) => `${h}: keine LV.`,
   'note.tomorrow': 'Prüfung morgen',
@@ -374,7 +376,7 @@ export const de: Dict = {
   'toast.wiped': 'Alles gelöscht.',
   'toast.previewOnly': 'Das funktioniert in der installierten App, nicht in dieser Vorschau.',
   'note.prepLater': 'Die Vorbereitung beginnt später',
-  'note.prepLaterBody': (e: string, d: string) => `Die Arbeit für ${e} beginnt am ${d}. Bis dahin bleiben deine Tage für LV, Nachbereitung und Karteikarten. Früher beginnen? Erhöhe in den Einstellungen die Vorbereitungswochen.`,
+  'note.prepLaterBody': (e: string, d: string) => `Die Arbeit für ${e} beginnt am ${dot(d)} Bis dahin bleiben deine Tage für LV, Nachbereitung und Karteikarten. Früher beginnen? Erhöhe in den Einstellungen die Vorbereitungswochen.`,
 
   'ob.kicker': 'Willkommen',
   'ob.title': 'Plane deine Prüfungen rund um deine Woche',

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { dn, dnOf, isISO, kwOf, monOf, monthOf, num, yearOf } from '../../core/dates';
 import { weekTotals, type WeekTotals } from '../../core/planner';
 import { useCtx } from '../ctx';
@@ -163,12 +163,23 @@ function LoadChart({ R1 }: { R1: number }) {
   const [tipX, setTipX] = useState(0);
   const wrap = useRef<HTMLDivElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
+  // Fill the card's width; with many weeks the chart keeps a minimum spacing and scrolls sideways.
+  const [avail, setAvail] = useState(0);
+  useEffect(() => {
+    const w = wrap.current;
+    if (!w || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setAvail(w.clientWidth));
+    ro.observe(w);
+    return () => ro.disconnect();
+  }, []);
   const weeks: (WeekTotals & { w: number })[] = [];
   for (let w = monOf(T); w <= monOf(R1); w += 7) weeks.push({ w, ...weekTotals(data, plan, w) });
   const maxH = Math.max(10, ...weeks.map((x) => (x.study + x.cards) / 60));
   const top = Math.ceil(maxH / 10) * 10;
-  const bw = 12, gap = 7, padL = 32, padT = 12, H = 150, padB = 58;
-  const W = padL + weeks.length * (bw + gap) + 8;
+  const padL = 32, padT = 12, H = 150, padB = 58;
+  const slot = Math.max(19, (avail - padL - 8) / weeks.length);
+  const bw = Math.round(Math.min(28, Math.max(12, slot * 0.6))), gap = slot - bw;
+  const W = Math.floor(padL + weeks.length * slot + 8);
   const yv = (h: number) => padT + H - (h / top) * H;
   const grid = [];
   for (let g = 0; g <= top; g += 10)

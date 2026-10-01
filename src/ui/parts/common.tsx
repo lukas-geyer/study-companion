@@ -22,6 +22,12 @@ export const both = (e?: Exam | null): Vars => ({ ...xv(e), ...av(e?.color) });
 
 export const exLabel = (e: Exam | null | undefined, t: T): string => (e ? e.short || e.name || t('exam.fallback') : '');
 export const exName = (e: Exam | null | undefined, t: T): string => (e ? e.name || e.short || t('exam.fallback') : '');
+/** "PM IV · Nervous system" for pickers; just the name when it already starts with the short name. */
+export const exFull = (e: Exam | null | undefined, t: T): string => {
+  if (!e) return '';
+  const { short: s, name: n } = e;
+  return !n || n === s ? exLabel(e, t) : !s || n.startsWith(s) ? n : `${s} · ${n}`;
+};
 
 export function Box({ kind, label, children }: { kind: 'hinweis' | 'lerntipp' | 'achtung' | 'praxis' | 'info'; label: string; children: ReactNode }) {
   return (

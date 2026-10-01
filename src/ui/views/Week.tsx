@@ -186,7 +186,7 @@ function WeekCol({ v, H0, H1, hp }: { v: DayView; H0: number; H1: number; hp: nu
         return (
           <button
             key={`c${i}`}
-            className={`blk cls${b.tent ? ' tent' : ''}${b.est ? ' est' : ''}`}
+            className={`blk cls${b.tent ? ' tent' : ''}${b.est ? ' est' : ''}${ht < 18 ? ' sm' : ''}`}
             style={{ top, height: ht }}
             onClick={() => setUI({ pane: { k: 'cls', cls: b, n: v.n } })}
             aria-label={`${b.t || t('class.fallback')}, ${hm(b.s0)}–${hm(b.e0)}`}
@@ -204,7 +204,7 @@ function WeekCol({ v, H0, H1, hp }: { v: DayView; H0: number; H1: number; hp: nu
         return (
           <button
             key={m.id}
-            className={`blk mod ${modClass(m, data)}${m.done ? ' done' : ''}`}
+            className={`blk mod ${modClass(m, data)}${m.done ? ' done' : ''}${ht < 18 ? ' sm' : ''}`}
             style={{ top, height: ht, ...xv(e), ...av(e?.color) }}
             onClick={() => setUI({ pane: { k: 'mod', id: m.id, n: v.n } })}
             aria-label={`${modTitle(m, data, t)}, ${hm(m.s)}–${hm(m.e)}`}

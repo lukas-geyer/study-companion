@@ -1,7 +1,7 @@
 // The planner: fixed daily blocks first, then each exam's hours spread over its prep window and
 // packed into deep (90 min) and focus (45 min) blocks that fit the free slots. Pure function of the data.
 import { cardsFor, type CardsDay } from './cards';
-import { dn, isISO, isoOf, monOf, num, todayDn, toMin, weekKey } from './dates';
+import { dn, isISO, isoOf, num, todayDn, toMin, weekKey } from './dates';
 import { COUNTED, SIZES } from './defaults';
 import { placeFirst, placeLast, type Iv } from './intervals';
 import { countsBusy, dayInfo, type DayInfo } from './timetable';
@@ -371,5 +371,3 @@ export const cardsAt = (data: AppData, plan: Plan, n: number): CardsDay => {
   const pd = n >= plan.T ? plan.days.get(n) : null;
   return pd ? pd.cards : cardsFor(data.settings, n, plan.dated, plan.start);
 };
-
-export const weekMonday = monOf;

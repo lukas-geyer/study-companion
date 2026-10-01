@@ -95,7 +95,7 @@ src/config.ts           app name, storage keys
 src/core/               planning engine: dates, holidays, timetable, flashcards, planner, .ics import/export, backups
 src/state/              app state, persistence (IndexedDB → localStorage → memory), actions
 src/i18n/               English and German texts, date/number formatting
-src/ui/                 React components: App, Today, Week, Year, Setup, dialogs, setup assistant
+src/ui/                 React components: App, Today, Week, Year, Setup, dialogs, setup assistant, imprint/privacy
 src/styles/             Pastell design tokens and styles
 public/                 icons, web app manifest, fonts (SIL Open Font License, see public/fonts/OFL.txt)
 scripts/                build (incl. service worker), dev server, icon generator, screenshot script
