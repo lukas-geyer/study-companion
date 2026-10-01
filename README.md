@@ -5,6 +5,8 @@ free time with focused study blocks, keeps flashcards (e.g. Anki) going every da
 something changes. It runs in the browser, can be installed on a phone like an app, works offline, and keeps
 all data on the device.
 
+Live at **https://semestra.at** (GitHub Pages, deployed on every push to `main`).
+
 The app is called Semestra (semestra.at). The name lives in `src/config.ts`, `index.html` (title tags) and
 `public/manifest.webmanifest`.
 

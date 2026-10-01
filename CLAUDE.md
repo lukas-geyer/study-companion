@@ -3,9 +3,9 @@
 A local-first study planner. It's built as an installable web app (PWA) and will later be wrapped for iOS
 with Capacitor. Users enter their exams and their week (classes from an .ics import or a typical week).
 The engine fills the free time with study blocks and flashcard sessions, and re-plans whenever something
-changes. There are no accounts and no server: all data stays on the device. The app is called Semestra (domain
-semestra.at; "Study Companion" was the working title). The name lives in `src/config.ts`, `index.html` and
-`public/manifest.webmanifest`. Internally it is `semestra` too (`APP_ID`, `DB_NAME`, the service-worker
+changes. There are no accounts and no server: all data stays on the device. The app is called Semestra, live
+at https://semestra.at via GitHub Pages (contact: hallo@semestra.at; "Study Companion" was the working
+title). The name lives in `src/config.ts`, `index.html` and `public/manifest.webmanifest`. Internally it is `semestra` too (`APP_ID`, `DB_NAME`, the service-worker
 cache prefix); the switch from `study-companion` in October 2026 deliberately dropped the owner's test data.
 
 The owner isn't a professional developer. Explain changes in plain language. When something needs his
@@ -128,7 +128,6 @@ are in `src/styles/legacy.css`: `:root` plus two identical dark blocks (media qu
 
 ## Roadmap
 
-- Connect the domain semestra.at to GitHub Pages.
 - Ideas:
   - Reminders and notifications (native app).
   - Sync between devices; this needs accounts, a server and a GDPR privacy policy.
