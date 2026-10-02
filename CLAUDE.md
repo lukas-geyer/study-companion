@@ -25,6 +25,7 @@ bun run ios            # build + copy into the Xcode project (cap sync ios); the
 python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ → shots/ (Python Playwright)
 node scripts/store-shots.mjs   # App Store screenshots → store/screenshots/ (needs: npm i --no-save playwright-core)
 node scripts/flyer.mjs         # A4 flyer (German) → store/flyer/ (needs: npm i --no-save playwright-core qrcode)
+node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ (needs: npm i --no-save playwright-core)
 ```
 
 - Bun is the runtime, bundler and test runner. npm is the package manager, because Bun's own installer
