@@ -1,7 +1,9 @@
 // Cover banner for the Buy Me a Coffee page (buymeacoffee.com/lukasgeyer), in the Pastell design, German and English.
 // 1600 × 400 is Buy Me a Coffee's recommended cover size; drawn at 2× for sharp screens. Phones crop the sides,
 // so everything important sits in the middle. The page's About/Follow cards cover the bottom quarter, so the
-// content stays in the top 70 %.  Output: store/bmc/semestra-bmc-cover-{de,en}.png
+// content stays in the top 70 %.  Output: store/bmc/semestra-bmc-cover-{de,en}.png, plus
+// semestra-bmc-cover-simple.png: only the icon and the name, small enough for the narrow strip phones show and
+// without fine text that the site's recompression blurs.
 //
 //   npm i --no-save playwright-core && node scripts/bmc-banner.mjs
 //
@@ -76,12 +78,19 @@ h1 .cup{font-weight:400;margin-left:.2em}
 </div>
 </body></html>`;
 
+// language-free variant: icon and name in the middle fifth of the width
+const simple = (t) => html(t)
+  .replace('.txt{max-width:720px}', '.txt{max-width:none}.wrap{gap:28px}.icon{width:104px;height:104px;border-radius:24px}h1{margin-top:10px;font-size:48px}')
+  .replace(/<p class="lede">[\s\S]*?<div class="pills">[\s\S]*?<\/div>/, '')
+  .replace(/<h1>[\s\S]*?<\/h1>/, '<h1><b>Semestra</b></h1>')
+  .replace(/<div class="kicker">[^<]*/, '<div class="kicker">Lernplaner');
+
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium' });
 const page = await browser.newPage({ viewport: { width: 1600, height: 400 }, deviceScaleFactor: 2 });
-for (const [lang, t] of Object.entries(texts)) {
+for (const [lang, t, make] of [...Object.entries(texts).map(([l, t]) => [l, t, html]), ['simple', texts.de, simple]]) {
   // opened as a file, so the page may load the font files next to it (setContent can't)
   const file = join(out, 'banner.html');
-  await writeFile(file, html(t));
+  await writeFile(file, make(t));
   await page.goto(pathToFileURL(file).href);
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(200);
@@ -89,4 +98,4 @@ for (const [lang, t] of Object.entries(texts)) {
   await rm(file);
 }
 await browser.close();
-console.log('store/bmc: semestra-bmc-cover-de.png, semestra-bmc-cover-en.png');
+console.log('store/bmc: semestra-bmc-cover-de.png, -en.png, -simple.png');
