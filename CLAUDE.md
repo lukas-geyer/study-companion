@@ -72,7 +72,8 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
 - `src/i18n/`: `en.ts` is the source of truth. `de.ts` is typed against it, so a missing key fails the
   typecheck. Dates and numbers are formatted via `Intl` (de-AT/de-DE/de-CH by region, en-GB).
 - `src/ui/`:
-  - `App.tsx`: the shell, with tabs Today/Week/Year/Setup; the current view is in the URL hash.
+  - `App.tsx`: the shell, with tabs Today/Week/Year/Setup; the current view is in the URL hash. The tab bar
+    sticks while scrolling and then widens into an edge-to-edge top bar (`.tabs.stuck` in `app.css`).
   - `views/`.
   - `Panes.tsx`: dialogs (on phones a bottom sheet with a grab handle; pull down to close).
   - `Onboarding.tsx`: the setup assistant.

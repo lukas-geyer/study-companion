@@ -11,6 +11,15 @@ body{min-height:100vh;min-height:100dvh}
 .ms b{color:var(--ink-strong);font-weight:700}
 .tab{padding:0 4px}
 
+/* Tab bar → top bar. While it sticks to the top (.stuck, set in App.tsx) it widens to the window edges and up over
+   the status bar, its corners square off and a hairline appears below. The widening is drawn with box-shadows
+   (they never widen the page; shifted up so only the hairline reaches below the bar) and revealed by animating
+   clip-path. */
+.tabs{top:calc(env(safe-area-inset-top,0px) + 8px);--wide:0 -100vmax 0 100vmax var(--page),0 calc(1px - 100vmax) 0 100vmax var(--line);box-shadow:inset 0 0 0 1px var(--line),var(--wide);clip-path:inset(0 round 16px);
+  transition:clip-path .28s cubic-bezier(.3,.7,.3,1),box-shadow .28s ease}
+.tabs.stuck{box-shadow:inset 0 0 0 1px transparent,var(--wide);
+  clip-path:inset(calc(-9px - env(safe-area-inset-top,0px)) calc(-1 * var(--br,0px)) -1px calc(-1 * var(--bl,0px)) round 0)}
+
 /* exam rows without flashcard columns */
 .ex-row.nocards{grid-template-areas:"dot short name name name del" ". date date size size ." ". hours hours weeks weeks ."}
 @media (min-width:1080px){.ex-row.nocards{grid-template-columns:18px 84px minmax(150px,1fr) 150px 96px 72px 80px 38px;grid-template-areas:"dot short name date size hours weeks del"}}

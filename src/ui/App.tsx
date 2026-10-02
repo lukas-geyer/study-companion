@@ -99,6 +99,34 @@ export function App() {
   );
 }
 
+// The tab bar sticks to the top while scrolling. Once it does, it gets the class "stuck" and widens into a top bar
+// from edge to edge (app.css); --bl/--br are the distances to the window edges it grows into.
+function useStuckBar() {
+  useEffect(() => {
+    const el = document.getElementById('tabs');
+    if (!el) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--bl', `${r.left}px`);
+      el.style.setProperty('--br', `${document.documentElement.clientWidth - r.right}px`);
+      el.classList.toggle('stuck', scrollY > 0 && r.top <= parseFloat(getComputedStyle(el).top) + 0.5);
+    };
+    const queue = () => {
+      frame ||= requestAnimationFrame(update);
+    };
+    update();
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener('scroll', queue);
+      removeEventListener('resize', queue);
+    };
+  }, []);
+}
+
 function Main() {
   const { data, ui, plan, T, i18n } = useCtx();
   const { t, f } = i18n;
@@ -107,6 +135,7 @@ function Main() {
   const wk = weekTotals(data, plan, monOf(T));
   const sk = streak(data, T);
   const tabs: View[] = ['today', 'week', 'year', 'setup'];
+  useStuckBar();
   const go = (v: View) => {
     setUI({ view: v, pane: null });
     const el = document.getElementById('tabs');
