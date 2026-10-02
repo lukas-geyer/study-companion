@@ -74,7 +74,7 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
 - `src/ui/`:
   - `App.tsx`: the shell, with tabs Today/Week/Year/Setup; the current view is in the URL hash.
   - `views/`.
-  - `Panes.tsx`: dialogs.
+  - `Panes.tsx`: dialogs (on phones a bottom sheet with a grab handle; pull down to close).
   - `Onboarding.tsx`: the setup assistant.
   - `Legal.tsx`: imprint and privacy notice (quiet footer links, the legal pane; direct links `#imprint` and
     `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`. The main footer also

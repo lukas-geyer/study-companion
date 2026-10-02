@@ -90,3 +90,5 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 
 /* dialogs scroll on their own, without handing the gesture on to the page behind */
 .pane{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+/* grab handle: phone sheets can be pulled down to close (Panes.tsx) */
+@media (max-width:699px){.pane::before{content:"";display:block;width:36px;height:5px;border-radius:3px;background:var(--line-2);margin:-8px auto 12px}}

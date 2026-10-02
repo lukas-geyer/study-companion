@@ -14,6 +14,8 @@ const close = () => setUI({ pane: null });
 
 function Shell({ children, label, focus = '[autofocus], input, select, button' }: { children: ReactNode; label: string; focus?: string }) {
   const ref = useRef<HTMLElement>(null);
+  const scrim = useRef<HTMLDivElement>(null);
+  useSwipeDown(ref, scrim);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const t = setTimeout(() => {
@@ -45,12 +47,74 @@ function Shell({ children, label, focus = '[autofocus], input, select, button' }
   }, []);
   return (
     <>
-      <div className="scrim" onClick={close} />
+      <div className="scrim" onClick={close} ref={scrim} />
       <section className="pane" role="dialog" aria-modal="true" aria-label={label} ref={ref}>
         {children}
       </section>
     </>
   );
+}
+
+// On phones the dialog is a sheet from the bottom: pull it down to close it, as with iOS sheets. A pull only starts
+// when the sheet is scrolled to the top, so scrolling long texts (imprint, privacy) keeps working as before.
+function useSwipeDown(sheet: { current: HTMLElement | null }, scrim: { current: HTMLElement | null }) {
+  useEffect(() => {
+    const el = sheet.current;
+    if (!el) return;
+    const phone = matchMedia('(max-width: 699px)'); // wider screens show a centred dialog (legacy.css)
+    let y0 = 0, dy = 0, start = 0, v = 0, lastY = 0, lastT = 0, active = false, pulling = false;
+    const move = (y: number, anim: boolean) => {
+      el.style.transition = scrim.current!.style.transition = anim ? 'transform .2s ease, opacity .2s ease' : 'none';
+      el.style.transform = y ? `translate(-50%, ${y}px)` : '';
+      scrim.current!.style.opacity = y ? String(Math.max(0, 1 - y / el.offsetHeight)) : '';
+    };
+    const onStart = (ev: TouchEvent) => {
+      const target = ev.target as HTMLElement;
+      active = phone.matches && ev.touches.length === 1 && !target.closest('input, textarea, select');
+      pulling = false;
+      dy = v = 0;
+      start = ev.touches[0].clientY;
+    };
+    const onMove = (ev: TouchEvent) => {
+      if (!active) return;
+      const y = ev.touches[0].clientY;
+      if (!pulling) {
+        if (el.scrollTop > 0 || y - start < 0) {
+          start = y; // scrolling the content; a pull may still begin once it reaches the top
+          return;
+        }
+        if (y - start < 8) return;
+        pulling = true;
+        y0 = lastY = y;
+        lastT = ev.timeStamp;
+      }
+      ev.preventDefault(); // the sheet moves, not the content
+      dy = Math.max(0, y - y0);
+      v = (y - lastY) / Math.max(1, ev.timeStamp - lastT); // speed of the latest movement, px per ms
+      lastY = y;
+      lastT = ev.timeStamp;
+      move(dy, false);
+    };
+    const onEnd = () => {
+      if (!pulling) return;
+      pulling = active = false;
+      // far enough, or a quick downward flick
+      if (dy > Math.min(140, el.offsetHeight / 4) || (v > 0.5 && dy > 30)) {
+        move(el.offsetHeight, true);
+        setTimeout(close, 180);
+      } else move(0, true);
+    };
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchmove', onMove, { passive: false });
+    el.addEventListener('touchend', onEnd);
+    el.addEventListener('touchcancel', onEnd);
+    return () => {
+      el.removeEventListener('touchstart', onStart);
+      el.removeEventListener('touchmove', onMove);
+      el.removeEventListener('touchend', onEnd);
+      el.removeEventListener('touchcancel', onEnd);
+    };
+  }, []);
 }
 
 export function Panes() {
