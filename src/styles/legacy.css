@@ -103,7 +103,7 @@ button{cursor:pointer}
 .num{font-variant-numeric:tabular-nums}
 
 /* ============ masthead (cover blobs, kicker, light H1) ============ */
-.mast{position:relative;overflow:hidden;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--shadow);padding:24px clamp(18px,4vw,34px) 22px}
+.mast{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--shadow);padding:24px clamp(18px,4vw,34px) 22px}
 .blob{position:absolute;border-radius:50%;z-index:-1;pointer-events:none}
 .blob.b1{width:420px;height:420px;left:-170px;top:-220px;background:radial-gradient(circle,var(--blob1) 0%,transparent 68%)}
 .blob.b2{width:460px;height:460px;right:-190px;top:-150px;background:radial-gradient(circle,var(--blob2) 0%,transparent 68%)}

@@ -30,7 +30,7 @@ body{min-height:100vh;min-height:100dvh}
 
 /* onboarding */
 .ob{padding-top:4px}
-.ob-card{position:relative;overflow:hidden;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--shadow);padding:26px clamp(18px,4vw,36px) 24px;max-width:880px;margin:0 auto}
+.ob-card{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--shadow);padding:26px clamp(18px,4vw,36px) 24px;max-width:880px;margin:0 auto}
 .ob-body{position:relative}
 .ob-h1{margin:10px 0 0;font:300 clamp(30px,6vw,44px)/1.08 var(--f-head);color:var(--ink-strong);letter-spacing:-.015em;text-wrap:balance}
 .ob-h1:focus,.ob .h2:focus{outline:none}
@@ -40,6 +40,11 @@ body{min-height:100vh;min-height:100dvh}
 .ob-progress i{flex:1;height:4px;border-radius:4px;background:var(--line)}
 .ob-progress i.on{background:var(--lav-mid)}
 .ob-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+/* long labels (German, narrow phones) wrap inside the button instead of pushing the page wider */
+@media (max-width:640px){.btn{max-width:100%;white-space:normal;text-align:center;line-height:1.25;padding-block:6px}}
+.ob-nav .btn{min-width:0}
+.ob-nav .btn.ghost{flex:none;white-space:nowrap}
+/* the pastel blobs reach past .ob-card and .mast: overflow:clip (not hidden) so iOS can't pan them sideways */
 .ob .h2{margin-top:6px}
 .ob .ex-row:first-child{border-top:0}
 
@@ -85,7 +90,7 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 /* reminders (iOS app): four options, two per row on wider screens */
 .rem-grid{display:grid;gap:0 28px;grid-template-columns:minmax(0,1fr)}
 @media (min-width:640px){.rem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.rem-item{display:grid;gap:6px;align-content:start;padding:14px 0;border-top:1px solid var(--line)}
+.rem-item{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;align-content:start;padding:14px 0;border-top:1px solid var(--line)}
 .rem-item .fgrid{max-width:320px}
 
 /* dialogs scroll on their own, without handing the gesture on to the page behind */
