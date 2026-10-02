@@ -148,5 +148,7 @@ are in `src/styles/legacy.css`: `:root` plus two identical dark blocks (media qu
   - More holiday regions; semester templates per university.
 - iOS (Capacitor project in `ios/`, built on the owner's Mac with Xcode):
   - Done: study reminders as local notifications (the native value App Store guideline 4.2 asks for).
-  - Next: first run on the owner's iPhone, TestFlight, App Store submission (privacy label: no data collected).
+  - Done: runs on the owner's iPhone (free Apple ID signing, October 2026); pages, scrolling and notifications
+    checked on the device.
+  - Next: Apple Developer Program, TestFlight, App Store submission (privacy label: no data collected).
   - Later maybe a home-screen widget (Swift, Xcode).
