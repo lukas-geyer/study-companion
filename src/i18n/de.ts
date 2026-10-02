@@ -333,6 +333,7 @@ export const de: Dict = {
   'data.wipeQ': 'Deinen ganzen Plan von diesem Gerät löschen? Das lässt sich nicht rückgängig machen.',
   'data.wipeYes': 'Alles löschen',
   'data.storage': (kind: string) => `Gespeichert: ${kind}`,
+  'store.file': 'auf diesem Gerät (in der App)',
   'store.idb': 'in diesem Browser (IndexedDB)',
   'store.local': 'in diesem Browser (lokaler Speicher)',
   'store.memory': 'nirgends – Änderungen gehen beim Schließen dieser Ansicht verloren',
@@ -441,6 +442,9 @@ export const de: Dict = {
   'pv.host3':
     'Rechtsgrundlage ist das berechtigte Interesse an einer sicheren und zuverlässigen Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO). Dabei können Daten in die USA übermittelt werden; GitHub ist nach dem EU-US Data Privacy Framework zertifiziert, für das ein Angemessenheitsbeschluss der Europäischen Kommission besteht (Art. 45 DSGVO). Mehr dazu in der',
   'pv.host3Link': 'Datenschutzerklärung von GitHub',
+  'pv.appH': 'In der iPhone-App',
+  'pv.app':
+    'Die App enthält alle ihre Dateien und verbindet sich deshalb mit nichts im Internet; GitHub (siehe Hosting) ist nicht beteiligt. Dein Plan wird statt im Browser in einer Datei im privaten Speicher der App auf deinem iPhone gespeichert; iOS nimmt ihn in deine Gerätesicherungen auf (etwa iCloud-Backup), wenn du sie eingeschaltet hast. Sicherungen und Kalender-Exporte öffnen das Teilen-Menü von iOS, in dem du selbst wählst, wohin sie gehen. Die App wird über Apples App Store verteilt; für den Download gilt die Datenschutzrichtlinie von Apple.',
   'pv.mailH': 'Kontakt per E-Mail',
   'pv.mail':
     'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO). E-Mails werden über iCloud Mail empfangen und gespeichert, einen Dienst der Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland. Apple kann sie auch außerhalb der EU verarbeiten und stützt solche Übermittlungen auf die Standardvertragsklauseln der EU (Art. 46 DSGVO).',

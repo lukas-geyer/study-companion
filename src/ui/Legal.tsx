@@ -105,6 +105,8 @@ function Privacy({ t }: { t: T }) {
       <p>
         {t('pv.host3')} <Ext href={GITHUB_PRIVACY}>{t('pv.host3Link')}</Ext>.
       </p>
+      <h4 className="lbl">{t('pv.appH')}</h4>
+      <p>{t('pv.app')}</p>
       <h4 className="lbl">{t('pv.mailH')}</h4>
       <p>{t('pv.mail')}</p>
       <h4 className="lbl">{t('pv.rightsH')}</h4>

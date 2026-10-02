@@ -91,7 +91,8 @@ The engine is pure TypeScript in `src/core` (no UI code) and is covered by `test
 
 ```
 index.html              entry page
-src/config.ts           app name, storage keys
+src/config.ts           app name, storage keys, imprint details
+src/native.ts           what differs in the iPhone app (detection, share sheet)
 src/core/               planning engine: dates, holidays, timetable, flashcards, planner, .ics import/export, backups
 src/state/              app state, persistence (IndexedDB → localStorage → memory), actions
 src/i18n/               English and German texts, date/number formatting
@@ -100,36 +101,45 @@ src/styles/             Pastell design tokens and styles
 public/                 icons, web app manifest, fonts (SIL Open Font License, see public/fonts/OFL.txt)
 scripts/                build (incl. service worker), dev server, icon generator, screenshot script
 tests/                  engine tests (bun test)
+ios/, capacitor.config.ts   the iPhone app (Xcode project, Capacitor settings)
 .github/workflows/      checks and deployment to GitHub Pages
 CLAUDE.md, .claude/     notes and setup for Claude Code sessions working on this repository
 ```
 
-## Towards the App Store
+## The iPhone app
 
-The app is built so the same code can be wrapped as an iOS app with [Capacitor](https://capacitorjs.com).
-The rough path (on a Mac with Xcode installed):
+The iPhone app is the same web app inside a thin native shell made with [Capacitor](https://capacitorjs.com).
+The Xcode project is in `ios/`; `capacitor.config.ts` sets the name (Semestra) and bundle ID
+(`at.semestra.app`). In the app the plan is stored in a file in the app's own storage (iOS can clear web
+storage), backups and calendar exports open the iOS share sheet, and the app works without internet.
 
-```bash
-npm install @capacitor/core @capacitor/ios
-npm install -D @capacitor/cli
-npx cap init "Semestra" at.semestra.app --web-dir dist
-bun run build && npx cap add ios
-npx cap open ios         # opens Xcode: run it in the simulator or on your iPhone
-# after each change: bun run build && npx cap sync
-```
+**First time on your Mac**
+1. Install **Xcode** from the Mac App Store and open it once, so it can install its components.
+2. Install Node.js and Bun (see "Run it on your computer" above).
+3. Get the code: `git clone https://github.com/lukas-geyer/study-companion.git`, then `cd study-companion`
+   and `npm install`.
+4. `bun run ios` builds the web app and copies it into the iOS project. `bun run ios:open` opens it in Xcode.
+   The first time, Xcode downloads the Capacitor packages (bottom-left progress), which takes a minute.
+5. In Xcode, click **App** at the top of the left sidebar → target **App** → **Signing & Capabilities** →
+   **Team**: add your Apple ID and choose it. A free Apple ID is enough to run the app on your own iPhone.
+6. Connect your iPhone with a cable. On the iPhone turn on Settings → Privacy & Security → **Developer Mode**
+   (it restarts). Choose your iPhone at the top of the Xcode window and press ▶.
 
-Before submitting to the App Store:
-- Apple tends to reject apps that are only a website in a wrapper, so the iOS version should add things a
-  website can't do well: study reminders as local notifications (`@capacitor/local-notifications`), maybe a
-  home-screen widget.
-- Store data with `@capacitor/preferences` or a file (iOS may clear web storage of apps under storage
-  pressure); the storage layer is one small file, `src/state/persist.ts`.
-- You need an Apple Developer Program membership, an App Store Connect entry, screenshots and a privacy
-  policy URL: use the app's own notice, `https://<your-domain>/#privacy`.
+**After every change:** `bun run ios`, then ▶ in Xcode again.
+
+**Publishing (TestFlight and App Store)**
+1. Join the **Apple Developer Program** (developer.apple.com, 99 USD/year) with the same Apple ID.
+2. In **App Store Connect** → Apps → **+** → New App: platform iOS, name Semestra, bundle ID `at.semestra.app`.
+3. In Xcode: choose **Any iOS Device** at the top, then Product → **Archive** → **Distribute App** →
+   App Store Connect. After processing, the build appears under **TestFlight** for you and testers.
+4. For the App Store listing you need screenshots, a description, the privacy policy URL
+   `https://semestra.at/#privacy`, a support URL (e.g. `https://semestra.at`) and the privacy label: the
+   app collects no data ("Data Not Collected").
+5. Apple rejects apps that are only a website in a wrapper (guideline 4.2), so before submitting, the app gets
+   things a website can't do well: study reminders as local notifications are planned first.
 
 ## Ideas for later
 
-- Reminders and notifications (native app)
 - Optional sync between devices (would need accounts and a server, and a privacy policy under GDPR)
 - Dragging blocks to other times, marking days as sick/off
 - More regions for public holidays; semester templates per university

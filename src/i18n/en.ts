@@ -327,6 +327,7 @@ export const en = {
   'data.wipeQ': 'Delete your whole plan from this device? This can’t be undone.',
   'data.wipeYes': 'Delete everything',
   'data.storage': (kind: string) => `Stored in: ${kind}`,
+  'store.file': 'this device (in the app)',
   'store.idb': 'this browser (IndexedDB)',
   'store.local': 'this browser (local storage)',
   'store.memory': 'nowhere – changes are lost when you close this view',
@@ -435,6 +436,9 @@ export const en = {
   'pv.host3':
     'The legal basis is the legitimate interest in delivering the website securely and reliably (Art. 6(1)(f) GDPR). Data may be transferred to the USA; GitHub is certified under the EU–US Data Privacy Framework, for which there is an adequacy decision of the European Commission (Art. 45 GDPR). More in',
   'pv.host3Link': 'GitHub’s privacy statement',
+  'pv.appH': 'In the iPhone app',
+  'pv.app':
+    'The app contains all its files, so it connects to nothing on the internet, and GitHub (see Hosting) is not involved. Your plan is saved in a file in the app’s private storage on your iPhone instead of in a browser; iOS includes it in your device backups (for example iCloud Backup) if you have them switched on. Backups and calendar exports open the iOS share sheet, where you choose where they go. The app is distributed through Apple’s App Store; downloading it is covered by Apple’s privacy policy.',
   'pv.mailH': 'Contact by e-mail',
   'pv.mail':
     'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR). E-mails are received and stored by iCloud Mail, a service of Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Ireland. Apple may also process them outside the EU; it bases such transfers on the EU standard contractual clauses (Art. 46 GDPR).',

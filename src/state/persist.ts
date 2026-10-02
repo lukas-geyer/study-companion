@@ -1,7 +1,10 @@
-// Where the plan lives on the device: IndexedDB, else localStorage, else memory only.
+// Where the plan lives on the device: a file in the iOS app's own storage, in the browser IndexedDB, else
+// localStorage, else memory only.
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { DB_NAME, STORE_KEY } from '../config';
+import { isNative } from '../native';
 
-export type StoreKind = 'idb' | 'local' | 'memory';
+export type StoreKind = 'file' | 'idb' | 'local' | 'memory';
 
 export interface Persist {
   kind: StoreKind;
@@ -55,6 +58,27 @@ const localPersist: Persist = {
   clear: async () => localStorage.removeItem(STORE_KEY),
 };
 
+// iOS app: web storage inside the app can be cleared by the system, so the plan is a JSON file in the app's
+// Library folder instead (private to the app, kept by iOS and included in iCloud backups).
+const FILE = { path: `${DB_NAME}/${STORE_KEY}.json`, directory: Directory.Library };
+const filePersist: Persist = {
+  kind: 'file',
+  load: async () => {
+    try {
+      const { data } = await Filesystem.readFile({ ...FILE, encoding: Encoding.UTF8 });
+      return typeof data === 'string' && data ? JSON.parse(data) : null;
+    } catch {
+      return null; // no file yet
+    }
+  },
+  save: async (data) => {
+    await Filesystem.writeFile({ ...FILE, data: JSON.stringify(data), encoding: Encoding.UTF8, recursive: true });
+  },
+  clear: async () => {
+    await Filesystem.deleteFile(FILE).catch(() => undefined);
+  },
+};
+
 let memory: unknown = null;
 const memoryPersist: Persist = {
   kind: 'memory',
@@ -68,6 +92,7 @@ const memoryPersist: Persist = {
 };
 
 export async function openPersist(): Promise<Persist> {
+  if (isNative) return filePersist;
   try {
     if (typeof indexedDB !== 'undefined') {
       const db = await withTimeout(idbOpen(), 2500);
@@ -88,6 +113,7 @@ export async function openPersist(): Promise<Persist> {
 }
 
 export async function askPersistentStorage(): Promise<void> {
+  if (isNative) return; // the app's files are never cleared by the system
   try {
     if (navigator.storage && navigator.storage.persist && !(await navigator.storage.persisted())) await navigator.storage.persist();
   } catch {

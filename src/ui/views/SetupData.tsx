@@ -7,6 +7,7 @@ import { planToICS } from '../../core/icsExport';
 import type { AppData } from '../../core/types';
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
+import { isNative, shareFile } from '../../native';
 import { useCtx } from '../ctx';
 import { LegalLink } from '../Legal';
 import { av, Toggle } from '../parts/common';
@@ -17,8 +18,10 @@ const FILE_PREFIX = APP_NAME.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 type SaveNs = { save(r: { filename: string; data: string }): Promise<unknown> } | null;
 type ClaudeWin = { claude?: { use?: (n: string) => Promise<unknown> } };
 
-/** Save a generated file: through the Claude viewer's download prompt when running there, else a normal download. */
+/** Save a generated file: the share sheet in the iOS app, the Claude viewer's download prompt when running there,
+ *  else a normal download. */
 export async function download(filename: string, text: string, type: string): Promise<'saved' | 'declined' | 'unsupported' | 'failed'> {
+  if (isNative) return shareFile(filename, text).catch(() => 'failed' as const);
   const w = window as unknown as ClaudeWin;
   if (w.claude?.use && window.top !== window.self) {
     try {
@@ -62,7 +65,7 @@ export function DataSection() {
   const [confirm, setConfirm] = useState<Confirm>(null);
   const [withCards, setWithCards] = useState(false);
   const file = useRef<HTMLInputElement>(null);
-  const storeName = ui.storage === 'idb' ? t('store.idb') : ui.storage === 'local' ? t('store.local') : ui.storage === 'memory' ? t('store.memory') : '…';
+  const storeName = ui.storage === 'file' ? t('store.file') : ui.storage === 'idb' ? t('store.idb') : ui.storage === 'local' ? t('store.local') : ui.storage === 'memory' ? t('store.memory') : '…';
 
   const backup = () => {
     void download(`${FILE_PREFIX}-backup-${isoOf(T)}.json`, toBackup(data), 'application/json').then((r) => report(r, 'toast.backedUp'));

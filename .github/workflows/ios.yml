@@ -1,0 +1,28 @@
+# Compiles the iPhone app on a GitHub Mac (simulator build, no signing) whenever iOS-related files change,
+# so problems show up before the owner opens Xcode. Releases are still built and signed in Xcode on the Mac.
+name: iOS build
+on:
+  push:
+    branches: [main]
+    paths: ['ios/**', 'capacitor.config.ts', 'package.json', 'package-lock.json', 'src/native.ts', 'src/state/persist.ts', '.github/workflows/ios.yml']
+  pull_request:
+    paths: ['ios/**', 'capacitor.config.ts', 'package.json', 'package-lock.json', 'src/native.ts', 'src/state/persist.ts', '.github/workflows/ios.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+      - run: npm ci --no-audit --no-fund
+      - run: bun run ios
+      - name: Build for the iOS simulator
+        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tail -n 40; exit ${PIPESTATUS[0]}

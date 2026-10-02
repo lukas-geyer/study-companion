@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { APP_NAME } from '../config';
 import { fromBackup } from '../core/backup';
+import { isNative } from '../native';
 import { toast } from '../state/store';
 import * as A from '../state/actions';
 import { useCtx } from './ctx';
@@ -169,7 +170,7 @@ export function Onboarding() {
                   {t('ob.doneTitle')}
                 </h2>
                 <p className="sub">{t('ob.doneSub')}</p>
-                <p className="small muted">{t('ob.install')}</p>
+                {!isNative && <p className="small muted">{t('ob.install')}</p>}
               </>
             )}
             {nav}
