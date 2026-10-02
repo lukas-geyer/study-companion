@@ -27,7 +27,20 @@ function Shell({ children, label, focus = '[autofocus], input, select, button' }
     return () => {
       clearTimeout(t);
       document.removeEventListener('keydown', onKey);
-      prev?.focus?.();
+      prev?.focus?.({ preventScroll: true });
+    };
+  }, []);
+  // Freeze the page behind the dialog. Otherwise iOS scrolls the page first and the dialog only once the page
+  // has reached its end.
+  useEffect(() => {
+    const y = scrollY;
+    const body = document.body.style;
+    const before = body.cssText;
+    const bar = innerWidth - document.documentElement.clientWidth; // keep the layout from jumping where scrollbars take space
+    Object.assign(body, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', paddingRight: bar ? `${bar}px` : '' });
+    return () => {
+      body.cssText = before;
+      scrollTo(0, y);
     };
   }, []);
   return (

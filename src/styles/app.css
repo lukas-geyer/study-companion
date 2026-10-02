@@ -87,3 +87,6 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 @media (min-width:640px){.rem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .rem-item{display:grid;gap:6px;align-content:start;padding:14px 0;border-top:1px solid var(--line)}
 .rem-item .fgrid{max-width:320px}
+
+/* dialogs scroll on their own, without handing the gesture on to the page behind */
+.pane{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
