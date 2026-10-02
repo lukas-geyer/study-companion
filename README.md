@@ -102,7 +102,8 @@ public/                 icons, web app manifest, fonts (SIL Open Font License, s
 scripts/                build (incl. service worker), dev server, icon generator, screenshot script
 tests/                  engine tests (bun test)
 ios/, capacitor.config.ts   the iPhone app (Xcode project, Capacitor settings)
-store/                  App Store listing texts and screenshots (scripts/store-shots.mjs makes the screenshots)
+store/                  App Store listing texts and screenshots (scripts/store-shots.mjs), and the A4 flyer
+                        for notice boards (store/flyer/, made by scripts/flyer.mjs)
 .github/workflows/      checks and deployment to GitHub Pages
 CLAUDE.md, .claude/     notes and setup for Claude Code sessions working on this repository
 ```

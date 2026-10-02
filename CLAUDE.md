@@ -24,6 +24,7 @@ bun run icons          # regenerate the PNG app icons, incl. the iOS icon and la
 bun run ios            # build + copy into the Xcode project (cap sync ios); then build/run in Xcode on a Mac
 python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ → shots/ (Python Playwright)
 node scripts/store-shots.mjs   # App Store screenshots → store/screenshots/ (needs: npm i --no-save playwright-core)
+node scripts/flyer.mjs         # A4 flyer (German) → store/flyer/ (needs: npm i --no-save playwright-core qrcode)
 ```
 
 - Bun is the runtime, bundler and test runner. npm is the package manager, because Bun's own installer
