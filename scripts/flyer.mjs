@@ -141,12 +141,19 @@ h1{margin-top:6mm;font:300 30pt/1.06 'Nunito Sans',sans-serif;letter-spacing:-.0
 const file = join(out, 'flyer.html');
 await writeFile(file, html);
 
-const page = await browser.newPage({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 2.5 });
+// Draw the page once at 300 dpi (A4 = 794 × 1123 CSS px × 3.125) and build the PDF from that image. Printing the
+// HTML directly gave a shrunken, off-centre page in some viewers and blocky soft shadows, so PDF and PNG are now
+// pixel-identical everywhere.
+const page = await browser.newPage({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 300 / 96 });
 await page.goto(pathToFileURL(file).href);
 await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(300);
-await page.pdf({ path: join(out, 'semestra-flyer-a4.pdf'), format: 'A4', printBackground: true, preferCSSPageSize: true });
-await page.screenshot({ path: join(out, 'semestra-flyer-a4.png') });
+const png = join(out, 'semestra-flyer-a4.png');
+await page.screenshot({ path: png });
+const pdf = await browser.newPage();
+await pdf.setContent(`<!doctype html><style>@page{size:A4;margin:0}html,body{margin:0}img{display:block;width:210mm;height:297mm}</style><img src="data:image/png;base64,${(await readFile(png)).toString('base64')}">`);
+await pdf.waitForLoadState('load');
+await pdf.pdf({ path: join(out, 'semestra-flyer-a4.pdf'), preferCSSPageSize: true, printBackground: true });
 await browser.close();
 // the working files point at this machine's fonts; only the PDF and the preview are kept
 await rm(file);
