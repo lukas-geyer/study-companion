@@ -46,6 +46,7 @@ export function defaultSettings(region: Region = 'none'): Settings {
     breaks: [],
     courses: {},
     tentativeBusy: true,
+    reminders: { morning: false, morningAt: '07:30', before: false, beforeMin: 10, evening: false, eveningAt: '20:30', exam: false, examDays: 3 },
   };
 }
 

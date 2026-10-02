@@ -5,6 +5,7 @@ import { REGIONS } from '../../core/holidays';
 import { previewICS, type IcsPreview } from '../../core/ics';
 import { deckPerDay } from '../../core/cards';
 import type { Exam, Size } from '../../core/types';
+import { askNotifications, isNative, notificationsState, type NotifState } from '../../native';
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
@@ -52,6 +53,7 @@ export function SetupView() {
       <TimetableSection />
       <RhythmSection />
       <CardsSection />
+      {isNative && <RemindersSection />}
       <PrefsSection />
       <DataSection />
     </div>
@@ -558,6 +560,53 @@ function CardsSection() {
       <h2 className="h2">{t('fc.title')}</h2>
       <p className="sub">{t('fc.sub')}</p>
       <CardsFields />
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------- reminders (iOS app only)
+type RemKey = 'morning' | 'before' | 'evening' | 'exam';
+
+function RemindersSection() {
+  const { data, i18n } = useCtx();
+  const { t } = i18n;
+  const r = data.settings.reminders;
+  const [perm, setPerm] = useState<NotifState | ''>('');
+  useEffect(() => {
+    notificationsState().then(setPerm, () => setPerm(''));
+  }, []);
+  const toggle = (k: RemKey, on: boolean) => {
+    A.setSetting(`reminders.${k}`, on);
+    if (on) void askNotifications().then((ok) => setPerm(ok ? 'granted' : 'denied'), () => undefined);
+  };
+  const anyOn = r.morning || r.before || r.evening || r.exam;
+  const item = (k: RemKey, label: string, on: string, field: ReactNode, hint?: string) => (
+    <div className="rem-item">
+      <span className="lbl">{label}</span>
+      <Toggle id={`set-rem-${k}`} checked={r[k]} onChange={(v) => toggle(k, v)}>
+        {on}
+      </Toggle>
+      <div className="fgrid">{field}</div>
+      {hint && <p className="small muted" style={{ margin: 0 }}>{hint}</p>}
+    </div>
+  );
+  return (
+    <section className="card" id="sec-reminders" style={av('butter')}>
+      <h2 className="h2">{t('rem.title')}</h2>
+      <p className="sub">{t('rem.sub')}</p>
+      {anyOn && perm === 'denied' && (
+        <div className="notes" style={{ margin: '0 0 6px' }}>
+          <Box kind="achtung" label={t('rem.offLabel')}>
+            <p>{t('rem.off')}</p>
+          </Box>
+        </div>
+      )}
+      <div className="rem-grid">
+        {item('morning', t('rem.morning'), t('rem.morningOn'), <TimeSet path="reminders.morningAt" label={t('rem.at')} />)}
+        {item('before', t('rem.before'), t('rem.beforeOn'), <NumSet path="reminders.beforeMin" label={t('rem.beforeMin')} min={0} max={60} step={5} />)}
+        {item('evening', t('rem.evening'), t('rem.eveningOn'), <TimeSet path="reminders.eveningAt" label={t('rem.at')} />)}
+        {item('exam', t('rem.exam'), t('rem.examOn'), <NumSet path="reminders.examDays" label={t('rem.examDays')} min={1} max={14} step={1} />, t('rem.examHint'))}
+      </div>
     </section>
   );
 }

@@ -5,7 +5,7 @@ export const APP_VERSION = '0.1.0';
 // Storage keys (IndexedDB database / localStorage key). Changing them loses existing data.
 export const DB_NAME = 'semestra';
 export const STORE_KEY = 'app-data';
-export const DATA_VERSION = 1;
+export const DATA_VERSION = 2; // 2: settings.reminders (older data gets the defaults in normalize)
 // Imprint and privacy contact (Austria: § 5 ECG, § 25 MedienG; GDPR Art. 13), shown under Imprint and Privacy.
 export const IMPRINT = {
   name: 'Lukas Geyer',

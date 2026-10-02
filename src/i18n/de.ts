@@ -444,7 +444,7 @@ export const de: Dict = {
   'pv.host3Link': 'Datenschutzerklärung von GitHub',
   'pv.appH': 'In der iPhone-App',
   'pv.app':
-    'Die App enthält alle ihre Dateien und verbindet sich deshalb mit nichts im Internet; GitHub (siehe Hosting) ist nicht beteiligt. Dein Plan wird statt im Browser in einer Datei im privaten Speicher der App auf deinem iPhone gespeichert; iOS nimmt ihn in deine Gerätesicherungen auf (etwa iCloud-Backup), wenn du sie eingeschaltet hast. Sicherungen und Kalender-Exporte öffnen das Teilen-Menü von iOS, in dem du selbst wählst, wohin sie gehen. Die App wird über Apples App Store verteilt; für den Download gilt die Datenschutzrichtlinie von Apple.',
+    'Die App enthält alle ihre Dateien und verbindet sich deshalb mit nichts im Internet; GitHub (siehe Hosting) ist nicht beteiligt. Dein Plan wird statt im Browser in einer Datei im privaten Speicher der App auf deinem iPhone gespeichert; iOS nimmt ihn in deine Gerätesicherungen auf (etwa iCloud-Backup), wenn du sie eingeschaltet hast. Erinnerungen plant die App, wenn du sie einschaltest, auf deinem iPhone, und iOS zeigt sie an; dafür wird nichts an einen Server geschickt. Sicherungen und Kalender-Exporte öffnen das Teilen-Menü von iOS, in dem du selbst wählst, wohin sie gehen. Die App wird über Apples App Store verteilt; für den Download gilt die Datenschutzrichtlinie von Apple.',
   'pv.mailH': 'Kontakt per E-Mail',
   'pv.mail':
     'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO). E-Mails werden über iCloud Mail empfangen und gespeichert, einen Dienst der Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland. Apple kann sie auch außerhalb der EU verarbeiten und stützt solche Übermittlungen auf die Standardvertragsklauseln der EU (Art. 46 DSGVO).',
@@ -453,4 +453,29 @@ export const de: Dict = {
     'Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO); schreib dafür einfach an die oben genannte E-Mail-Adresse. Deinen Plan selbst verwaltest du auf deinem Gerät; der Betreiber kann ihn weder einsehen noch löschen.',
   'pv.rights2':
     'Wenn du meinst, dass die Verarbeitung deiner Daten gegen das Datenschutzrecht verstößt, kannst du dich bei einer Aufsichtsbehörde beschweren – in Österreich bei der Datenschutzbehörde, Barichgasse 40–42, 1030 Wien,',
+  // Erinnerungen (iOS-App)
+  'rem.title': 'Erinnerungen',
+  'rem.sub': 'Mitteilungen auf diesem iPhone, jede einzeln wählbar. Die App plant sie auf dem Gerät aus deinem Plan und passt sie an, sobald er sich ändert.',
+  'rem.morning': 'Morgenüberblick',
+  'rem.morningOn': 'Zeigen, was heute ansteht',
+  'rem.at': 'Um',
+  'rem.before': 'Vor jedem Block',
+  'rem.beforeOn': 'Vor Beginn eines Blocks erinnern',
+  'rem.beforeMin': 'Minuten vorher',
+  'rem.evening': 'Abend-Check',
+  'rem.eveningOn': 'Erinnern, wenn noch Blöcke offen sind',
+  'rem.exam': 'Vor Prüfungen',
+  'rem.examOn': 'Jede Prüfung vorher ankündigen',
+  'rem.examDays': 'Tage vorher',
+  'rem.examHint': 'Kommt zur Uhrzeit des Morgenüberblicks.',
+  'rem.offLabel': 'Mitteilungen sind aus',
+  'rem.off': 'Semestra darf keine Mitteilungen zeigen. Erlaube sie in den iPhone-Einstellungen → Mitteilungen → Semestra.',
+  'rem.morningTitle': (study: string) => `Heute: ${study} Lernzeit`,
+  'rem.morningBody': (n: number, first: string, at: string) => `${n} ${pl(n, 'Block', 'Blöcke')} · zuerst: ${first} um ${at}`,
+  'rem.morningBodyAny': (n: number) => `${n} ${pl(n, 'Block', 'Blöcke')} für heute geplant.`,
+  'rem.beforeTitle': (title: string, min: number) => (min > 0 ? `${title} in ${min} min` : `${title} beginnt jetzt`),
+  'rem.eveningTitle': (n: number) => (n === 1 ? 'Ein Block ist heute noch offen' : `${n} Blöcke sind heute noch offen`),
+  'rem.eveningBody': 'Hak ab, was du erledigt hast. Der Rest wandert von selbst auf die nächsten Tage.',
+  'rem.examTitle': (exam: string, d: number) => `${exam} in ${d} ${pl(d, 'Tag', 'Tagen')}`,
+  'rem.examBody': (date: string, status: string) => `${date}${status ? ` · ${status}` : ''}`,
 };

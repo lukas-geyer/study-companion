@@ -9,6 +9,17 @@ export interface Meal { label: string; from: string; to: string }
 export interface Rest { label: string; dow: number; from: string; to: string }
 export interface Break { label: string; from: string; to: string }
 export interface Course { name?: string; exam?: string; busy?: boolean }
+/** Optional notifications in the iOS app; each one is switched on separately. Times are "HH:MM". */
+export interface Reminders {
+  morning: boolean;
+  morningAt: string;
+  before: boolean;
+  beforeMin: number;
+  evening: boolean;
+  eveningAt: string;
+  exam: boolean;
+  examDays: number;
+}
 /** One recurring class in the typical week. */
 export interface TplSlot { from: string; to: string; title?: string }
 
@@ -45,6 +56,7 @@ export interface Settings {
   breaks: Break[];
   courses: Record<string, Course>;
   tentativeBusy: boolean;
+  reminders: Reminders;
 }
 
 export interface Exam {

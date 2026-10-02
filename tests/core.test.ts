@@ -8,6 +8,7 @@ import { applyICS, previewICS } from '../src/core/ics';
 import { planToICS } from '../src/core/icsExport';
 import { mergeIv, placeFirst, subtractIv } from '../src/core/intervals';
 import { buildPlan, dayView, streak, weekTotals } from '../src/core/planner';
+import { MAX_REMINDERS, plannedReminders } from '../src/core/reminders';
 import { dayInfo } from '../src/core/timetable';
 
 const T = dn('2026-10-05'); // a Monday
@@ -176,5 +177,57 @@ describe('backup', () => {
     expect(legacy.settings.template['1'][0]).toEqual({ from: '08:15', to: '12:00' });
     expect(() => fromBackup('nope')).toThrow();
     expect(makeExam([]).color).toBe('lav');
+  });
+});
+
+describe('reminders', () => {
+  const setup = () => {
+    const d = exampleData('en', 'AT', T);
+    d.exams.push(makeExam(d.exams, { id: 'ex-soon', short: 'SOON', date: isoOf(T + 5), hours: 10, weeks: 1 }));
+    d.settings.reminders = { morning: true, morningAt: '07:30', before: true, beforeMin: 10, evening: true, eveningAt: '20:30', exam: true, examDays: 3 };
+    return d;
+  };
+
+  test('nothing when all are off', () => {
+    const d = exampleData('en', 'AT', T);
+    expect(plannedReminders(d, buildPlan(d, T), T, 8 * 60)).toEqual([]);
+  });
+
+  test('morning, before, evening and exam reminders, soonest first, never in the past', () => {
+    const d = setup();
+    const plan = buildPlan(d, T);
+    const nowM = 8 * 60;
+    const rs = plannedReminders(d, plan, T, nowM);
+    expect(rs.length).toBeGreaterThan(0);
+    expect(rs.length).toBeLessThanOrEqual(MAX_REMINDERS);
+    for (const r of rs) expect(r.n > T || r.at > nowM).toBe(true);
+    for (let i = 1; i < rs.length; i++) expect(rs[i - 1].n * 1440 + rs[i - 1].at <= rs[i].n * 1440 + rs[i].at).toBe(true);
+    // today's 07:30 overview has passed; tomorrow's is there
+    expect(rs.some((r) => r.kind === 'morning' && r.n === T)).toBe(false);
+    expect(rs.some((r) => r.kind === 'morning' && r.n === T + 1 && r.at === 450)).toBe(true);
+    // a block reminder comes 10 minutes before its block
+    const b = rs.find((r) => r.kind === 'before');
+    expect(b && b.kind === 'before' && b.at === (b.mod.s as number) - 10).toBe(true);
+    // the exam on T+5 is announced 3 days ahead, at the morning time
+    const ex = rs.find((r) => r.kind === 'exam');
+    expect(ex && ex.kind === 'exam' ? [ex.n, ex.at, ex.exam.id] : null).toEqual([T + 2, 450, 'ex-soon']);
+  });
+
+  test('ticked blocks get no reminders, and a fully ticked day no evening nudge', () => {
+    const d = setup();
+    const plan = buildPlan(d, T);
+    const day = T + 1;
+    const doc = (d.done[weekKey(day)] = d.done[weekKey(day)] || { items: {} });
+    for (const m of dayView(d, plan, day).mods) doc.items[m.id] = { d: m.d, t: m.type, x: m.exam || '', min: m.min, s: m.s, e: m.e };
+    const rs = plannedReminders(d, plan, T, 8 * 60).filter((r) => r.n === day);
+    expect(rs.some((r) => r.kind === 'before' || r.kind === 'evening')).toBe(false);
+    expect(rs.some((r) => r.kind === 'morning')).toBe(true);
+  });
+
+  test('data saved before reminders existed gets them switched off (v1 → v2)', () => {
+    const v1 = { v: 1, settings: { dayStart: '08:00' }, exams: [] };
+    const d = normalize(v1);
+    expect(d.v).toBe(2);
+    expect(d.settings.reminders).toEqual({ morning: false, morningAt: '07:30', before: false, beforeMin: 10, evening: false, eveningAt: '20:30', exam: false, examDays: 3 });
   });
 });

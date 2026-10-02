@@ -153,6 +153,7 @@ export function resetSettings(): void {
       courses: keep.courses,
       breaks: keep.breaks,
       template: keep.template,
+      reminders: keep.reminders,
       cards: { ...s.cards, on: keep.cards.on, generalName: keep.cards.generalName },
     });
     d.settings = s;

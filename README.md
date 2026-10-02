@@ -112,6 +112,8 @@ The iPhone app is the same web app inside a thin native shell made with [Capacit
 The Xcode project is in `ios/`; `capacitor.config.ts` sets the name (Semestra) and bundle ID
 (`at.semestra.app`). In the app the plan is stored in a file in the app's own storage (iOS can clear web
 storage), backups and calendar exports open the iOS share sheet, and the app works without internet.
+Only in the app: optional **reminders** (Setup → Reminders): a morning overview, a heads-up before each
+block, an evening check when blocks are still open, and a notice a few days before each exam.
 
 **First time on your Mac**
 1. Install **Xcode** from the Mac App Store and open it once, so it can install its components.
@@ -135,8 +137,8 @@ storage), backups and calendar exports open the iOS share sheet, and the app wor
 4. For the App Store listing you need screenshots, a description, the privacy policy URL
    `https://semestra.at/#privacy`, a support URL (e.g. `https://semestra.at`) and the privacy label: the
    app collects no data ("Data Not Collected").
-5. Apple rejects apps that are only a website in a wrapper (guideline 4.2), so before submitting, the app gets
-   things a website can't do well: study reminders as local notifications are planned first.
+5. Apple rejects apps that are only a website in a wrapper (guideline 4.2); the reminders are what the app
+   adds over the website. Mention them in the review notes.
 
 ## Ideas for later
 

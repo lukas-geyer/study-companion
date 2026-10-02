@@ -438,7 +438,7 @@ export const en = {
   'pv.host3Link': 'GitHub’s privacy statement',
   'pv.appH': 'In the iPhone app',
   'pv.app':
-    'The app contains all its files, so it connects to nothing on the internet, and GitHub (see Hosting) is not involved. Your plan is saved in a file in the app’s private storage on your iPhone instead of in a browser; iOS includes it in your device backups (for example iCloud Backup) if you have them switched on. Backups and calendar exports open the iOS share sheet, where you choose where they go. The app is distributed through Apple’s App Store; downloading it is covered by Apple’s privacy policy.',
+    'The app contains all its files, so it connects to nothing on the internet, and GitHub (see Hosting) is not involved. Your plan is saved in a file in the app’s private storage on your iPhone instead of in a browser; iOS includes it in your device backups (for example iCloud Backup) if you have them switched on. Reminders, if you switch them on, are planned by the app on your iPhone and shown by iOS; nothing is sent to a server for them. Backups and calendar exports open the iOS share sheet, where you choose where they go. The app is distributed through Apple’s App Store; downloading it is covered by Apple’s privacy policy.',
   'pv.mailH': 'Contact by e-mail',
   'pv.mail':
     'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR). E-mails are received and stored by iCloud Mail, a service of Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Ireland. Apple may also process them outside the EU; it bases such transfers on the EU standard contractual clauses (Art. 46 GDPR).',
@@ -447,6 +447,31 @@ export const en = {
     'You have the right of access, rectification, erasure, restriction of processing, data portability and objection (Art. 15–21 GDPR); just write to the e-mail address above. Your plan itself is only on your device: you manage it yourself, and the operator can neither see nor delete it.',
   'pv.rights2':
     'If you believe the processing of your data breaks data protection law, you can complain to a supervisory authority – in Austria, the Data Protection Authority (Datenschutzbehörde), Barichgasse 40–42, 1030 Vienna,',
+  // reminders (iOS app)
+  'rem.title': 'Reminders',
+  'rem.sub': 'Notifications on this iPhone, each one optional. The app plans them on the device from your plan and updates them whenever the plan changes.',
+  'rem.morning': 'Morning overview',
+  'rem.morningOn': 'Show what today holds',
+  'rem.at': 'At',
+  'rem.before': 'Before each block',
+  'rem.beforeOn': 'Remind me before a block starts',
+  'rem.beforeMin': 'Minutes before',
+  'rem.evening': 'Evening check',
+  'rem.eveningOn': 'Nudge me if blocks are still open',
+  'rem.exam': 'Before exams',
+  'rem.examOn': 'Announce each exam in advance',
+  'rem.examDays': 'Days before',
+  'rem.examHint': 'Arrives at the time of the morning overview.',
+  'rem.offLabel': 'Notifications are off',
+  'rem.off': 'Semestra isn’t allowed to show notifications. Allow them in the iPhone Settings → Notifications → Semestra.',
+  'rem.morningTitle': (study: string) => `Today: ${study} of study`,
+  'rem.morningBody': (n: number, first: string, at: string) => `${n} ${plural(n, 'block', 'blocks')} · first: ${first} at ${at}`,
+  'rem.morningBodyAny': (n: number) => `${n} ${plural(n, 'block', 'blocks')} planned for today.`,
+  'rem.beforeTitle': (title: string, min: number) => (min > 0 ? `${title} in ${min} min` : `${title} starts now`),
+  'rem.eveningTitle': (n: number) => (n === 1 ? 'One block is still open today' : `${n} blocks are still open today`),
+  'rem.eveningBody': 'Tick off what you did. The rest moves to the next days by itself.',
+  'rem.examTitle': (exam: string, d: number) => `${exam} in ${d} ${plural(d, 'day', 'days')}`,
+  'rem.examBody': (date: string, status: string) => `${date}${status ? ` · ${status}` : ''}`,
 } as const;
 
 export type Dict = { [K in keyof typeof en]: (typeof en)[K] extends (...a: infer A) => string ? (...a: A) => string : string };

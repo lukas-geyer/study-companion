@@ -81,3 +81,9 @@ body{min-height:100vh;min-height:100dvh}
    given, so neighbouring fields overlapped. Without the native look they size like any other input. */
 input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%}
 input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
+
+/* reminders (iOS app): four options, two per row on wider screens */
+.rem-grid{display:grid;gap:0 28px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:640px){.rem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rem-item{display:grid;gap:6px;align-content:start;padding:14px 0;border-top:1px solid var(--line)}
+.rem-item .fgrid{max-width:320px}

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { APP_NAME } from '../config';
-import { monOf, todayDn } from '../core/dates';
+import { monOf, nowMin, todayDn } from '../core/dates';
 import { buildPlan, streak, weekTotals } from '../core/planner';
+import { plannedReminders } from '../core/reminders';
 import { makeI18n, resolveLang } from '../i18n';
+import { isNative, syncReminders } from '../native';
 import * as A from '../state/actions';
 import { setUI, useApp, type View } from '../state/store';
 import { CtxR, useCtx, type Ctx } from './ctx';
@@ -10,6 +12,7 @@ import { LegalLinks } from './Legal';
 import { Onboarding } from './Onboarding';
 import { Panes } from './Panes';
 import { av, exLabel, Html } from './parts/common';
+import { reminderNotes } from './parts/reminders';
 import { examById } from './parts/labels';
 import { SetupView } from './views/Setup';
 import { TodayView } from './views/Today';
@@ -72,6 +75,12 @@ export function App() {
       /* sandboxed */
     }
   }, [hash]);
+  // iOS app: replace the scheduled reminders shortly after the plan changes (and on each new day).
+  useEffect(() => {
+    if (!isNative || !ready) return;
+    const id = setTimeout(() => void syncReminders(reminderNotes(plannedReminders(data, plan, T, nowMin(new Date())), data, plan, i18n)), 800);
+    return () => clearTimeout(id);
+  }, [ready, data, plan, T, i18n]);
   const ctx: Ctx = { data, ui, plan, T, now, i18n };
   if (!ready) return <div className="app boot" aria-busy="true" />;
   const wizard = !data.meta.onboarded || ui.wizard;
