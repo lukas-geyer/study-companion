@@ -1,6 +1,7 @@
 // Cover banner for the Buy Me a Coffee page (buymeacoffee.com/lukasgeyer), in the Pastell design, German and English.
 // 1600 × 400 is Buy Me a Coffee's recommended cover size; drawn at 2× for sharp screens. Phones crop the sides,
-// so everything important sits in the middle.  Output: store/bmc/semestra-bmc-cover-{de,en}.png
+// so everything important sits in the middle. The page's About/Follow cards cover the bottom quarter, so the
+// content stays in the top 70 %.  Output: store/bmc/semestra-bmc-cover-{de,en}.png
 //
 //   npm i --no-save playwright-core && node scripts/bmc-banner.mjs
 //
@@ -49,18 +50,18 @@ body{position:relative;overflow:hidden;background:var(--page);font:400 20px/1.45
 .b3{width:760px;height:760px;right:-240px;top:-360px;background:radial-gradient(circle,var(--blob2) 0%,transparent 68%)}
 .b4{width:640px;height:640px;right:-120px;top:80px;background:radial-gradient(circle,var(--blob4) 0%,transparent 68%)}
 .b5{width:560px;height:560px;left:520px;top:180px;background:radial-gradient(circle,var(--blob5) 0%,transparent 68%)}
-.wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:48px}
-.icon{width:132px;height:132px;border-radius:30px;box-shadow:0 0 0 1px var(--line),0 16px 34px rgba(50,40,100,.14);flex:none}
-.txt{max-width:820px}
-.kicker{font:500 15px/1 'Poppins',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--kick)}
-.dots{display:flex;gap:7px;margin-top:12px}.dots i{width:9px;height:9px;border-radius:50%}
-h1{margin-top:16px;font:300 50px/1.08 'Nunito Sans',sans-serif;letter-spacing:-.015em;color:var(--ink-strong)}
+.wrap{position:absolute;left:0;right:0;top:34px;height:240px;display:flex;align-items:center;justify-content:center;gap:40px}
+.icon{width:112px;height:112px;border-radius:26px;box-shadow:0 0 0 1px var(--line),0 16px 34px rgba(50,40,100,.14);flex:none}
+.txt{max-width:720px}
+.kicker{font:500 13px/1 'Poppins',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--kick)}
+.dots{display:flex;gap:6px;margin-top:10px}.dots i{width:8px;height:8px;border-radius:50%}
+h1{margin-top:12px;font:300 42px/1.08 'Nunito Sans',sans-serif;letter-spacing:-.015em;color:var(--ink-strong)}
 h1 b{font-weight:800}
 h1 .cup{font-weight:400;margin-left:.2em}
-.lede{margin-top:12px;font-size:21px;line-height:1.45}
-.pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-.pill{display:flex;align-items:center;gap:7px;padding:5px 14px 5px 7px;border-radius:99px;background:var(--sheet);box-shadow:0 0 0 1px var(--line);font-size:16.5px;color:var(--ink-strong)}
-.pill i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--acc-bg);color:var(--acc);font:800 11px/1 'Nunito Sans',sans-serif;font-style:normal}
+.lede{margin-top:8px;font-size:18px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pill{display:flex;align-items:center;gap:7px;padding:4px 12px 4px 6px;border-radius:99px;background:var(--sheet);box-shadow:0 0 0 1px var(--line);font-size:14.5px;color:var(--ink-strong)}
+.pill i{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--acc-bg);color:var(--acc);font:800 10px/1 'Nunito Sans',sans-serif;font-style:normal}
 </style></head><body>
 <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span><span class="blob b5"></span>
 <div class="wrap">
