@@ -455,7 +455,7 @@ export const de: Dict = {
     'Wenn du meinst, dass die Verarbeitung deiner Daten gegen das Datenschutzrecht verstößt, kannst du dich bei einer Aufsichtsbehörde beschweren – in Österreich bei der Datenschutzbehörde, Barichgasse 40–42, 1030 Wien,',
   // Erinnerungen (iOS-App)
   'rem.title': 'Erinnerungen',
-  'rem.sub': 'Mitteilungen auf diesem iPhone, jede einzeln wählbar. Die App plant sie auf dem Gerät aus deinem Plan und passt sie an, sobald er sich ändert.',
+  'rem.sub': 'Mitteilungen auf diesem Gerät, jede einzeln wählbar. Die App plant sie auf dem Gerät aus deinem Plan und passt sie an, sobald er sich ändert.',
   'rem.morning': 'Morgenüberblick',
   'rem.morningOn': 'Zeigen, was heute ansteht',
   'rem.at': 'Um',

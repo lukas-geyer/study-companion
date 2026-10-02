@@ -102,6 +102,7 @@ public/                 icons, web app manifest, fonts (SIL Open Font License, s
 scripts/                build (incl. service worker), dev server, icon generator, screenshot script
 tests/                  engine tests (bun test)
 ios/, capacitor.config.ts   the iPhone app (Xcode project, Capacitor settings)
+store/                  App Store listing texts and screenshots (scripts/store-shots.mjs makes the screenshots)
 .github/workflows/      checks and deployment to GitHub Pages
 CLAUDE.md, .claude/     notes and setup for Claude Code sessions working on this repository
 ```
@@ -134,9 +135,8 @@ block, an evening check when blocks are still open, and a notice a few days befo
 2. In **App Store Connect** → Apps → **+** → New App: platform iOS, name Semestra, bundle ID `at.semestra.app`.
 3. In Xcode: choose **Any iOS Device** at the top, then Product → **Archive** → **Distribute App** →
    App Store Connect. After processing, the build appears under **TestFlight** for you and testers.
-4. For the App Store listing you need screenshots, a description, the privacy policy URL
-   `https://semestra.at/#privacy`, a support URL (e.g. `https://semestra.at`) and the privacy label: the
-   app collects no data ("Data Not Collected").
+4. The App Store listing is ready in `store/listing.md` (texts in German and English, review notes, the
+   settings to choose) and the screenshots in `store/screenshots/` (iPhone and iPad, German and English).
 5. Apple rejects apps that are only a website in a wrapper (guideline 4.2); the reminders are what the app
    adds over the website. Mention them in the review notes.
 

@@ -23,6 +23,7 @@ bun run build:preview  # single-file page fragment → dist-preview/index.html (
 bun run icons          # regenerate the PNG app icons, incl. the iOS icon and launch image (scripts/icons.ts, sharp)
 bun run ios            # build + copy into the Xcode project (cap sync ios); then build/run in Xcode on a Mac
 python3 scripts/shots.py [--dark] [--mobile] [--de]   # screenshots of dist/ → shots/ (Python Playwright)
+node scripts/store-shots.mjs   # App Store screenshots → store/screenshots/ (needs: npm i --no-save playwright-core)
 ```
 
 - Bun is the runtime, bundler and test runner. npm is the package manager, because Bun's own installer
@@ -150,5 +151,7 @@ are in `src/styles/legacy.css`: `:root` plus two identical dark blocks (media qu
   - Done: study reminders as local notifications (the native value App Store guideline 4.2 asks for).
   - Done: runs on the owner's iPhone (free Apple ID signing, October 2026); pages, scrolling and notifications
     checked on the device.
+  - Ready: App Store texts and review notes in `store/listing.md`, screenshots in `store/screenshots/`. Keep
+    both in step with the app (features named in the description, screens in the screenshots).
   - Next: Apple Developer Program, TestFlight, App Store submission (privacy label: no data collected).
   - Later maybe a home-screen widget (Swift, Xcode).

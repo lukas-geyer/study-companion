@@ -449,7 +449,7 @@ export const en = {
     'If you believe the processing of your data breaks data protection law, you can complain to a supervisory authority – in Austria, the Data Protection Authority (Datenschutzbehörde), Barichgasse 40–42, 1030 Vienna,',
   // reminders (iOS app)
   'rem.title': 'Reminders',
-  'rem.sub': 'Notifications on this iPhone, each one optional. The app plans them on the device from your plan and updates them whenever the plan changes.',
+  'rem.sub': 'Notifications on this device, each one optional. The app plans them on the device from your plan and updates them whenever the plan changes.',
   'rem.morning': 'Morning overview',
   'rem.morningOn': 'Show what today holds',
   'rem.at': 'At',
