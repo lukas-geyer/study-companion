@@ -2,8 +2,9 @@
 // The privacy notice must match what the app and its host really do with data. Update it, and
 // 'legal.updated', whenever that changes (a network request, a new kind of stored data, other hosting).
 import { Fragment, type MouseEvent, type ReactNode } from 'react';
-import { APP_NAME, APP_VERSION, IMPRINT } from '../config';
+import { APP_NAME, APP_VERSION, IMPRINT, SUPPORT_URL } from '../config';
 import type { T } from '../i18n';
+import { isNative } from '../native';
 import { setUI, type LegalDoc } from '../state/store';
 import { useCtx } from './ctx';
 import { Box } from './parts/common';
@@ -25,13 +26,22 @@ export function LegalLink({ doc, children }: { doc: LegalDoc; children: ReactNod
   );
 }
 
-export function LegalLinks() {
+/** Footer links. `support` adds the donation link – on the website only, never in the iOS app. */
+export function LegalLinks({ support = false }: { support?: boolean }) {
   const { t } = useCtx().i18n;
   return (
     <nav className="foot legal-links" aria-label={t('legal.links')}>
       <LegalLink doc="imprint">{t('legal.imprint')}</LegalLink>
       <span aria-hidden="true"> · </span>
       <LegalLink doc="privacy">{t('legal.privacy')}</LegalLink>
+      {support && !isNative && (
+        <>
+          <span aria-hidden="true"> · </span>
+          <a className="legal-link" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+            {t('legal.support')} ☕
+          </a>
+        </>
+      )}
     </nav>
   );
 }
@@ -109,6 +119,8 @@ function Privacy({ t }: { t: T }) {
       <p>{t('pv.app')}</p>
       <h4 className="lbl">{t('pv.mailH')}</h4>
       <p>{t('pv.mail')}</p>
+      <h4 className="lbl">{t('pv.supportH')}</h4>
+      <p>{t('pv.support')}</p>
       <h4 className="lbl">{t('pv.rightsH')}</h4>
       <p>{t('pv.rights1')}</p>
       <p>

@@ -167,7 +167,7 @@ function Main() {
         {ui.view === 'week' ? <WeekView /> : ui.view === 'year' ? <YearView /> : ui.view === 'setup' ? <SetupView /> : <TodayView />}
       </main>
       <p className="foot">{t('foot')}</p>
-      <LegalLinks />
+      <LegalLinks support />
     </div>
   );
 }

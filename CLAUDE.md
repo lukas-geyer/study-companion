@@ -76,7 +76,9 @@ node scripts/flyer.mjs         # A4 flyer (German) → store/flyer/ (needs: npm 
   - `Panes.tsx`: dialogs.
   - `Onboarding.tsx`: the setup assistant.
   - `Legal.tsx`: imprint and privacy notice (quiet footer links, the legal pane; direct links `#imprint` and
-    `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`.
+    `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`. The main footer also
+    has the Buy Me a Coffee link (`SUPPORT_URL`), on the website only: App Store guideline 3.1.1 forbids it in
+    the iOS app, so keep it behind `!isNative` and out of `store/listing.md`.
   - `parts/common.tsx`: `Box`, input components, and the colour-variable helpers `xv()`/`av()`.
 - `src/native.ts`: everything that differs in the iOS app (`isNative`, share sheet for exported files, local
   notifications). `App.tsx` reschedules all reminders shortly after every plan change; Setup shows the

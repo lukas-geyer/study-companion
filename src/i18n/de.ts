@@ -411,6 +411,7 @@ export const de: Dict = {
   'legal.privacy': 'Datenschutz',
   'legal.kicker': 'Rechtliches',
   'legal.links': 'Impressum und Datenschutz',
+  'legal.support': 'Spendier mir einen Kaffee',
   'legal.updated': 'Stand: Oktober 2026',
   'imp.law': 'Informationen nach § 5 E-Commerce-Gesetz (ECG) und Offenlegung nach § 25 Mediengesetz (MedienG).',
   'imp.owner': 'Medieninhaber und Betreiber',
@@ -448,6 +449,9 @@ export const de: Dict = {
   'pv.mailH': 'Kontakt per E-Mail',
   'pv.mail':
     'Wenn du eine E-Mail schreibst, werden deine Angaben nur zur Beantwortung verwendet und gelöscht, sobald sie nicht mehr gebraucht werden, sofern keine gesetzliche Aufbewahrungspflicht besteht (Art. 6 Abs. 1 lit. f DSGVO). E-Mails werden über iCloud Mail empfangen und gespeichert, einen Dienst der Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland. Apple kann sie auch außerhalb der EU verarbeiten und stützt solche Übermittlungen auf die Standardvertragsklauseln der EU (Art. 46 DSGVO).',
+  'pv.supportH': 'Spenden',
+  'pv.support':
+    'Die Website enthält einen Link zur Seite des Betreibers bei Buy Me a Coffee, über die du das Projekt freiwillig unterstützen kannst. Erst wenn du ihn anklickst, verbindet sich dein Browser mit Buy Me a Coffee (USA); dort gilt dessen Datenschutzerklärung. Die App erfährt nichts darüber, ob oder wie du spendest. Die iPhone-App enthält keinen solchen Link.',
   'pv.rightsH': 'Deine Rechte',
   'pv.rights1':
     'Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO); schreib dafür einfach an die oben genannte E-Mail-Adresse. Deinen Plan selbst verwaltest du auf deinem Gerät; der Betreiber kann ihn weder einsehen noch löschen.',

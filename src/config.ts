@@ -12,3 +12,5 @@ export const IMPRINT = {
   address: ['Ghegagasse 13/32', '8020 Graz', 'Österreich'] as string[],
   email: 'hallo@semestra.at',
 };
+// Voluntary donations: a quiet footer link on the website only. Never shown in the iOS app (App Store guideline 3.1.1).
+export const SUPPORT_URL = 'https://buymeacoffee.com/lukasgeyer';

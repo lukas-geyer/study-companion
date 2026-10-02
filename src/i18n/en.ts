@@ -405,6 +405,7 @@ export const en = {
   'legal.privacy': 'Privacy',
   'legal.kicker': 'Legal',
   'legal.links': 'Imprint and privacy',
+  'legal.support': 'Buy me a coffee',
   'legal.updated': 'Last updated: October 2026',
   'imp.law': 'Information under § 5 of the Austrian E-Commerce Act (ECG) and disclosure under § 25 of the Austrian Media Act (MedienG).',
   'imp.owner': 'Media owner and operator',
@@ -442,6 +443,9 @@ export const en = {
   'pv.mailH': 'Contact by e-mail',
   'pv.mail':
     'If you send an e-mail, your details are used only to answer it and are deleted once they are no longer needed, unless the law requires keeping them (Art. 6(1)(f) GDPR). E-mails are received and stored by iCloud Mail, a service of Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Ireland. Apple may also process them outside the EU; it bases such transfers on the EU standard contractual clauses (Art. 46 GDPR).',
+  'pv.supportH': 'Donations',
+  'pv.support':
+    'The website has a link to the operator’s page on Buy Me a Coffee, where you can support the project voluntarily. Only if you click it does your browser connect to Buy Me a Coffee (USA), and its privacy policy applies there. The app learns nothing about whether or how you donate. The iPhone app contains no such link.',
   'pv.rightsH': 'Your rights',
   'pv.rights1':
     'You have the right of access, rectification, erasure, restriction of processing, data portability and objection (Art. 15–21 GDPR); just write to the e-mail address above. Your plan itself is only on your device: you manage it yourself, and the operator can neither see nor delete it.',
