@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: 22
       - uses: oven-sh/setup-bun@v2
+        with:
+          # an exact version downloads directly; "latest" asks GitHub's API first, which failed once with a 503
+          bun-version: 1.3.14
       - run: npm ci --no-audit --no-fund
       - run: bun run ios
       - name: Build for the iOS simulator
