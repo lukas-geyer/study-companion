@@ -130,7 +130,7 @@ export function TodayView() {
         {st.cards.on && <CardsCard v={v} />}
         <NextExams />
         <section className="card">
-          <div className="h3">{t('changed.title')}</div>
+          <h3 className="h2">{t('changed.title')}</h3>
           <p className="small muted" style={{ margin: '0 0 10px' }}>
             {t('changed.body')}
           </p>
@@ -302,7 +302,7 @@ function CardsCard({ v }: { v: DayView }) {
   const total = planned.length ? planned.reduce((s, m) => s + m.min, 0) : a.reviews + a.learn;
   return (
     <section className="card anki-card">
-      <div className="h3">{t('cards.title')}</div>
+      <h3 className="h2">{t('cards.title')}</h3>
       <div className="big">~{f.dur(total)}</div>
       <ul className="kv">
         <li>
@@ -336,7 +336,7 @@ function NextExams() {
   if (!list.length)
     return (
       <section className="card">
-        <div className="h3">{t('next.title')}</div>
+        <h3 className="h2">{t('next.title')}</h3>
         <p className="small muted" style={{ margin: '0 0 10px' }}>
           {t('next.none')}
         </p>
@@ -347,7 +347,7 @@ function NextExams() {
     );
   return (
     <section className="card">
-      <div className="h3">{t('next.title')}</div>
+      <h3 className="h2">{t('next.title')}</h3>
       <ul className="nx">
         {list.map((x) => {
           const e = examById(data, x.id);

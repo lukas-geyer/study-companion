@@ -1,6 +1,8 @@
 @import './legacy.css';
 
 /* ============ app additions (same Pastell tokens) ============ */
+/* One inner spacing for every card (cards, header, setup assistant, Setup folds) */
+:root{--card-py:20px;--card-px:clamp(16px,4vw,24px)}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* Nothing may ever widen the page: whatever pokes out sideways is clipped (clip, unlike hidden, keeps the sticky
    tab bar working), so the page can't be dragged sideways on phones. */
@@ -26,7 +28,7 @@ body{min-height:100vh;min-height:100dvh}
   clip-path:inset(calc(-9px - env(safe-area-inset-top,0px)) calc(-1 * var(--br,0px)) -1px calc(-1 * var(--bl,0px)) round 0)}
 
 /* flashcard decks (Setup → Flashcards and the setup assistant), laid out like the exam rows */
-.deck-row{display:grid;gap:10px;align-items:end;padding:14px 0;border-top:1px solid var(--line);grid-template-columns:22px repeat(3,minmax(0,1fr)) 38px;
+.deck-row{display:grid;gap:10px;align-items:end;padding:12px 0;border-top:1px solid var(--line);grid-template-columns:22px repeat(3,minmax(0,1fr)) 38px;
   grid-template-areas:"dot name name exam del" ". cards newd rev ."}
 @media (min-width:1080px){.deck-row{grid-template-columns:18px minmax(150px,1fr) 190px 120px 100px 150px 38px;grid-template-areas:"dot name exam cards newd rev del"}}
 .deck-row > .dot{grid-area:dot;align-self:center;justify-self:center}
@@ -50,7 +52,7 @@ body{min-height:100vh;min-height:100dvh}
 
 /* onboarding */
 .ob{padding-top:4px}
-.ob-card{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--raise);padding:26px clamp(18px,4vw,36px) 24px;max-width:880px;margin:0 auto}
+.ob-card{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:20px;background:var(--sheet);box-shadow:var(--raise);padding:var(--card-py) var(--card-px);max-width:880px;margin:0 auto}
 .ob-body{position:relative}
 .ob-h1{margin:10px 0 0;font:300 clamp(30px,6vw,44px)/1.08 var(--f-head);color:var(--ink-strong);letter-spacing:-.015em;text-wrap:balance}
 .ob-h1:focus,.ob .h2:focus{outline:none}
@@ -122,18 +124,18 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 /* Setup sections that fold open (parts/Fold.tsx): heading with an accent bar and a one-line hint, arrow on the right */
 .card.fold{padding:0;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 76px)} /* jumps land below the sticky tab bar */
 .fold-h{margin:0;font:inherit}
-.fold-h button{display:flex;align-items:center;gap:14px;width:100%;padding:18px clamp(14px,3vw,22px);border:0;border-radius:20px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fold-h button{display:flex;align-items:center;gap:14px;width:100%;padding:var(--card-py) var(--card-px);border:0;border-radius:20px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .fold-h button:focus-visible{outline:2px solid var(--acc,var(--lav));outline-offset:-3px}
 .fold-t{position:relative;flex:1;min-width:0;padding-left:14px}
 .fold-t::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:4px;border-radius:4px;background:var(--acc-mid,var(--lav-mid))}
-.fold-title{display:block;font:800 19px/1.25 var(--f-head);color:var(--ink-strong);letter-spacing:-.005em}
+.fold-title{display:block;font:800 21px/1.22 var(--f-head);color:var(--ink-strong);letter-spacing:-.005em}
 .fold-hint{display:block;margin-top:3px;font-size:14.5px;line-height:1.4;color:var(--ink-soft)}
 .fold-chev{position:relative;flex:none;width:34px;height:34px;border-radius:50%;background:var(--sunk);box-shadow:0 0 0 1px var(--line);transition:background-color .15s ease,transform .25s ease}
 .fold-chev::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid var(--ink-soft);border-bottom:2px solid var(--ink-soft);transform:translate(-50%,-70%) rotate(45deg)}
 .fold-h button:hover .fold-chev{background:var(--acc-bg,var(--lav-bg))}
 .fold.open .fold-chev{transform:rotate(180deg);background:var(--acc-bg,var(--lav-bg))}
 .fold.open .fold-h button{border-radius:20px 20px 0 0}
-.fold-body{padding:16px clamp(14px,3vw,22px) 20px;border-top:1px solid var(--line)}
+.fold-body{padding:16px var(--card-px) var(--card-py);border-top:1px solid var(--line)}
 .fold-body > .sub:first-child{margin-top:0}
 
 /* Buttons inside a coloured box or banner take the box's colour instead of black */
@@ -141,8 +143,13 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .box .btn.soft{background:var(--sheet);color:var(--bx-fg,var(--ink-strong));box-shadow:0 0 0 1px var(--bx-ring,var(--line))}
 .ex-banner .btn:not(.soft):not(.ghost){background:var(--lav);color:var(--sheet)}
 
-/* Info pills and chips (under the date on Today, the totals on Week, imported weeks) are labels, not buttons:
-   very pale fill, dashed outline in their colour */
+/* Info pills, chips and stats (under the date on Today, the totals on Week, the header, imported weeks) are labels,
+   not buttons: one size, very pale fill, dashed outline in their colour */
+.stat{padding:1px 10px;font:700 13px/1.5 var(--f-body);letter-spacing:.01em;color:var(--acc,var(--grey));
+  background:var(--acc-bg,var(--grey-bg));background:color-mix(in srgb,var(--acc-bg,var(--grey-bg)) 40%,var(--sheet));border:1px dashed var(--acc-mid,var(--grey-mid))}
+.stat b{color:inherit;font-weight:800}
+/* card titles that aren't the page's main heading use the same h2 look; this gives them room below */
+.card > h3.h2{margin-bottom:14px}
 .chip{padding:1px 10px;font:700 13px/1.5 var(--f-body);letter-spacing:.01em;color:var(--acc,var(--grey));box-shadow:none;
   background:var(--acc-bg,var(--grey-bg));background:color-mix(in srgb,var(--acc-bg,var(--grey-bg)) 40%,var(--sheet));border:1px dashed var(--acc-mid,var(--grey-mid))}
 .chip b{color:inherit;font-weight:800}

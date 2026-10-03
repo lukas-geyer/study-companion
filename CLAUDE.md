@@ -134,7 +134,9 @@ are in `src/styles/legacy.css`: `:root` plus two identical dark blocks (media qu
   - The fonts are self-hosted from `public/fonts` under the OFL. Source Sans 3 has a Reserved Font Name,
     so never subset, convert or rename the font files.
 - **Cards and charts:**
-  - Cards are white on #f7f6fb, with a 20 px radius, a #ebe8f2 hairline and a soft drop shadow (`--raise`).
+  - Cards are white on #f7f6fb, with a 20 px radius, a #ebe8f2 hairline and a soft drop shadow (`--raise`). Every
+    card (header, setup assistant, Setup folds too) uses the same inner spacing `--card-py`/`--card-px` and one
+    heading style (`.h2`); info labels (`.pill`, `.chip`, `.stat`) share one look. Keep new elements on these.
   - Charts use one series in #c3bce0 (highlighted #8b80c4).
   - The "today" line is #c4517f.
 - **Checks:** check every visual change in light mode, dark mode and a narrow phone layout (≤ 640 px).
