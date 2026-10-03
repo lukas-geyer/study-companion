@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { DATA_VERSION } from '../src/config';
 import { fromBackup, normalize, toBackup } from '../src/core/backup';
-import { cardsFor } from '../src/core/cards';
+import { cardsFor, REVIEW_MIN } from '../src/core/cards';
 import { dn, dowOf, isoOf, kwOf, monOf, toMin, weekKey } from '../src/core/dates';
 import { makeDeck, makeExam, newAppData } from '../src/core/defaults';
 import { exampleData } from '../src/core/example';
@@ -175,7 +175,7 @@ describe('backup', () => {
       exams: [{ id: 'fp1', name: 'X', date: '2026-11-05', size: 'L', hours: 60, weeks: 8, color: 'lav' }],
     });
     expect(legacy.settings.cards.on).toBe(true);
-    expect(legacy.decks).toEqual([{ id: 'deck-general', name: '', cards: 0, newPerDay: 12, reviews: 25, exam: '' }]);
+    expect(legacy.decks).toEqual([{ id: 'deck-general', name: '', cards: 0, newPerDay: 12, due: 33, exam: '' }]);
     expect(legacy.settings.template['1'][0]).toEqual({ from: '08:15', to: '12:00' });
     expect(() => fromBackup('nope')).toThrow();
     expect(makeExam([]).color).toBe('lav');
@@ -200,10 +200,10 @@ describe('flashcard decks', () => {
   });
 
   test('decks without an exam keep their own pace, end when done and slow down before exams', () => {
-    const deck = makeDeck({ cards: 50, newPerDay: 10, reviews: 15 });
+    const deck = makeDeck({ cards: 50, newPerDay: 10, due: 20 });
     const far = cardsFor(st(), [deck], T, [], T);
     expect(far.decks[0].per).toBe(10);
-    expect(far.reviews).toBe(Math.round(15 + 1.2 * 10));
+    expect(far.reviews).toBe(Math.round(20 * REVIEW_MIN + 1.2 * 10)); // 20 due cards ≈ 15 min, plus reviews from new cards
     expect(cardsFor(st(), [deck], T + 5, [], T).decks).toEqual([]); // 50 cards at 10 a day: done after 5 days
     const open = makeDeck({ newPerDay: 20 });
     expect(cardsFor(st(), [open], T + 20, [exam], T)).toMatchObject({ throttled: 'halved', newTotal: 10 });
@@ -230,12 +230,19 @@ describe('flashcard decks', () => {
       ],
     });
     expect(v2.decks).toEqual([
-      { id: 'deck-general', name: 'Allgemein', cards: 0, newPerDay: 10, reviews: 20, exam: '' },
-      { id: 'deck-ex-pm4', name: 'PM IV', cards: 1200, newPerDay: 0, reviews: 0, exam: 'ex-pm4' },
+      { id: 'deck-general', name: 'Allgemein', cards: 0, newPerDay: 10, due: 27, exam: '' },
+      { id: 'deck-ex-pm4', name: 'PM IV', cards: 1200, newPerDay: 0, due: 0, exam: 'ex-pm4' },
     ]);
     expect(v2.settings.cards).toEqual({ on: true, throttle: true, override: 0 });
     expect('cards' in v2.exams[0]).toBe(false);
     expect(normalize({ settings: { cards: { on: false } } }).decks).toEqual([]);
+  });
+
+  test('review minutes saved by v3 become due cards (v3 → v4)', () => {
+    const v3 = normalize({ v: 3, exams: [], decks: [{ id: 'd1', name: 'Anatomie', newPerDay: 10, reviews: 30 }] });
+    expect(v3.decks[0].due).toBe(40); // 30 minutes at 45 seconds a card
+    expect('reviews' in v3.decks[0]).toBe(false);
+    expect(normalize({ v: 4, decks: [{ id: 'd2', due: 120 }] }).decks[0].due).toBe(120);
   });
 });
 

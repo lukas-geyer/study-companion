@@ -295,11 +295,11 @@ export const en = {
   'deck.noExam': 'No exam',
   'deck.cards': 'New cards left',
   'deck.newPerDay': 'New / day',
-  'deck.reviews': 'Reviews (min/day)',
+  'deck.reviews': 'Reviews due / day',
   'deck.remove': (d: string) => `Remove ${d}`,
   'deck.removeQ': (d: string) => `Remove the deck ${d}?`,
   'deck.help':
-    '<b>New cards left</b>: cards in the deck you haven’t studied yet. Linked to an exam, the deck is spread automatically so it’s done a week before the exam; otherwise set <b>New / day</b> yourself. <b>Reviews</b>: minutes the deck’s reviews take you each day now (0 for a new deck).',
+    '<b>New cards left</b>: cards in the deck you haven’t studied yet. Linked to an exam, the deck is spread automatically so it’s done a week before the exam; otherwise set <b>New / day</b> yourself. <b>Reviews due</b>: how many cards Anki shows as due in this deck on a normal day (the “Due” number in the deck list; 0 for a new deck). The plan counts about 45 seconds per card.',
   'fc.override': 'Your real flashcard time (min/day, 0 = estimate)',
   'fc.start': 'New cards start on',
   'fc.throttle': 'Decks without an exam: halve new cards 4 weeks before an exam, pause them in the last 2 weeks',

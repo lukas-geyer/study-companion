@@ -3,6 +3,9 @@
 import { num } from './dates';
 import type { DatedExam, Deck, Settings } from './types';
 
+/** Minutes one review card takes on average (between half a minute and a minute). */
+export const REVIEW_MIN = 0.75;
+
 export interface CardsDay {
   on: boolean;
   /** Decks with new cards on this day (per = 0 in an exam deck's last week). exam: the linked, dated exam. */
@@ -43,7 +46,7 @@ export function cardsFor(st: Settings, decks: Deck[], n: number, dated: DatedExa
   let load = 0;
   let reviews = 0;
   for (const d of decks) {
-    reviews += Math.max(0, num(d.reviews));
+    reviews += Math.max(0, num(d.due)) * REVIEW_MIN;
     const ex = d.exam ? dated.find((e) => e.id === d.exam) || null : null;
     if (d.exam && !ex) {
       // linked to an exam without a date (yet): no deadline, so only a fixed rate applies

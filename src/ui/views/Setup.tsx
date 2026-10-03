@@ -600,7 +600,7 @@ function DeckRow({ d, k, confirm, setConfirm }: { d: Deck; k: number; confirm: b
         />
       </Fld>
       <Fld id={`${id}-rev`} label={t('deck.reviews')} className="f-rev">
-        <CommitInput id={`${id}-rev`} type="number" min={0} max={240} step={5} value={d.reviews || ''} placeholder="0" onCommit={(v) => up({ reviews: Math.min(240, Math.max(0, numOr(v))) })} />
+        <CommitInput id={`${id}-rev`} type="number" min={0} max={2000} step={1} value={d.due || ''} placeholder="0" onCommit={(v) => up({ due: Math.min(2000, Math.max(0, Math.round(numOr(v)))) })} />
       </Fld>
       <button className="iconbtn del" onClick={() => setConfirm(d.id)} aria-label={t('deck.remove', label)}>
         ×

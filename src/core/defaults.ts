@@ -74,7 +74,7 @@ export function makeExam(existing: Exam[], init: Partial<Exam> = {}): Exam {
 }
 
 export function makeDeck(init: Partial<Deck> = {}): Deck {
-  return { id: newId('deck'), name: '', cards: 0, newPerDay: 0, reviews: 0, exam: '', ...init };
+  return { id: newId('deck'), name: '', cards: 0, newPerDay: 0, due: 0, exam: '', ...init };
 }
 
 export function newAppData(region: Region = 'none'): AppData {

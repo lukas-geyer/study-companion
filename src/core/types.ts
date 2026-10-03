@@ -81,8 +81,8 @@ export interface Deck {
   cards: number;
   /** New cards per day; 0 = automatic (finish one week before the linked exam). */
   newPerDay: number;
-  /** Minutes of reviews this deck already takes per day. */
-  reviews: number;
+  /** Reviews due per day right now, as Anki shows them (cards, not minutes; see REVIEW_MIN). */
+  due: number;
   /** Linked exam id, or '' for a deck without an exam deadline. */
   exam: string;
 }

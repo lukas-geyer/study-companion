@@ -44,7 +44,7 @@ export function exampleData(lang: Lang, region: Region, T: number): AppData {
   add({ id: 'ex-bioch', name: de ? 'Biochemie' : 'Biochemistry', short: 'BIOCH', date: '', size: 'M', hours: 40, weeks: 5 });
   d.exams = exams;
   d.decks = [
-    makeDeck({ id: 'deck-anatomy', name: de ? 'Anatomie' : 'Anatomy', newPerDay: 10, reviews: 20 }),
+    makeDeck({ id: 'deck-anatomy', name: de ? 'Anatomie' : 'Anatomy', newPerDay: 10, due: 25 }),
     makeDeck({ id: 'deck-pm4', name: 'PM IV', cards: 1200, exam: 'ex-pm4' }),
   ];
   st.courses[lab].exam = 'ex-pm4';

@@ -301,11 +301,11 @@ export const de: Dict = {
   'deck.noExam': 'Keine Prüfung',
   'deck.cards': 'Neue Karten offen',
   'deck.newPerDay': 'Neu / Tag',
-  'deck.reviews': 'Wiederholungen (min/Tag)',
+  'deck.reviews': 'Fällige Wiederholungen / Tag',
   'deck.remove': (d: string) => `${d} entfernen`,
   'deck.removeQ': (d: string) => `Den Stapel ${d} entfernen?`,
   'deck.help':
-    '<b>Neue Karten offen</b>: Karten im Stapel, die du noch nicht gelernt hast. Gehört der Stapel zu einer Prüfung, verteilt der Plan sie automatisch, sodass er eine Woche vor der Prüfung fertig ist; sonst legst du <b>Neu / Tag</b> selbst fest. <b>Wiederholungen</b>: wie viele Minuten die Wiederholungen dieses Stapels dich jetzt täglich kosten (0 bei einem neuen Stapel).',
+    '<b>Neue Karten offen</b>: Karten im Stapel, die du noch nicht gelernt hast. Gehört der Stapel zu einer Prüfung, verteilt der Plan sie automatisch, sodass er eine Woche vor der Prüfung fertig ist; sonst legst du <b>Neu / Tag</b> selbst fest. <b>Fällige Wiederholungen</b>: wie viele Karten Anki in diesem Stapel an einem normalen Tag als fällig anzeigt (die Zahl unter „Fällig“ in der Stapelübersicht; 0 bei einem neuen Stapel). Der Plan rechnet mit etwa 45 Sekunden pro Karte.',
   'fc.override': 'Deine echte Karteikarten-Zeit (min/Tag, 0 = schätzen)',
   'fc.start': 'Neue Karten ab',
   'fc.throttle': 'Stapel ohne Prüfung: neue Karten 4 Wochen vor einer Prüfung halbieren, in den letzten 2 Wochen pausieren',

@@ -1,6 +1,7 @@
 // Backups (JSON) and normalising any stored/imported data into the current shape.
 import { APP_ID, DATA_VERSION } from '../config';
 import { isISO, num } from './dates';
+import { REVIEW_MIN } from './cards';
 import { defaultSettings, PALETTE, SIZES } from './defaults';
 import type { AppData, Deck, DoneDoc, Exam, PaletteKey, Settings, Size, TplSlot, WeekDoc } from './types';
 
@@ -70,7 +71,8 @@ function normDeck(raw: unknown, i: number, exams: Exam[]): Deck | null {
     name: String(raw.name || ''),
     cards: Math.max(0, Math.round(num(raw.cards))),
     newPerDay: Math.max(0, Math.round(num(raw.newPerDay))),
-    reviews: Math.max(0, num(raw.reviews)),
+    // v3 stored review minutes; since v4 it's the number of due cards
+    due: Math.max(0, Math.round(raw.due !== undefined ? num(raw.due) : num(raw.reviews) / REVIEW_MIN)),
     exam: exams.some((e) => e.id === exam) ? exam : '',
   };
 }
@@ -81,7 +83,7 @@ function legacyDecks(r: Json, rawExams: unknown[]): unknown[] {
   const c = isObj(st.cards) ? st.cards : isObj(st.anki) ? { on: true, ...st.anki } : null;
   const out: Json[] = [];
   if (c && (c.on || num(c.generalNew) > 0 || c.generalName))
-    out.push({ id: 'deck-general', name: String(c.generalName || ''), newPerDay: num(c.generalNew), reviews: num(c.reviewBase, 20) });
+    out.push({ id: 'deck-general', name: String(c.generalName || ''), newPerDay: num(c.generalNew), due: Math.round(num(c.reviewBase, 20) / REVIEW_MIN) });
   rawExams.forEach((e, i) => {
     if (isObj(e) && num(e.cards) > 0) out.push({ id: `deck-${String(e.id || i + 1)}`, name: String(e.short || e.name || ''), cards: e.cards, newPerDay: e.newPerDay, exam: String(e.id || `ex-${i + 1}`) });
   });

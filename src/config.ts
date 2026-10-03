@@ -5,7 +5,7 @@ export const APP_VERSION = '0.1.0';
 // Storage keys (IndexedDB database / localStorage key). Changing them loses existing data.
 export const DB_NAME = 'semestra';
 export const STORE_KEY = 'app-data';
-export const DATA_VERSION = 3; // 2: settings.reminders · 3: flashcard decks as a list (AppData.decks), migrated in normalize
+export const DATA_VERSION = 4; // 2: settings.reminders · 3: flashcard decks as a list (AppData.decks) · 4: deck reviews as due cards (Deck.due); all migrated in normalize
 // Imprint and privacy contact (Austria: § 5 ECG, § 25 MedienG; GDPR Art. 13), shown under Imprint and Privacy.
 export const IMPRINT = {
   name: 'Lukas Geyer',
