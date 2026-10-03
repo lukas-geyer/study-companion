@@ -70,11 +70,11 @@ export interface Plan {
   last: number;
 }
 
-export const datedExams = (data: AppData): DatedExam[] =>
+const datedExams = (data: AppData): DatedExam[] =>
   data.exams.filter((e) => isISO(e.date)).map((e) => ({ ...e, dn: dn(e.date) }));
 
 /** Day from which exam flashcard decks are spread: the setting, else the day the data was created. */
-export function cardsStart(data: AppData): number {
+function cardsStart(data: AppData): number {
   const st = data.settings;
   if (isISO(st.startDate)) return dn(st.startDate);
   return todayDn(new Date(data.meta?.createdAt || Date.now()));

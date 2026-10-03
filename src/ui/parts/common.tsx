@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import type { ExamStat } from '../../core/planner';
 import type { Exam, PaletteKey } from '../../core/types';
 import type { T } from '../../i18n';
+import { useCtx } from '../ctx';
 
 export const esc = (s: unknown): string =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
@@ -34,6 +35,47 @@ export function Box({ kind, label, children }: { kind: 'hinweis' | 'lerntipp' | 
     <div className={`box box-${kind}`}>
       <div className="box-label">{label}</div>
       <div className="box-body">{children}</div>
+    </div>
+  );
+}
+
+/** Heading of Today and Week: kicker and title on the left, ‹ / back-to-now / › on the right. */
+export function ViewHead(p: { kicker: ReactNode; title: string; nowLabel: string; prevLabel: string; nextLabel: string; onPrev: () => void; onNow: () => void; onNext: () => void }) {
+  return (
+    <div className="viewhead">
+      <div>
+        <div className="kicker">{p.kicker}</div>
+        <h2 className="h2">{p.title}</h2>
+      </div>
+      <div className="navgrp">
+        <button className="iconbtn" onClick={p.onPrev} aria-label={p.prevLabel}>
+          ‹
+        </button>
+        <button className="btn soft sm" onClick={p.onNow}>
+          {p.nowLabel}
+        </button>
+        <button className="iconbtn" onClick={p.onNext} aria-label={p.nextLabel}>
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** An inline "are you sure?" bar: a warning button that confirms, and Keep. */
+export function Confirm({ q, yes, onYes, onNo }: { q: string; yes: string; onYes: () => void; onNo: () => void }) {
+  const { t } = useCtx().i18n;
+  return (
+    <div className="confirm">
+      <span>{q}</span>
+      <span className="row-actions" style={{ margin: 0 }}>
+        <button className="btn warn sm" onClick={onYes}>
+          {yes}
+        </button>
+        <button className="btn soft sm" onClick={onNo}>
+          {t('keep')}
+        </button>
+      </span>
     </div>
   );
 }

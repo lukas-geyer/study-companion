@@ -11,7 +11,7 @@ import { isNative, shareFile } from '../../native';
 import { useCtx } from '../ctx';
 import { Fold } from '../parts/Fold';
 import { LegalLink } from '../Legal';
-import { Toggle } from '../parts/common';
+import { Confirm, Toggle } from '../parts/common';
 import { modTip, modTitle } from '../parts/labels';
 
 const FILE_PREFIX = APP_NAME.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -21,7 +21,7 @@ type ClaudeWin = { claude?: { use?: (n: string) => Promise<unknown> } };
 
 /** Save a generated file: the share sheet in the iOS app, the Claude viewer's download prompt when running there,
  *  else a normal download. */
-export async function download(filename: string, text: string, type: string): Promise<'saved' | 'declined' | 'unsupported' | 'failed'> {
+async function download(filename: string, text: string, type: string): Promise<'saved' | 'declined' | 'unsupported' | 'failed'> {
   if (isNative) return shareFile(filename, text).catch(() => 'failed' as const);
   const w = window as unknown as ClaudeWin;
   if (w.claude?.use && window.top !== window.self) {
@@ -94,19 +94,7 @@ export function DataSection() {
     void download(`${FILE_PREFIX}-${isoOf(T)}.ics`, text, 'text/calendar').then((r) => report(r, 'toast.exported'));
   };
 
-  const confirmBox = (q: string, yes: string, onYes: () => void) => (
-    <div className="confirm">
-      <span>{q}</span>
-      <span className="row-actions" style={{ margin: 0 }}>
-        <button className="btn warn sm" onClick={onYes}>
-          {yes}
-        </button>
-        <button className="btn soft sm" onClick={() => setConfirm(null)}>
-          {t('keep')}
-        </button>
-      </span>
-    </div>
-  );
+  const confirmBox = (q: string, yes: string, onYes: () => void) => <Confirm q={q} yes={yes} onYes={onYes} onNo={() => setConfirm(null)} />;
 
   return (
     <Fold id="sec-data" color="lilac" title={t('data.title')} hint={t('fold.data')}>

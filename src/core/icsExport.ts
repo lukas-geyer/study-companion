@@ -3,7 +3,8 @@ import { APP_ID } from '../config';
 import { hm, isoOf, pad } from './dates';
 import type { Mod, Plan } from './planner';
 
-const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+/** Escapes text for an iCalendar property value (RFC 5545 §3.3.11). */
+const icsText = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
 
 /** Fold long lines (RFC 5545 asks for ≤ 75 octets; 60 characters keeps multi-byte text safe). */
 function fold(line: string): string {
@@ -27,7 +28,7 @@ export interface ExportOptions {
 export function planToICS(plan: Plan, o: ExportOptions): string {
   const now = new Date();
   const dtstamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}00Z`;
-  const out = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${APP_ID}//planner//EN`, 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${esc(o.calendarName)}`];
+  const out = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${APP_ID}//planner//EN`, 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${icsText(o.calendarName)}`];
   for (let n = Math.max(o.from, plan.T); n <= Math.min(o.to, plan.last); n++) {
     const d = plan.days.get(n);
     if (!d) continue;
@@ -41,8 +42,8 @@ export function planToICS(plan: Plan, o: ExportOptions): string {
         `DTSTAMP:${dtstamp}`,
         `DTSTART:${stamp(iso, m.s)}`,
         `DTEND:${stamp(iso, m.e)}`,
-        fold(`SUMMARY:${esc(o.title(m))}`),
-        fold(`DESCRIPTION:${esc(o.description(m))}`),
+        fold(`SUMMARY:${icsText(o.title(m))}`),
+        fold(`DESCRIPTION:${icsText(o.description(m))}`),
         'TRANSP:OPAQUE',
         'END:VEVENT',
       );

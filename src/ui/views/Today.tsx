@@ -1,21 +1,19 @@
 import type { ReactElement } from 'react';
 import { dn, hm, isoOf, kwOf, nowMin, num, toMin } from '../../core/dates';
+import { GLYPH } from '../../core/defaults';
 import { cardsAt, dayView, type DayView, type Mod } from '../../core/planner';
 import { displayClasses, type DisplayClass } from '../../core/timetable';
-import { toggleDone } from '../../state/actions';
+import type { T as Tr } from '../../i18n';
+import { gotoSetup, toggleDone } from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
-import { av, both, Box, Dot, exLabel, exName, StatusPill, xv } from '../parts/common';
+import { av, both, Box, Dot, exLabel, exName, StatusPill, ViewHead, xv } from '../parts/common';
 import { clsName, deckLabel, examById, modClass, modTip, modTitle } from '../parts/labels';
-import { GLYPH } from '../../core/defaults';
 
-export function relLabel(n: number, T: number, t: ReturnType<typeof useCtx>['i18n']['t']): string {
+/** "today", "tomorrow", "in 3 days" … for the kicker above the date. */
+function relLabel(n: number, T: number, t: Tr): string {
   const d = n - T;
   return d === 0 ? t('rel.today') : d === 1 ? t('rel.tomorrow') : d === -1 ? t('rel.yesterday') : d > 0 ? t('rel.in', d) : t('rel.ago', -d);
-}
-
-export function gotoSetup(anchor: string): void {
-  setUI({ view: 'setup', anchor });
 }
 
 export function TodayView() {
@@ -42,25 +40,16 @@ export function TodayView() {
   return (
     <div className="today">
       <section className="card">
-        <div className="viewhead">
-          <div>
-            <div className="kicker">
-              {t('kw', kwOf(n))} · {relLabel(n, T, t)}
-            </div>
-            <h2 className="h2">{f.long(n)}</h2>
-          </div>
-          <div className="navgrp">
-            <button className="iconbtn" onClick={() => setUI({ dayN: n - 1 })} aria-label={t('nav.prevDay')}>
-              ‹
-            </button>
-            <button className="btn soft sm" onClick={() => setUI({ dayN: T })}>
-              {t('nav.today')}
-            </button>
-            <button className="iconbtn" onClick={() => setUI({ dayN: n + 1 })} aria-label={t('nav.nextDay')}>
-              ›
-            </button>
-          </div>
-        </div>
+        <ViewHead
+          kicker={`${t('kw', kwOf(n))} · ${relLabel(n, T, t)}`}
+          title={f.long(n)}
+          nowLabel={t('nav.today')}
+          prevLabel={t('nav.prevDay')}
+          nextLabel={t('nav.nextDay')}
+          onPrev={() => setUI({ dayN: n - 1 })}
+          onNow={() => setUI({ dayN: T })}
+          onNext={() => setUI({ dayN: n + 1 })}
+        />
         <div className="pills">
           <span className="pill">{typeLbl}</span>
           {v.info.classMin > 0 && <span className="pill">{t('pill.classes', f.dur(v.info.classMin))}</span>}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react';
 import { APP_NAME } from '../config';
 import { dn, hm, isISO, isoOf, toMin } from '../core/dates';
 import { GLYPH } from '../core/defaults';
@@ -117,6 +117,19 @@ function useSwipeDown(sheet: { current: HTMLElement | null }, scrim: { current: 
   }, []);
 }
 
+/** The head of every dialog: an icon tile (in the exam's colour for exam blocks), a kicker line and the title. */
+function PaneHead({ ico, kicker, title, exam, style }: { ico: string; kicker: string; title: string; exam?: boolean; style?: CSSProperties }) {
+  return (
+    <div className="pane-head" style={style}>
+      <span className={`pane-ico${exam ? ' ex' : ''}`}>{ico}</span>
+      <div>
+        <div className="kicker">{kicker}</div>
+        <h3 className="pane-title">{title}</h3>
+      </div>
+    </div>
+  );
+}
+
 export function Panes() {
   const { ui } = useCtx();
   const p = ui.pane;
@@ -141,15 +154,7 @@ function ModPane({ id, n }: { id: string; n: number }) {
   const [lead, tip] = modTip(m, n, data, plan, t);
   return (
     <Shell label={title}>
-      <div className="pane-head" style={xv(e)}>
-        <span className={`pane-ico${modClass(m, data) === 'ex' ? ' ex' : ''}`}>{GLYPH[m.type] || '·'}</span>
-        <div>
-          <div className="kicker">
-            {f.day(n)} · {when} · {f.dur(m.min)}
-          </div>
-          <h3 className="pane-title">{title}</h3>
-        </div>
-      </div>
+      <PaneHead ico={GLYPH[m.type] || '·'} exam={modClass(m, data) === 'ex'} style={xv(e)} kicker={`${f.day(n)} · ${when} · ${f.dur(m.min)}`} title={title} />
       <p>
         {lead && <b>{lead} </b>}
         {tip}
@@ -188,15 +193,7 @@ function ClsPane() {
   const title = b.est ? t('cls.est') : `${b.t || t('class.fallback')}${c.name ? ` · ${c.name}` : ''}`;
   return (
     <Shell label={title}>
-      <div className="pane-head">
-        <span className="pane-ico">▦</span>
-        <div>
-          <div className="kicker">
-            {f.day(n)} · {bits.join(' · ')}
-          </div>
-          <h3 className="pane-title">{title}</h3>
-        </div>
-      </div>
+      <PaneHead ico="▦" kicker={`${f.day(n)} · ${bits.join(' · ')}`} title={title} />
       {b.est ? (
         <p>{t('cls.estBody')}</p>
       ) : b.m ? (
@@ -258,13 +255,7 @@ function LogPane() {
   };
   return (
     <Shell label={t('log.title')}>
-      <div className="pane-head">
-        <span className="pane-ico">+</span>
-        <div>
-          <div className="kicker">{t('log.kicker')}</div>
-          <h3 className="pane-title">{t('log.title')}</h3>
-        </div>
-      </div>
+      <PaneHead ico="+" kicker={t('log.kicker')} title={t('log.title')} />
       <form className="form" onSubmit={submit}>
         <Fld id="lg-exam" label={t('log.exam')}>
           <select id="lg-exam" value={exam} onChange={(ev) => setExam(ev.target.value)}>
@@ -318,13 +309,7 @@ function ApptPane() {
   };
   return (
     <Shell label={t('appt.title')}>
-      <div className="pane-head">
-        <span className="pane-ico">▦</span>
-        <div>
-          <div className="kicker">{t('appt.kicker')}</div>
-          <h3 className="pane-title">{t('appt.title')}</h3>
-        </div>
-      </div>
+      <PaneHead ico="▦" kicker={t('appt.kicker')} title={t('appt.title')} />
       <form className="form" onSubmit={submit}>
         <Fld id="ap-title" label={t('appt.name')}>
           <input id="ap-title" type="text" maxLength={40} required placeholder={t('appt.namePh')} value={title} onChange={(ev) => setTitle(ev.target.value)} autoFocus />
@@ -356,22 +341,13 @@ function ApptPane() {
 function LegalPane({ doc }: { doc: LegalDoc }) {
   const { i18n } = useCtx();
   const { t } = i18n;
-  const head = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    head.current?.closest('.pane')?.scrollTo({ top: 0 });
+    document.querySelector('.pane')?.scrollTo({ top: 0 }); // switching between imprint and privacy starts at the top
   }, [doc]);
   const title = doc === 'imprint' ? t('legal.imprint') : t('pv.title');
   return (
     <Shell label={title} focus='[aria-selected="true"]'>
-      <div className="pane-head" ref={head}>
-        <span className="pane-ico">§</span>
-        <div>
-          <div className="kicker">
-            {APP_NAME} · {t('legal.kicker')}
-          </div>
-          <h3 className="pane-title">{title}</h3>
-        </div>
-      </div>
+      <PaneHead ico="§" kicker={`${APP_NAME} · ${t('legal.kicker')}`} title={title} />
       <div className="tabs legal-tabs" role="tablist" aria-label={t('legal.links')}>
         {(['imprint', 'privacy'] as const).map((d) => (
           <button key={d} className="tab" role="tab" aria-selected={d === doc} aria-controls="legal-doc" onClick={() => setUI({ pane: { k: 'legal', doc: d } })}>

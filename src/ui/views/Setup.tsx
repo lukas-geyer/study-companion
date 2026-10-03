@@ -9,7 +9,7 @@ import { askNotifications, isNative, notificationsState, type NotifState } from 
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
-import { av, Box, CommitInput, esc, exFull, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
+import { av, Box, CommitInput, Confirm, esc, exFull, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
 import { Fold, setFold } from '../parts/Fold';
 import { deckLabel, examById } from '../parts/labels';
 import { DataSection } from './SetupData';
@@ -134,23 +134,15 @@ function ExamRow({ e, k, confirm, setConfirm }: { e: Exam; k: number; confirm: b
         ×
       </button>
       {confirm && (
-        <div className="confirm">
-          <span>{t('ex.removeQ', label)}</span>
-          <span className="row-actions" style={{ margin: 0 }}>
-            <button
-              className="btn warn sm"
-              onClick={() => {
-                setConfirm(null);
-                A.deleteExam(e.id);
-              }}
-            >
-              {t('ex.removeYes')}
-            </button>
-            <button className="btn soft sm" onClick={() => setConfirm(null)}>
-              {t('keep')}
-            </button>
-          </span>
-        </div>
+        <Confirm
+          q={t('ex.removeQ', label)}
+          yes={t('ex.removeYes')}
+          onYes={() => {
+            setConfirm(null);
+            A.deleteExam(e.id);
+          }}
+          onNo={() => setConfirm(null)}
+        />
       )}
     </div>
   );
@@ -374,10 +366,14 @@ function TimetableSection() {
 }
 
 // ---------------------------------------------------------------- rhythm
-function NumSet({ path, label, min, max, step }: { path: string; label: string; min: number; max: number; step: number }) {
+/** A setting by its dotted path (as A.setSetting takes it), and the field id derived from that path. */
+function useSetting(path: string): [unknown, string] {
   const { data } = useCtx();
-  const id = 'set-' + path.replace(/\./g, '-');
   const v = path.split('.').reduce<unknown>((a, k) => (a == null ? undefined : (a as Record<string, unknown>)[k]), data.settings);
+  return [v, 'set-' + path.replace(/\./g, '-')];
+}
+function NumSet({ path, label, min, max, step }: { path: string; label: string; min: number; max: number; step: number }) {
+  const [v, id] = useSetting(path);
   return (
     <Fld id={id} label={label}>
       <CommitInput id={id} type="number" min={min} max={max} step={step} value={num(v)} onCommit={(x) => A.setSetting(path, Math.min(max, Math.max(min, numOr(x, min))))} />
@@ -385,9 +381,7 @@ function NumSet({ path, label, min, max, step }: { path: string; label: string; 
   );
 }
 function TimeSet({ path, label }: { path: string; label: string }) {
-  const { data } = useCtx();
-  const id = 'set-' + path.replace(/\./g, '-');
-  const v = path.split('.').reduce<unknown>((a, k) => (a == null ? undefined : (a as Record<string, unknown>)[k]), data.settings);
+  const [v, id] = useSetting(path);
   return (
     <Fld id={id} label={label}>
       <PickInput id={id} type="time" value={String(v || '')} onCommit={(x) => A.setSetting(path, x)} />
@@ -395,9 +389,9 @@ function TimeSet({ path, label }: { path: string; label: string }) {
   );
 }
 function DowSet({ path, label, allowNone }: { path: string; label: string; allowNone?: boolean }) {
-  const { data, i18n } = useCtx();
-  const id = 'set-' + path.replace(/\./g, '-');
-  const v = num(path.split('.').reduce<unknown>((a, k) => (a == null ? undefined : (a as Record<string, unknown>)[k]), data.settings), 0);
+  const { i18n } = useCtx();
+  const [raw, id] = useSetting(path);
+  const v = num(raw, 0);
   return (
     <Fld id={id} label={label}>
       <select id={id} value={v} onChange={(ev) => A.setSetting(path, Number(ev.target.value))}>
@@ -412,7 +406,7 @@ function DowSet({ path, label, allowNone }: { path: string; label: string; allow
   );
 }
 
-export function Grp({ label, children, first }: { label: string; children: ReactNode; first?: boolean }) {
+function Grp({ label, children, first }: { label: string; children: ReactNode; first?: boolean }) {
   return (
     <div className="grp" style={first ? { border: 0, paddingTop: 0, marginTop: 0 } : undefined}>
       <span className="lbl">{label}</span>
@@ -499,7 +493,7 @@ export function CardsFields({ compact }: { compact?: boolean }) {
   const c = data.settings.cards;
   const turn = (on: boolean) => {
     A.setSetting('cards.on', on);
-    if (on && !data.decks.length) addDeck(); // saying yes opens the first deck right away
+    if (on && !data.decks.length) addDeckAndFocus(); // saying yes opens the first deck right away
   };
   return (
     <>
@@ -531,7 +525,8 @@ export function CardsFields({ compact }: { compact?: boolean }) {
 }
 
 const deckDom = (id: string) => `dk-${id.replace(/[^A-Za-z0-9_-]/g, '_')}`;
-function addDeck() {
+/** Adds a deck and puts the cursor in its name field. */
+function addDeckAndFocus() {
   const id = A.addDeck();
   setTimeout(() => document.getElementById(`${deckDom(id)}-name`)?.focus(), 60);
 }
@@ -551,7 +546,7 @@ function DeckList() {
       </div>
       {data.decks.length < MAX_DECKS && (
         <div className="row-actions">
-          <button className="btn soft" onClick={addDeck}>
+          <button className="btn soft" onClick={addDeckAndFocus}>
             {t('deck.add')}
           </button>
         </div>
@@ -606,23 +601,15 @@ function DeckRow({ d, k, confirm, setConfirm }: { d: Deck; k: number; confirm: b
         ×
       </button>
       {confirm && (
-        <div className="confirm">
-          <span>{t('deck.removeQ', label)}</span>
-          <span className="row-actions" style={{ margin: 0 }}>
-            <button
-              className="btn warn sm"
-              onClick={() => {
-                setConfirm(null);
-                A.deleteDeck(d.id);
-              }}
-            >
-              {t('ex.removeYes')}
-            </button>
-            <button className="btn soft sm" onClick={() => setConfirm(null)}>
-              {t('keep')}
-            </button>
-          </span>
-        </div>
+        <Confirm
+          q={t('deck.removeQ', label)}
+          yes={t('ex.removeYes')}
+          onYes={() => {
+            setConfirm(null);
+            A.deleteDeck(d.id);
+          }}
+          onNo={() => setConfirm(null)}
+        />
       )}
     </div>
   );

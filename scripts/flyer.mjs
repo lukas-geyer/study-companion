@@ -2,41 +2,23 @@
 // to semestra.at and tear-off strips.  Output: store/flyer/semestra-flyer-a4.pdf (print) and .png (preview).
 //
 //   bun run build && npm i --no-save playwright-core qrcode && node scripts/flyer.mjs
-//
-// Needs a Chromium; set CHROMIUM=/path/to/chrome if it isn't at /opt/pw-browsers/chromium (Claude Code cloud).
-import { createServer } from 'node:http';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { extname, join } from 'node:path';
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { chromium } from 'playwright-core';
 import QRCode from 'qrcode';
+import { asIosApp, launch, pastelCss, root, serveDist } from './lib.mjs';
 
-const root = join(import.meta.dirname, '..');
-const dist = join(root, 'dist');
 const out = join(root, 'store', 'flyer');
 const URL_ = 'https://semestra.at';
 await mkdir(out, { recursive: true });
 
 // ---------------------------------------------------------------- the app screen (example plan, German, fixed date)
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.ttf': 'font/ttf', '.png': 'image/png', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json' };
-const server = createServer(async (req, res) => {
-  const p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  try {
-    res.writeHead(200, { 'content-type': types[extname(p)] || 'text/html' }).end(await readFile(join(dist, p.endsWith('/') ? p + 'index.html' : p)));
-  } catch {
-    res.writeHead(404).end();
-  }
-});
-await new Promise((r) => server.listen(0, '127.0.0.1', r));
-const base = `http://127.0.0.1:${server.address().port}/`;
-const env = { ...process.env, LANG: 'de_AT.UTF-8', LC_ALL: 'de_AT.UTF-8', LANGUAGE: 'de_AT' };
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium', args: ['--lang=de-AT'], env });
+const { base, close } = await serveDist();
+const browser = await launch('de-AT');
 
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, locale: 'de-AT', timezoneId: 'Europe/Vienna', isMobile: true, hasTouch: true });
 await ctx.clock.setFixedTime(new Date('2026-10-05T07:40:00+02:00'));
-await ctx.addInitScript(() => {
-  window.CapacitorCustomPlatform = { name: 'ios', plugins: {} };
-});
+await asIosApp(ctx);
 const app = await ctx.newPage();
 await app.goto(base);
 await app.getByRole('button', { name: 'Zuerst ein Beispiel ansehen' }).click();
@@ -50,11 +32,11 @@ await app.evaluate(() => scrollTo(0, 0));
 await app.waitForTimeout(400);
 await writeFile(join(out, 'screen.png'), await app.screenshot());
 await ctx.close();
-server.close();
+close();
 
 // ---------------------------------------------------------------- the flyer
 const qr = await QRCode.toString(URL_, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#2e3240', light: '#ffffff' } });
-const fontUrl = (f) => pathToFileURL(join(root, 'public', 'fonts', f)).href;
+const css = await pastelCss();
 const features = [
   ['lav', '◆', 'Lernblöcke zwischen deinen LVs', '90- und 45-Minuten-Blöcke in deinen freien Stunden, jeweils mit Pause.'],
   ['sky', '↻', 'Karteikarten inklusive', 'Jeden Tag Zeit für Anki-Wiederholungen und genau so viele neue Karten, wie du brauchst.'],
@@ -63,13 +45,8 @@ const features = [
 ];
 const strips = Array.from({ length: 8 }, () => `<div class="strip"><b>semestra.at</b><span>Lernplaner · gratis</span></div>`).join('');
 const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Semestra – Flyer A4</title><style>
-@font-face{font-family:'Source Sans 3';src:url(${fontUrl('SourceSans3.ttf')});font-weight:200 900}
-@font-face{font-family:'Nunito Sans';src:url(${fontUrl('NunitoSans.ttf')});font-weight:200 1000}
-@font-face{font-family:'Poppins';src:url(${fontUrl('Poppins-Medium.ttf')});font-weight:500}
+${css}
 @page{size:A4;margin:0}
-:root{--page:#f7f6fb;--sheet:#fff;--ink:#363b47;--ink-strong:#2e3240;--ink-soft:#6e7483;--ink-faint:#9aa0ad;--kick:#a3a8b5;--line:#ebe8f2;--line-2:#d9d4ea;
-  --lav:#7a5bc4;--lav-bg:#efeafd;--lav-mid:#d9cff8;--rose:#c4517f;--rose-bg:#fde8f0;--rose-mid:#f6c7d9;--mint:#2f9468;--mint-bg:#e2f5ec;--mint-mid:#b9e6d1;--sky:#3b7cc0;--sky-bg:#e4effb;--sky-mid:#bfd8f3;
-  --butter-mid:#f7e3a2;--praxis-bg:#e7f6ef;--praxis-fg:#2d8a5e;--blob1:#efe9fd;--blob2:#fde6ee;--blob3:#dff4ea;--blob4:#fff1cf;--blob5:#e2edfb}
 *{box-sizing:border-box;margin:0}
 html,body{width:210mm;height:297mm}
 body{position:relative;overflow:hidden;background:var(--page);color:var(--ink);font:400 11pt/1.45 'Source Sans 3',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}

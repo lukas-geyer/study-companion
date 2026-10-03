@@ -3,17 +3,13 @@
 //
 //   bun run build && npm i --no-save playwright-core && node scripts/store-shots.mjs
 //
-// Needs a Chromium; set CHROMIUM=/path/to/chrome if it isn't at /opt/pw-browsers/chromium (Claude Code cloud).
 // The app runs in "iOS mode" (Capacitor custom platform with the plugins' web fallbacks), so app-only parts such as
 // Setup → Reminders appear exactly as on the iPhone. Clock and time zone are fixed, so the plan is the same each run.
-import { createServer } from 'node:http';
-import { mkdir, readdir, readFile } from 'node:fs/promises';
-import { extname, join } from 'node:path';
-import { chromium } from 'playwright-core';
+import { mkdir, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import sharp from 'sharp';
+import { asIosApp, launch, root, serveDist } from './lib.mjs';
 
-const root = join(import.meta.dirname, '..');
-const dist = join(root, 'dist');
 const out = join(root, 'store', 'screenshots');
 const NOW = new Date('2026-10-05T07:40:00+02:00'); // a Monday morning in Vienna
 
@@ -57,31 +53,10 @@ const TEXT = {
   },
 };
 
-// ---------------------------------------------------------------- a tiny static server for dist/
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.ttf': 'font/ttf', '.png': 'image/png', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json', '.txt': 'text/plain' };
-const server = createServer(async (req, res) => {
-  const p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  try {
-    const body = await readFile(join(dist, p.endsWith('/') ? p + 'index.html' : p));
-    res.writeHead(200, { 'content-type': types[extname(p)] || 'text/html' }).end(body);
-  } catch {
-    res.writeHead(404).end();
-  }
-});
-await new Promise((r) => server.listen(0, '127.0.0.1', r));
-const base = `http://127.0.0.1:${server.address().port}/`;
-const fonts = await readdir(join(dist, 'assets'));
+// ---------------------------------------------------------------- the built app, served locally
+const { base, close } = await serveDist();
+const fonts = await readdir(join(root, 'dist', 'assets'));
 const font = (prefix) => base + 'assets/' + fonts.find((f) => f.startsWith(prefix) && f.endsWith('.ttf'));
-
-// Date and time fields follow the browser's own language (from the environment), so each language gets its own browser.
-const launch = (locale) => {
-  const posix = locale.replace('-', '_') + '.UTF-8';
-  return chromium.launch({
-    executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium',
-    args: [`--lang=${locale}`],
-    env: { ...process.env, LANG: posix, LC_ALL: posix, LANGUAGE: locale.replace('-', '_') },
-  });
-};
 let browser;
 
 // ---------------------------------------------------------------- 1. screens of the app
@@ -91,9 +66,7 @@ async function appScreens(dev, lang) {
   for (const dark of [false, true]) {
     const ctx = await browser.newContext({ viewport: d.viewport, deviceScaleFactor: d.scale, locale: L.locale, timezoneId: 'Europe/Vienna', colorScheme: dark ? 'dark' : 'light', permissions: ['notifications'], isMobile: dev === 'iphone', hasTouch: true });
     await ctx.clock.setFixedTime(NOW);
-    await ctx.addInitScript(() => {
-      window.CapacitorCustomPlatform = { name: 'ios', plugins: {} };
-    });
+    await asIosApp(ctx);
     const pg = await ctx.newPage();
     await pg.goto(base);
     await pg.getByRole('button', { name: L.example }).click();
@@ -203,4 +176,4 @@ for (const dev of Object.keys(DEVICES)) {
     await browser.close();
   }
 }
-server.close();
+close();

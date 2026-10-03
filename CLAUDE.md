@@ -28,6 +28,9 @@ node scripts/flyer.mjs         # A4 flyer (German) → store/flyer/ (needs: npm 
 node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ (needs: npm i --no-save playwright-core)
 ```
 
+The three image scripts share `scripts/lib.mjs` (browser, local server for `dist/`, fonts, and the colour tokens read
+from `legacy.css`, so flyer and banner always use the app's real colours).
+
 - Bun is the runtime, bundler and test runner. npm is the package manager, because Bun's own installer
   has proxy problems in Claude Code cloud sessions. At session start, `.claude/settings.json` runs
   `scripts/install_pkgs.sh`, which installs with npm (in cloud sessions only).
@@ -84,7 +87,8 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
     `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`. The main footer also
     has the Buy Me a Coffee link (`SUPPORT_URL`), on the website only: App Store guideline 3.1.1 forbids it in
     the iOS app, so keep it behind `!isNative` and out of `store/listing.md`.
-  - `parts/common.tsx`: `Box`, input components, and the colour-variable helpers `xv()`/`av()`.
+  - `parts/common.tsx`: `Box`, input components, `ViewHead` (heading + ‹ now › of Today/Week), `Confirm` (the
+    inline "remove?" bar), and the colour-variable helpers `xv()`/`av()`.
 - `src/native.ts`: everything that differs in the iOS app (`isNative`, share sheet for exported files, local
   notifications). `App.tsx` reschedules all reminders shortly after every plan change; Setup shows the
   Reminders section only in the app. The
@@ -114,7 +118,8 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
 
 This is the owner's pastel design system, shared with his study handbooks and flashcard decks. The tokens
 are in `src/styles/legacy.css`: `:root` plus two identical dark blocks (media query and
-`[data-theme="dark"]`). `src/styles/app.css` holds app-only additions.
+`[data-theme="dark"]`). `src/styles/app.css` holds app-only additions (Setup folds, decks, typical-week editor,
+legal pane, phone layouts). Style each element in one place: change its rule rather than overriding it.
 
 - **Tokens:** use them only; no new hex values in components. A new token needs a light definition and
   both dark ones.

@@ -13,7 +13,7 @@ export type Reminder =
 /** iOS keeps at most 64 pending notifications per app; stay below that. */
 export const MAX_REMINDERS = 60;
 /** How many days ahead to schedule; opening the app (or any change) schedules the next days again. */
-export const REMINDER_DAYS = 7;
+const REMINDER_DAYS = 7;
 
 /** Reminders from day T (at minute nowM) for the next days, soonest first. `at` is minutes after midnight of day n. */
 export function plannedReminders(data: AppData, plan: Plan, T: number, nowM: number, days = REMINDER_DAYS): Reminder[] {

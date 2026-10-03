@@ -1,5 +1,5 @@
 // Calendar maths on "day numbers" (days since 1970-01-01, UTC based, so no DST surprises).
-export const DAYMS = 864e5;
+const DAYMS = 864e5;
 
 export const pad = (x: number): string => String(x).padStart(2, '0');
 export const num = (v: unknown, d = 0): number => {

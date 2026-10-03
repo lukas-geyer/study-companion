@@ -70,7 +70,7 @@ let state: AppState = {
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 export const getState = (): AppState => state;
-export function subscribe(l: () => void): () => void {
+function subscribe(l: () => void): () => void {
   listeners.add(l);
   return () => listeners.delete(l);
 }

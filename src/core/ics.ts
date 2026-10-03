@@ -17,7 +17,7 @@ interface RawEvent {
 
 const icsText = (v: string) => v.replace(/\\n/gi, ' ').replace(/\\([,;\\])/g, '$1').trim();
 
-export function parseICS(text: string): RawEvent[] {
+function parseICS(text: string): RawEvent[] {
   const lines = text.replace(/\r?\n[ \t]/g, '').split(/\r?\n/);
   const evs: RawEvent[] = [];
   let cur: RawEvent | null = null;
@@ -79,13 +79,13 @@ function icsDur(s: string | undefined): number | null {
 }
 
 /** Course code: a leading all-caps code (e.g. "TMCB VO …" → "TMCB"), else the start of the title. */
-export function courseCode(sum: string | undefined): string {
+function courseCode(sum: string | undefined): string {
   const s = (sum || '').trim();
   const m = s.match(/^([A-ZÄÖÜ][A-ZÄÖÜ0-9]{2,7})(?![a-zäöüß])/);
   return m ? m[1] : s.slice(0, 24) || 'Class';
 }
 
-export function expandICS(evs: RawEvent[]): TtItem[] {
+function expandICS(evs: RawEvent[]): TtItem[] {
   const out: TtItem[] = [];
   const map: Record<string, number> = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
   for (const ev of evs) {

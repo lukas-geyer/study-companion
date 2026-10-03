@@ -182,6 +182,11 @@ export function resetSettings(): void {
   });
 }
 
+/** Opens Setup at a section (a Fold id such as 'sec-exams'), which unfolds and scrolls into view. */
+export function gotoSetup(anchor: string): void {
+  setUI({ view: 'setup', anchor });
+}
+
 export function loadExample(lang: Lang, region: Region): void {
   const T = todayDn();
   updateData(() => exampleData(lang, region, T));

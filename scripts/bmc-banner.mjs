@@ -6,17 +6,15 @@
 // without fine text that the site's recompression blurs.
 //
 //   npm i --no-save playwright-core && node scripts/bmc-banner.mjs
-//
-// Needs a Chromium; set CHROMIUM=/path/to/chrome if it isn't at /opt/pw-browsers/chromium (Claude Code cloud).
+
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { chromium } from 'playwright-core';
+import { launch, pastelCss, root } from './lib.mjs';
 
-const root = join(import.meta.dirname, '..');
 const out = join(root, 'store', 'bmc');
 await mkdir(out, { recursive: true });
-const fontUrl = (f) => pathToFileURL(join(root, 'public', 'fonts', f)).href;
+const css = await pastelCss();
 const icon = `data:image/png;base64,${(await readFile(join(root, 'public', 'icons', 'icon-512.png'))).toString('base64')}`;
 
 const texts = {
@@ -37,12 +35,7 @@ const dots = ['lav', 'rose', 'mint', 'sky', 'butter'].map((c) => `<i style="back
 const pillColours = ['mint', 'lav', 'sky', 'rose'];
 
 const html = (t) => `<!doctype html><html><head><meta charset="utf-8"><style>
-@font-face{font-family:'Source Sans 3';src:url(${fontUrl('SourceSans3.ttf')});font-weight:200 900}
-@font-face{font-family:'Nunito Sans';src:url(${fontUrl('NunitoSans.ttf')});font-weight:200 1000}
-@font-face{font-family:'Poppins';src:url(${fontUrl('Poppins-Medium.ttf')});font-weight:500}
-:root{--page:#f7f6fb;--sheet:#fff;--ink-strong:#2e3240;--ink-soft:#6e7483;--kick:#a3a8b5;--line:#ebe8f2;
-  --lav:#7a5bc4;--lav-bg:#efeafd;--lav-mid:#d9cff8;--rose:#c4517f;--rose-bg:#fde8f0;--rose-mid:#f6c7d9;--mint:#2f9468;--mint-bg:#e2f5ec;--mint-mid:#b9e6d1;
-  --sky:#3b7cc0;--sky-bg:#e4effb;--sky-mid:#bfd8f3;--butter-mid:#f7e3a2;--blob1:#efe9fd;--blob2:#fde6ee;--blob3:#dff4ea;--blob4:#fff1cf;--blob5:#e2edfb}
+${css}
 *{box-sizing:border-box;margin:0}
 html,body{width:1600px;height:400px}
 body{position:relative;overflow:hidden;background:var(--page);font:400 20px/1.45 'Source Sans 3',sans-serif;color:var(--ink-soft)}
@@ -85,7 +78,7 @@ const simple = (t) => html(t)
   .replace(/<h1>[\s\S]*?<\/h1>/, '<h1><b>Semestra</b></h1>')
   .replace(/<div class="kicker">[^<]*/, '<div class="kicker">Lernplaner');
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium' });
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: 1600, height: 400 }, deviceScaleFactor: 2 });
 for (const [lang, t, make] of [...Object.entries(texts).map(([l, t]) => [l, t, html]), ['simple', texts.de, simple]]) {
   // opened as a file, so the page may load the font files next to it (setContent can't)

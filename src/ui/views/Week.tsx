@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { dayOfMonth, dn, dowOf, hm, isISO, kwOf, monOf, nowMin, pad, toMin } from '../../core/dates';
 import { dayView, weekTotals, type DayView } from '../../core/planner';
 import { displayClasses } from '../../core/timetable';
+import { gotoSetup } from '../../state/actions';
 import { setUI } from '../../state/store';
 import { useCtx } from '../ctx';
-import { av, Box, exLabel, xv, type Vars } from '../parts/common';
+import { av, Box, exLabel, ViewHead, xv, type Vars } from '../parts/common';
 import { blkLabel, examById, modClass, modTitle } from '../parts/labels';
-import { gotoSetup } from './Today';
 
 function useNarrow(): boolean {
   const q = '(max-width: 640px)';
@@ -45,26 +45,16 @@ export function WeekView() {
   const byExam = Object.entries(tot.by).sort((a, b) => b[1] - a[1]);
   return (
     <section className="card week">
-      <div className="viewhead">
-        <div>
-          <div className="kicker">
-            {t('kw', kwOf(mon))}
-            {monOf(T) === mon ? ` · ${t('nav.thisWeekTag')}` : ''}
-          </div>
-          <h2 className="h2">{f.range(mon, mon + 6)}</h2>
-        </div>
-        <div className="navgrp">
-          <button className="iconbtn" onClick={() => setUI({ weekMon: mon - 7 })} aria-label={t('nav.prevWeek')}>
-            ‹
-          </button>
-          <button className="btn soft sm" onClick={() => setUI({ weekMon: monOf(T) })}>
-            {t('nav.thisWeek')}
-          </button>
-          <button className="iconbtn" onClick={() => setUI({ weekMon: mon + 7 })} aria-label={t('nav.nextWeek')}>
-            ›
-          </button>
-        </div>
-      </div>
+      <ViewHead
+        kicker={t('kw', kwOf(mon)) + (monOf(T) === mon ? ` · ${t('nav.thisWeekTag')}` : '')}
+        title={f.range(mon, mon + 6)}
+        nowLabel={t('nav.thisWeek')}
+        prevLabel={t('nav.prevWeek')}
+        nextLabel={t('nav.nextWeek')}
+        onPrev={() => setUI({ weekMon: mon - 7 })}
+        onNow={() => setUI({ weekMon: monOf(T) })}
+        onNext={() => setUI({ weekMon: mon + 7 })}
+      />
       <div className="chips">
         <span className="chip">
           {t('week.chipClasses')} <b>{f.hrs(tot.classes)}</b>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { dn, dnOf, isISO, kwOf, monOf, monthOf, num, yearOf } from '../../core/dates';
 import { weekTotals, type WeekTotals } from '../../core/planner';
+import { gotoSetup } from '../../state/actions';
 import { useCtx } from '../ctx';
 import { av, Box, exLabel, Html, StatusPill, xv, esc } from '../parts/common';
 import { examById } from '../parts/labels';
-import { gotoSetup } from './Today';
 
 export function YearView() {
   const { data, plan, T, i18n } = useCtx();

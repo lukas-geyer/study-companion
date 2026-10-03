@@ -20,7 +20,7 @@ export function easterSunday(y: number): number {
 
 const cache = new Map<string, Map<number, HolidayKey>>();
 
-export function holidaysOf(region: Region, y: number): Map<number, HolidayKey> {
+function holidaysOf(region: Region, y: number): Map<number, HolidayKey> {
   const k = `${region}-${y}`;
   const hit = cache.get(k);
   if (hit) return hit;

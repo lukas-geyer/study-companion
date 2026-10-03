@@ -19,7 +19,7 @@ export interface DayInfo {
   brk: Break | null;
 }
 
-export function inBreak(st: Settings, n: number): Break | null {
+function inBreak(st: Settings, n: number): Break | null {
   for (const b of st.breaks || []) if (isISO(b.from) && isISO(b.to) && n >= dn(b.from) && n <= dn(b.to)) return b;
   return null;
 }
@@ -39,7 +39,7 @@ const validItem = (x: TtItem | null | undefined): x is TtItem =>
  * import) the typical week fills in, except on public holidays and in breaks. The user's own
  * appointments (m) always count.
  */
-export function classesFor(data: AppData, n: number): { items: TtItem[]; est: boolean } {
+function classesFor(data: AppData, n: number): { items: TtItem[]; est: boolean } {
   const st = data.settings;
   const iso = isoOf(n);
   const items = ((data.weeks[weekKey(n)] || { items: [] }).items || []).filter((x) => validItem(x) && x.d === iso);
