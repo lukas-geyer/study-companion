@@ -10,6 +10,7 @@ import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
 import { av, Box, CommitInput, esc, exFull, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
+import { Fold, setFold } from '../parts/Fold';
 import { deckLabel, examById } from '../parts/labels';
 import { DataSection } from './SetupData';
 
@@ -21,6 +22,7 @@ export function SetupView() {
   useEffect(() => {
     if (!ui.anchor) return;
     const id = ui.anchor;
+    setFold(id, true); // a link to a section opens it
     requestAnimationFrame(() => {
       document.getElementById(id)?.scrollIntoView({ block: 'start' });
       setUI({ anchor: '' });
@@ -28,9 +30,7 @@ export function SetupView() {
   }, [ui.anchor]);
   return (
     <div className="stack">
-      <section className="card">
-        <div className="kicker">{t('setup.howKicker')}</div>
-        <h2 className="h2">{t('setup.howTitle')}</h2>
+      <Fold id="sec-how" color="lilac" title={t('setup.howKicker')} hint={t('fold.how')}>
         <ol className="steps">
           <li>
             <b>1 · {t('setup.step1')}</b>
@@ -49,7 +49,7 @@ export function SetupView() {
             {t('setup.step4b')}
           </li>
         </ol>
-      </section>
+      </Fold>
       <ExamsSection />
       <TimetableSection />
       <RhythmSection />
@@ -90,11 +90,10 @@ export function ExamsSection({ compact }: { compact?: boolean }) {
   );
   if (compact) return body;
   return (
-    <section className="card" id="sec-exams" style={av('lav')}>
-      <h2 className="h2">{t('ex.title')}</h2>
+    <Fold id="sec-exams" color="lav" title={t('ex.title')} hint={t('fold.exams')}>
       <Html as="p" className="sub" html={t('ex.sub')} />
       {body}
-    </section>
+    </Fold>
   );
 }
 
@@ -263,8 +262,7 @@ function TimetableSection() {
   for (const c of Object.keys(st.courses)) if (c) codes.add(c);
   const online = (code: string) => wks.some((k) => (data.weeks[k].items || []).some((x) => x.t === code && x.on));
   return (
-    <section className="card" id="sec-tt" style={av('grey')}>
-      <h2 className="h2">{t('tt.title')}</h2>
+    <Fold id="sec-tt" color="grey" title={t('tt.title')} hint={t('fold.tt')}>
       <p className="sub">{t('tt.sub')}</p>
       <IcsImport />
       <p className="small muted" style={{ margin: '10px 0 0' }}>
@@ -371,7 +369,7 @@ function TimetableSection() {
           </p>
         )}
       </div>
-    </section>
+    </Fold>
   );
 }
 
@@ -428,8 +426,7 @@ function RhythmSection() {
   const { t } = i18n;
   const st = data.settings;
   return (
-    <section className="card" id="sec-rhythm" style={av('mint')}>
-      <h2 className="h2">{t('rh.title')}</h2>
+    <Fold id="sec-rhythm" color="mint" title={t('rh.title')} hint={t('fold.rhythm')}>
       <p className="sub">{t('rh.sub')}</p>
       <Grp label={t('rh.caps')} first>
         <div className="fgrid">
@@ -491,7 +488,7 @@ function RhythmSection() {
           </Toggle>
         </div>
       </Grp>
-    </section>
+    </Fold>
   );
 }
 
@@ -635,11 +632,10 @@ function CardsSection() {
   const { i18n } = useCtx();
   const { t } = i18n;
   return (
-    <section className="card" id="sec-cards" style={av('sky')}>
-      <h2 className="h2">{t('fc.title')}</h2>
+    <Fold id="sec-cards" color="sky" title={t('fc.title')} hint={t('fold.cards')}>
       <p className="sub">{t('fc.sub')}</p>
       <CardsFields />
-    </section>
+    </Fold>
   );
 }
 
@@ -670,8 +666,7 @@ function RemindersSection() {
     </div>
   );
   return (
-    <section className="card" id="sec-reminders" style={av('butter')}>
-      <h2 className="h2">{t('rem.title')}</h2>
+    <Fold id="sec-reminders" color="butter" title={t('rem.title')} hint={t('fold.reminders')}>
       <p className="sub">{t('rem.sub')}</p>
       {anyOn && perm === 'denied' && (
         <div className="notes" style={{ margin: '0 0 6px' }}>
@@ -686,7 +681,7 @@ function RemindersSection() {
         {item('evening', t('rem.evening'), t('rem.eveningOn'), <TimeSet path="reminders.eveningAt" label={t('rem.at')} />)}
         {item('exam', t('rem.exam'), t('rem.examOn'), <NumSet path="reminders.examDays" label={t('rem.examDays')} min={1} max={14} step={1} />, t('rem.examHint'))}
       </div>
-    </section>
+    </Fold>
   );
 }
 
@@ -722,8 +717,7 @@ function PrefsSection() {
   const { t } = i18n;
   const st = data.settings;
   return (
-    <section className="card" id="sec-prefs" style={av('peach')}>
-      <h2 className="h2">{t('pref.title')}</h2>
+    <Fold id="sec-prefs" color="peach" title={t('pref.title')} hint={t('fold.prefs')}>
       <LangRegion />
       <p className="small muted" style={{ margin: '8px 0 0' }}>
         {t('pref.regionHelp')}
@@ -740,7 +734,7 @@ function PrefsSection() {
           <CommitInput id="set-termName" value={st.termName} maxLength={60} placeholder={t('pref.termNamePh')} onCommit={(v) => A.setSetting('termName', v.trim())} />
         </Fld>
       </div>
-    </section>
+    </Fold>
   );
 }
 

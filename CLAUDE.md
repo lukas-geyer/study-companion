@@ -75,7 +75,8 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
 - `src/ui/`:
   - `App.tsx`: the shell, with tabs Today/Week/Year/Setup; the current view is in the URL hash. The tab bar
     sticks while scrolling and then widens into an edge-to-edge top bar (`.tabs.stuck` in `app.css`).
-  - `views/`.
+  - `views/`. Setup sections are `Fold`s (`parts/Fold.tsx`): heading + one-line hint (`fold.*` texts), closed
+    until tapped; `gotoSetup(id)` opens the section it jumps to. Scripts that click into Setup open them first.
   - `Panes.tsx`: dialogs (on phones a bottom sheet with a grab handle; pull down to close).
   - `Onboarding.tsx`: the setup assistant.
   - `Legal.tsx`: imprint and privacy notice (quiet footer links, the legal pane; direct links `#imprint` and

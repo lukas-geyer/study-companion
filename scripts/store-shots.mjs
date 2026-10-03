@@ -100,9 +100,12 @@ async function appScreens(dev, lang) {
     await pg.addStyleTag({ content: '.ex-banner{display:none!important}' });
     // a realistic plan name instead of "example plan"
     await pg.getByRole('tab', { name: L.tabs[3] }).click();
+    const fold = (id) => pg.locator(`#${id}-toggle`).click(); // Setup sections are folded; this opens or closes one
+    await fold('sec-prefs');
     const name = pg.locator('#set-termName');
     await name.fill(L.plan);
     await name.press('Enter');
+    await fold('sec-prefs');
     const snap = async (key) => {
       await pg.waitForTimeout(350);
       shots[key] = await pg.screenshot();
@@ -123,9 +126,12 @@ async function appScreens(dev, lang) {
       await scrollTo('#view .card', 70);
       await snap('year');
       await pg.getByRole('tab', { name: L.tabs[3] }).click();
+      await fold('sec-reminders');
       for (const k of ['morning', 'before', 'exam']) await pg.locator(`#set-rem-${k}`).check({ force: true });
       await scrollTo('#sec-reminders', dev === 'iphone' ? 120 : 205); // room for the notification banner on top
       await snap('reminders');
+      await fold('sec-reminders');
+      await fold('sec-data');
       await scrollTo('#sec-data', 70);
       await snap('privacy');
     }

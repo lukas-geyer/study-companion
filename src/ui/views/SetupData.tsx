@@ -9,8 +9,9 @@ import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { isNative, shareFile } from '../../native';
 import { useCtx } from '../ctx';
+import { Fold } from '../parts/Fold';
 import { LegalLink } from '../Legal';
-import { av, Toggle } from '../parts/common';
+import { Toggle } from '../parts/common';
 import { modTip, modTitle } from '../parts/labels';
 
 const FILE_PREFIX = APP_NAME.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -108,8 +109,7 @@ export function DataSection() {
   );
 
   return (
-    <section className="card" id="sec-data" style={av('lilac')}>
-      <h2 className="h2">{t('data.title')}</h2>
+    <Fold id="sec-data" color="lilac" title={t('data.title')} hint={t('fold.data')}>
       <p className="sub">{t('data.sub')}</p>
       <div className="row-actions" style={{ marginTop: 0 }}>
         <button className="btn soft" onClick={backup}>
@@ -206,6 +206,6 @@ export function DataSection() {
           </button>
         )}
       </div>
-    </section>
+    </Fold>
   );
 }

@@ -42,6 +42,7 @@ await app.goto(base);
 await app.getByRole('button', { name: 'Zuerst ein Beispiel ansehen' }).click();
 await app.addStyleTag({ content: '.ex-banner{display:none!important}' });
 await app.getByRole('tab', { name: 'Einstellungen' }).click();
+await app.locator('#sec-prefs-toggle').click(); // Setup sections are folded
 await app.locator('#set-termName').fill('Medizin · WS 2026/27');
 await app.locator('#set-termName').press('Enter');
 await app.getByRole('tab', { name: 'Heute' }).click();

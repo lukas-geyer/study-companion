@@ -116,3 +116,20 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .pane{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 /* grab handle: phone sheets can be pulled down to close (Panes.tsx) */
 @media (max-width:699px){.pane::before{content:"";display:block;width:36px;height:5px;border-radius:3px;background:var(--line-2);margin:-8px auto 12px}}
+
+/* Setup sections that fold open (parts/Fold.tsx): heading with an accent bar and a one-line hint, arrow on the right */
+.card.fold{padding:0;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 76px)} /* jumps land below the sticky tab bar */
+.fold-h{margin:0;font:inherit}
+.fold-h button{display:flex;align-items:center;gap:14px;width:100%;padding:18px clamp(14px,3vw,22px);border:0;border-radius:20px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fold-h button:focus-visible{outline:2px solid var(--acc,var(--lav));outline-offset:-3px}
+.fold-t{position:relative;flex:1;min-width:0;padding-left:14px}
+.fold-t::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:4px;border-radius:4px;background:var(--acc-mid,var(--lav-mid))}
+.fold-title{display:block;font:800 19px/1.25 var(--f-head);color:var(--ink-strong);letter-spacing:-.005em}
+.fold-hint{display:block;margin-top:3px;font-size:14.5px;line-height:1.4;color:var(--ink-soft)}
+.fold-chev{position:relative;flex:none;width:34px;height:34px;border-radius:50%;background:var(--sunk);box-shadow:0 0 0 1px var(--line);transition:background-color .15s ease,transform .25s ease}
+.fold-chev::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid var(--ink-soft);border-bottom:2px solid var(--ink-soft);transform:translate(-50%,-70%) rotate(45deg)}
+.fold-h button:hover .fold-chev{background:var(--acc-bg,var(--lav-bg))}
+.fold.open .fold-chev{transform:rotate(180deg);background:var(--acc-bg,var(--lav-bg))}
+.fold.open .fold-h button{border-radius:20px 20px 0 0}
+.fold-body{padding:16px clamp(14px,3vw,22px) 20px;border-top:1px solid var(--line)}
+.fold-body > .sub:first-child{margin-top:0}
