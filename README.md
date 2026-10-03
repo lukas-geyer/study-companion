@@ -18,9 +18,10 @@ The app is called Semestra (semestra.at). The name lives in `src/config.ts`, `in
 - **Week** – a calendar grid of classes and planned blocks, with hours per exam.
 - **Year** – exam timeline with each exam's prep window, weekly study load chart, and a status per exam
   (✓ on track, ~ tight, ! short by N hours).
-- **Setup** – exams (date, hours, prep weeks, flashcard deck size), timetable (calendar import from any
+- **Setup** – exams (date, hours, prep weeks), timetable (calendar import from any
   .ics file, typical week, breaks, courses linked to exams), daily rhythm (study window, hours per day,
-  block lengths, meals, time off), flashcards, language/region/look, and your data (backup, restore,
+  block lengths, meals, time off), flashcard decks (each with its new cards, reviews and optionally an
+  exam to finish it for), language/region/look, and your data (backup, restore,
   calendar export, reset).
 - Setup assistant on first start, and an example plan to explore.
 - German and English, light and dark mode, public holidays for Austria, Germany and Switzerland.

@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'bun:test';
+import { DATA_VERSION } from '../src/config';
 import { fromBackup, normalize, toBackup } from '../src/core/backup';
+import { cardsFor } from '../src/core/cards';
 import { dn, dowOf, isoOf, kwOf, monOf, toMin, weekKey } from '../src/core/dates';
-import { makeExam, newAppData } from '../src/core/defaults';
+import { makeDeck, makeExam, newAppData } from '../src/core/defaults';
 import { exampleData } from '../src/core/example';
 import { easterSunday, holidayOn } from '../src/core/holidays';
 import { applyICS, previewICS } from '../src/core/ics';
@@ -167,16 +169,73 @@ describe('backup', () => {
     const data = exampleData('en', 'AT', T);
     const back = fromBackup(toBackup(data));
     expect(back.exams.length).toBe(data.exams.length);
-    expect(back.settings.cards.generalNew).toBe(10);
+    expect(back.decks).toEqual(data.decks);
     const legacy = normalize({
       settings: { anki: { generalNew: 12, reviewBase: 25 }, template: { '1': [['08:15', '12:00']] } },
       exams: [{ id: 'fp1', name: 'X', date: '2026-11-05', size: 'L', hours: 60, weeks: 8, color: 'lav' }],
     });
     expect(legacy.settings.cards.on).toBe(true);
-    expect(legacy.settings.cards.generalNew).toBe(12);
+    expect(legacy.decks).toEqual([{ id: 'deck-general', name: '', cards: 0, newPerDay: 12, reviews: 25, exam: '' }]);
     expect(legacy.settings.template['1'][0]).toEqual({ from: '08:15', to: '12:00' });
     expect(() => fromBackup('nope')).toThrow();
     expect(makeExam([]).color).toBe('lav');
+  });
+});
+
+describe('flashcard decks', () => {
+  const st = () => {
+    const d = newAppData('AT');
+    d.settings.cards.on = true;
+    return d.settings;
+  };
+  const exam = { ...makeExam([], { id: 'ex-a', short: 'A', date: isoOf(T + 37) }), dn: T + 37 };
+
+  test('a deck linked to an exam is done a week before it', () => {
+    const deck = makeDeck({ cards: 300, exam: 'ex-a' });
+    const day = (n: number) => cardsFor(st(), [deck], n, [exam], T).decks[0];
+    expect(day(T).per).toBe(10); // 300 cards over the 30 days until a week before the exam
+    expect(day(T + 29).per).toBe(10);
+    expect(day(T + 30).per).toBe(0); // last week: reviews only
+    expect(day(T + 37)).toBeUndefined(); // exam over
+  });
+
+  test('decks without an exam keep their own pace, end when done and slow down before exams', () => {
+    const deck = makeDeck({ cards: 50, newPerDay: 10, reviews: 15 });
+    const far = cardsFor(st(), [deck], T, [], T);
+    expect(far.decks[0].per).toBe(10);
+    expect(far.reviews).toBe(Math.round(15 + 1.2 * 10));
+    expect(cardsFor(st(), [deck], T + 5, [], T).decks).toEqual([]); // 50 cards at 10 a day: done after 5 days
+    const open = makeDeck({ newPerDay: 20 });
+    expect(cardsFor(st(), [open], T + 20, [exam], T)).toMatchObject({ throttled: 'halved', newTotal: 10 });
+    expect(cardsFor(st(), [open], T + 30, [exam], T)).toMatchObject({ throttled: 'paused', newTotal: 0 });
+  });
+
+  test('several decks add up; deleting an exam unlinks its deck', () => {
+    const d = exampleData('de', 'AT', T);
+    const plan = buildPlan(d, T);
+    const c = plan.days.get(T)!.cards;
+    expect(c.decks.map((x) => x.deck.id)).toEqual(['deck-anatomy', 'deck-pm4']);
+    expect(c.newTotal).toBe(c.decks.reduce((s, x) => s + x.per, 0));
+    const again = normalize({ ...d, exams: d.exams.filter((e) => e.id !== 'ex-pm4') });
+    expect(again.decks.find((x) => x.id === 'deck-pm4')!.exam).toBe('');
+  });
+
+  test('data saved before decks existed gets them from the old settings and exams (v2 → v3)', () => {
+    const v2 = normalize({
+      v: 2,
+      settings: { cards: { on: true, reviewBase: 20, generalName: 'Allgemein', generalNew: 10, throttle: true, override: 0 } },
+      exams: [
+        { id: 'ex-pm4', short: 'PM IV', name: 'Bewegungsapparat', date: '2026-11-25', cards: 1200, newPerDay: 0 },
+        { id: 'ex-histo', short: 'HISTO', date: '2027-02-10' },
+      ],
+    });
+    expect(v2.decks).toEqual([
+      { id: 'deck-general', name: 'Allgemein', cards: 0, newPerDay: 10, reviews: 20, exam: '' },
+      { id: 'deck-ex-pm4', name: 'PM IV', cards: 1200, newPerDay: 0, reviews: 0, exam: 'ex-pm4' },
+    ]);
+    expect(v2.settings.cards).toEqual({ on: true, throttle: true, override: 0 });
+    expect('cards' in v2.exams[0]).toBe(false);
+    expect(normalize({ settings: { cards: { on: false } } }).decks).toEqual([]);
   });
 });
 
@@ -227,7 +286,7 @@ describe('reminders', () => {
   test('data saved before reminders existed gets them switched off (v1 → v2)', () => {
     const v1 = { v: 1, settings: { dayStart: '08:00' }, exams: [] };
     const d = normalize(v1);
-    expect(d.v).toBe(2);
+    expect(d.v).toBe(DATA_VERSION);
     expect(d.settings.reminders).toEqual({ morning: false, morningAt: '07:30', before: false, beforeMin: 10, evening: false, eveningAt: '20:30', exam: false, examDays: 3 });
   });
 });

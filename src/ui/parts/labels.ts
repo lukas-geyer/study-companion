@@ -2,11 +2,18 @@
 import { dn, isISO } from '../../core/dates';
 import { cardsAt, type Mod, type Plan } from '../../core/planner';
 import type { DisplayClass } from '../../core/timetable';
-import type { AppData, Exam } from '../../core/types';
+import type { AppData, Deck, Exam } from '../../core/types';
 import type { T } from '../../i18n';
 import { exLabel } from './common';
 
 export const examById = (data: AppData, id?: string | null): Exam | null => (id ? data.exams.find((e) => e.id === id) || null : null);
+
+/** A deck's name; unnamed decks fall back to their exam ("PM IV deck") or their place in the list ("Deck 2"). */
+export function deckLabel(d: Deck, data: AppData, t: T): string {
+  if (d.name) return d.name;
+  const e = examById(data, d.exam);
+  return e && exLabel(e, t) ? t('tip.deck', exLabel(e, t)) : t('deck.namePh', data.decks.indexOf(d) + 1);
+}
 
 export function modClass(m: Mod, data: AppData): 'anki' | 'ex' | 'neutral' {
   if (m.type === 'rev' || m.type === 'new') return 'anki';
@@ -58,8 +65,7 @@ export function modTip(m: Mod, n: number, data: AppData, plan: Plan, t: T): [str
     case 'new': {
       const a = cardsAt(data, plan, n);
       const parts: string[] = [];
-      if (a.gen > 0) parts.push(t('tip.newPart', a.gen, data.settings.cards.generalName || t('cards.general')));
-      for (const x of a.decks) if (x.per > 0) parts.push(t('tip.newPart', x.per, t('tip.deck', exLabel(x.exam, t))));
+      for (const x of a.decks) if (x.per > 0) parts.push(t('tip.newPart', x.per, deckLabel(x.deck, data, t)));
       return ['', t('tip.new', parts.join(', '))];
     }
     case 'fu':

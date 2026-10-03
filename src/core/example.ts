@@ -1,6 +1,6 @@
 // A ready-made example plan (medicine, Graz style) with dates relative to today, so it always looks alive.
 import { dnOf, dowOf, isoOf, weekKey, yearOf } from './dates';
-import { makeExam, newAppData } from './defaults';
+import { makeDeck, makeExam, newAppData } from './defaults';
 import type { AppData, DoneItem, Exam, Lang, Region } from './types';
 
 /** Move n forward to the next Tuesday–Thursday (exams rarely fall on a Monday or Friday). */
@@ -27,7 +27,7 @@ export function exampleData(lang: Lang, region: Region, T: number): AppData {
   };
   st.dayStart = '07:30';
   st.dayEnd = '21:30';
-  st.cards = { on: true, reviewBase: 20, generalName: de ? 'Allgemeiner Stapel' : 'General deck', generalNew: 10, throttle: true, override: 0 };
+  st.cards = { on: true, throttle: true, override: 0 };
   const y = yearOf(T) + (new Date(T * 864e5).getUTCMonth() >= 7 ? 0 : -1);
   st.breaks = [
     { label: de ? 'Weihnachtsferien' : 'Christmas break', from: isoOf(dnOf(y, 11, 24)), to: isoOf(dnOf(y + 1, 0, 6)) },
@@ -38,11 +38,15 @@ export function exampleData(lang: Lang, region: Region, T: number): AppData {
 
   const exams: Exam[] = [];
   const add = (init: Partial<Exam>) => exams.push(makeExam(exams, init));
-  add({ id: 'ex-pm4', name: de ? 'Bewegungsapparat' : 'Musculoskeletal system', short: 'PM IV', date: isoOf(midweek(T + 49)), size: 'L', hours: 60, weeks: 8, cards: 1200 });
+  add({ id: 'ex-pm4', name: de ? 'Bewegungsapparat' : 'Musculoskeletal system', short: 'PM IV', date: isoOf(midweek(T + 49)), size: 'L', hours: 60, weeks: 8 });
   add({ id: 'ex-pm5', name: de ? 'Nervensystem' : 'Nervous system', short: 'PM V', date: isoOf(midweek(T + 98)), size: 'L', hours: 60, weeks: 8 });
   add({ id: 'ex-histo', name: de ? 'Histologie' : 'Histology', short: 'HISTO', date: isoOf(midweek(T + 133)), size: 'M', hours: 40, weeks: 5 });
   add({ id: 'ex-bioch', name: de ? 'Biochemie' : 'Biochemistry', short: 'BIOCH', date: '', size: 'M', hours: 40, weeks: 5 });
   d.exams = exams;
+  d.decks = [
+    makeDeck({ id: 'deck-anatomy', name: de ? 'Anatomie' : 'Anatomy', newPerDay: 10, reviews: 20 }),
+    makeDeck({ id: 'deck-pm4', name: 'PM IV', cards: 1200, exam: 'ex-pm4' }),
+  ];
   st.courses[lab].exam = 'ex-pm4';
 
   // A few ticked days so progress and the streak are visible.

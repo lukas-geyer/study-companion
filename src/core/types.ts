@@ -50,7 +50,8 @@ export interface Settings {
   autoExtend: boolean;
   followUp: { on: boolean; min: number; minClassH: number };
   weekly: { on: boolean; dow: number; min: number };
-  cards: { on: boolean; reviewBase: number; generalName: string; generalNew: number; throttle: boolean; override: number };
+  /** Flashcards: the decks themselves are AppData.decks. override = real minutes per day (0 = estimate). */
+  cards: { on: boolean; throttle: boolean; override: number };
   /** Typical week, keyed by day of week "0" (Sunday) … "6". */
   template: Record<string, TplSlot[]>;
   breaks: Break[];
@@ -67,12 +68,24 @@ export interface Exam {
   size: Size;
   hours: number;
   weeks: number;
-  cards: number;
-  newPerDay: number;
   color: PaletteKey;
   order: number;
 }
 export interface DatedExam extends Exam { dn: number }
+
+/** A flashcard deck (e.g. in Anki). */
+export interface Deck {
+  id: string;
+  name: string;
+  /** New (not yet studied) cards left; 0 = open-ended. */
+  cards: number;
+  /** New cards per day; 0 = automatic (finish one week before the linked exam). */
+  newPerDay: number;
+  /** Minutes of reviews this deck already takes per day. */
+  reviews: number;
+  /** Linked exam id, or '' for a deck without an exam deadline. */
+  exam: string;
+}
 
 /** A timetable entry: d = ISO date, s/e = "HH:MM", t = course code/short title, n = full title. */
 export interface TtItem {
@@ -107,6 +120,7 @@ export interface AppData {
   v: number;
   settings: Settings;
   exams: Exam[];
+  decks: Deck[];
   weeks: Record<string, WeekDoc>;
   done: Record<string, DoneDoc>;
   meta: AppMeta;

@@ -20,9 +20,15 @@ body{min-height:100vh;min-height:100dvh}
 .tabs.stuck{box-shadow:inset 0 0 0 1px transparent,var(--wide);
   clip-path:inset(calc(-9px - env(safe-area-inset-top,0px)) calc(-1 * var(--br,0px)) -1px calc(-1 * var(--bl,0px)) round 0)}
 
-/* exam rows without flashcard columns */
-.ex-row.nocards{grid-template-areas:"dot short name name name del" ". date date size size ." ". hours hours weeks weeks ."}
-@media (min-width:1080px){.ex-row.nocards{grid-template-columns:18px 84px minmax(150px,1fr) 150px 96px 72px 80px 38px;grid-template-areas:"dot short name date size hours weeks del"}}
+/* flashcard decks (Setup → Flashcards and the setup assistant), laid out like the exam rows */
+.deck-row{display:grid;gap:10px;align-items:end;padding:14px 0;border-top:1px solid var(--line);grid-template-columns:22px repeat(3,minmax(0,1fr)) 38px;
+  grid-template-areas:"dot name name exam del" ". cards newd rev ."}
+@media (min-width:1080px){.deck-row{grid-template-columns:18px minmax(150px,1fr) 190px 120px 100px 150px 38px;grid-template-areas:"dot name exam cards newd rev del"}}
+.deck-row > .dot{grid-area:dot;align-self:center;justify-self:center}
+.deck-row .f-name{grid-area:name}.deck-row .f-exam{grid-area:exam}.deck-row .f-cards{grid-area:cards}.deck-row .f-new{grid-area:newd}.deck-row .f-rev{grid-area:rev}
+.deck-row .del{grid-area:del;align-self:center}
+.deck-list{margin-top:6px}
+.deck-list .deck-row:first-child{border-top:0}
 
 /* typical week editor */
 .tplw{display:grid;gap:4px}
@@ -78,7 +84,8 @@ body{min-height:100vh;min-height:100dvh}
   .ag-group{padding-left:52px}
   .modcard{grid-template-columns:auto minmax(0,1fr);padding-right:10px}
   .modcard .md{grid-column:2;margin:-4px 0 8px}
-  .ex-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". short size ." ". date date ." ". hours weeks ." ". cards newd ."}
+  .ex-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". short size ." ". date date ." ". hours weeks ."}
+  .deck-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". exam exam ." ". cards newd ." ". rev rev ."}
   .brk-row{grid-template-columns:minmax(0,1fr) 38px}
   .brk-row .fld:first-child{grid-column:1/-1}
   .brk-row .fld:nth-child(3){grid-column:1}

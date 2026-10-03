@@ -107,7 +107,7 @@ export function buildPlan(data: AppData, T: number): Plan {
   const days = new Map<number, PlanDay>();
   for (let n = T; n <= last; n++) {
     const info = dayInfo(data, n);
-    const cards = cardsFor(st, n, dated, start);
+    const cards = cardsFor(st, data.decks, n, dated, start);
     const free: Iv[] = info.free.map((iv) => [iv[0], iv[1]] as Iv);
     const mods: Mod[] = [];
     const examToday = dated.find((e) => e.dn === n) || null;
@@ -369,5 +369,5 @@ export function streak(data: AppData, T: number): number {
 
 export const cardsAt = (data: AppData, plan: Plan, n: number): CardsDay => {
   const pd = n >= plan.T ? plan.days.get(n) : null;
-  return pd ? pd.cards : cardsFor(data.settings, n, plan.dated, plan.start);
+  return pd ? pd.cards : cardsFor(data.settings, data.decks, n, plan.dated, plan.start);
 };

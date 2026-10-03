@@ -308,11 +308,11 @@ details.more summary{cursor:pointer;font:800 12px/1.2 var(--f-head);letter-spaci
 .fld input::placeholder{color:var(--ink-faint)}
 .grp{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 .grp > .lbl{display:block;margin-bottom:10px}
-.ex-row{display:grid;gap:10px;align-items:end;padding:14px 0;border-top:1px solid var(--line);grid-template-columns:22px repeat(4,minmax(0,1fr)) 38px;grid-template-areas:"dot short name name name del" ". date date size size ." ". hours weeks cards newd ."}
-@media (min-width:1080px){.ex-row{grid-template-columns:18px 84px minmax(150px,1fr) 150px 96px 72px 80px 86px 96px 38px;grid-template-areas:"dot short name date size hours weeks cards newd del"}}
+.ex-row{display:grid;gap:10px;align-items:end;padding:14px 0;border-top:1px solid var(--line);grid-template-columns:22px repeat(4,minmax(0,1fr)) 38px;grid-template-areas:"dot short name name name del" ". date date size size ." ". hours hours weeks weeks ."}
+@media (min-width:1080px){.ex-row{grid-template-columns:18px 84px minmax(150px,1fr) 150px 96px 72px 80px 38px;grid-template-areas:"dot short name date size hours weeks del"}}
 .ex-row > .dot{grid-area:dot;align-self:center;justify-self:center}
 .ex-row .f-short{grid-area:short}.ex-row .f-name{grid-area:name}.ex-row .f-date{grid-area:date}.ex-row .f-size{grid-area:size}
-.ex-row .f-hours{grid-area:hours}.ex-row .f-weeks{grid-area:weeks}.ex-row .f-cards{grid-area:cards}.ex-row .f-new{grid-area:newd}
+.ex-row .f-hours{grid-area:hours}.ex-row .f-weeks{grid-area:weeks}
 .ex-row .del{grid-area:del;align-self:center}
 .confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;grid-column:1/-1;padding:10px 12px;border-radius:12px;background:var(--achtung-bg);color:var(--achtung-fg);font-size:14px}
 .co-row{display:grid;grid-template-columns:86px minmax(0,1.2fr) minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}

@@ -6,7 +6,7 @@ import { toggleDone } from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
 import { av, both, Box, Dot, exLabel, exName, StatusPill, xv } from '../parts/common';
-import { clsName, examById, modClass, modTip, modTitle } from '../parts/labels';
+import { clsName, deckLabel, examById, modClass, modTip, modTitle } from '../parts/labels';
 import { GLYPH } from '../../core/defaults';
 
 export function relLabel(n: number, T: number, t: ReturnType<typeof useCtx>['i18n']['t']): string {
@@ -300,7 +300,6 @@ function CardsCard({ v }: { v: DayView }) {
   const a = cardsAt(data, plan, v.n);
   const planned = v.mods.filter((m) => m.type === 'rev' || m.type === 'new');
   const total = planned.length ? planned.reduce((s, m) => s + m.min, 0) : a.reviews + a.learn;
-  const st = data.settings.cards;
   return (
     <section className="card anki-card">
       <div className="h3">{t('cards.title')}</div>
@@ -310,17 +309,11 @@ function CardsCard({ v }: { v: DayView }) {
           <span>{t('cards.reviews')}</span>
           <b>~{f.dur(a.reviews)}</b>
         </li>
-        {(st.generalNew > 0 || a.gen > 0) && (
-          <li>
-            <span>{st.generalName || t('cards.general')}</span>
-            <b>{t('cards.newN', a.gen)}</b>
-          </li>
-        )}
         {a.decks.map((x) => (
-          <li key={x.exam.id} style={av(x.exam.color)}>
+          <li key={x.deck.id} style={av(x.exam ? x.exam.color : 'grey')}>
             <span>
               <i className="dot" />
-              {t('tip.deck', exLabel(x.exam, t))}
+              {deckLabel(x.deck, data, t)}
             </span>
             <b>{t('cards.newN', x.per)}</b>
           </li>
@@ -330,7 +323,7 @@ function CardsCard({ v }: { v: DayView }) {
       {a.throttled === 'halved' && a.next && <p className="small note">{t('cards.halved', exLabel(a.next, t), a.daysTo)}</p>}
       <p className="small muted note">
         {t('cards.hint')}
-        {a.decks.length ? t('cards.hintDecks') : ''}
+        {a.decks.some((x) => x.exam) ? t('cards.hintDecks') : ''}
       </p>
     </section>
   );

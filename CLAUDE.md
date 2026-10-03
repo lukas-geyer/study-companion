@@ -56,7 +56,8 @@ node scripts/bmc-banner.mjs     # Buy Me a Coffee cover, DE + EN → store/bmc/ 
   - Other modules:
     - `holidays.ts`: public holidays for AT, DE and CH.
     - `ics.ts` / `icsExport.ts`: calendar import and export.
-    - `cards.ts`: flashcard load.
+    - `cards.ts`: flashcard load per day from the user's decks (`AppData.decks`; a deck linked to an exam is
+      spread to finish a week before it, others run at their own new-cards-per-day).
     - `intervals.ts`.
     - `backup.ts`: `normalize()` is the one place that accepts old or foreign data.
     - `example.ts`: the example plan, with dates relative to today.

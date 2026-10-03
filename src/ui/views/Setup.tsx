@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { dn, isISO, num, todayDn } from '../../core/dates';
-import { MAX_EXAMS, SIZES } from '../../core/defaults';
+import { MAX_DECKS, MAX_EXAMS, SIZES } from '../../core/defaults';
 import { REGIONS } from '../../core/holidays';
 import { previewICS, type IcsPreview } from '../../core/ics';
 import { deckPerDay } from '../../core/cards';
-import type { Exam, Size } from '../../core/types';
+import type { Deck, Exam, Size } from '../../core/types';
 import { askNotifications, isNative, notificationsState, type NotifState } from '../../native';
 import * as A from '../../state/actions';
 import { setUI, toast } from '../../state/store';
 import { useCtx } from '../ctx';
 import { av, Box, CommitInput, esc, exFull, exLabel, Fld, Html, numOr, PickInput, Toggle } from '../parts/common';
+import { deckLabel, examById } from '../parts/labels';
 import { DataSection } from './SetupData';
 
 const DOWS = [1, 2, 3, 4, 5, 6, 0];
@@ -65,7 +66,6 @@ export function ExamsSection({ compact }: { compact?: boolean }) {
   const { data, i18n } = useCtx();
   const { t } = i18n;
   const [confirm, setConfirm] = useState<string | null>(null);
-  const cards = data.settings.cards.on;
   const add = () => {
     const id = A.addExam();
     setTimeout(() => document.getElementById(`ex-${id}-name`)?.focus(), 60);
@@ -74,7 +74,7 @@ export function ExamsSection({ compact }: { compact?: boolean }) {
     <>
       <div className="ex-list">
         {data.exams.length ? (
-          data.exams.map((e, i) => <ExamRow key={e.id} e={e} k={i + 1} cards={cards && !compact} confirm={confirm === e.id} setConfirm={setConfirm} />)
+          data.exams.map((e, i) => <ExamRow key={e.id} e={e} k={i + 1} confirm={confirm === e.id} setConfirm={setConfirm} />)
         ) : (
           <p className="small muted">{t('ex.none')}</p>
         )}
@@ -92,21 +92,20 @@ export function ExamsSection({ compact }: { compact?: boolean }) {
   return (
     <section className="card" id="sec-exams" style={av('lav')}>
       <h2 className="h2">{t('ex.title')}</h2>
-      <Html as="p" className="sub" html={t('ex.sub') + (cards ? t('ex.subCards') : '')} />
+      <Html as="p" className="sub" html={t('ex.sub')} />
       {body}
     </section>
   );
 }
 
-function ExamRow({ e, k, cards, confirm, setConfirm }: { e: Exam; k: number; cards: boolean; confirm: boolean; setConfirm: (id: string | null) => void }) {
-  const { plan, i18n } = useCtx();
+function ExamRow({ e, k, confirm, setConfirm }: { e: Exam; k: number; confirm: boolean; setConfirm: (id: string | null) => void }) {
+  const { i18n } = useCtx();
   const { t } = i18n;
   const id = `ex-${e.id.replace(/[^A-Za-z0-9_-]/g, '_')}`;
-  const auto = num(e.cards) > 0 && isISO(e.date) ? deckPerDay({ ...e, dn: dn(e.date) }, plan.start) : null;
   const up = (patch: Partial<Exam>) => A.updateExam(e.id, patch);
   const label = exLabel(e, t) || t('ex.namePh', k);
   return (
-    <div className={`ex-row${cards ? '' : ' nocards'}`} style={av(e.color)}>
+    <div className="ex-row" style={av(e.color)}>
       <span className="dot lg" />
       <Fld id={`${id}-short`} label={t('ex.short')} className="f-short">
         <CommitInput id={`${id}-short`} value={e.short} maxLength={8} onCommit={(v) => up({ short: v.trim() })} />
@@ -132,24 +131,6 @@ function ExamRow({ e, k, cards, confirm, setConfirm }: { e: Exam; k: number; car
       <Fld id={`${id}-weeks`} label={t('ex.weeks')} className="f-weeks">
         <CommitInput id={`${id}-weeks`} type="number" min={1} max={30} step={1} value={e.weeks} onCommit={(v) => up({ weeks: Math.max(1, Math.round(numOr(v, 1))) })} />
       </Fld>
-      {cards && (
-        <Fld id={`${id}-cards`} label={t('ex.cards')} className="f-cards">
-          <CommitInput id={`${id}-cards`} type="number" min={0} step={1} value={e.cards || 0} onCommit={(v) => up({ cards: Math.max(0, Math.round(numOr(v))) })} />
-        </Fld>
-      )}
-      {cards && (
-        <Fld id={`${id}-new`} label={t('ex.newPerDay')} className="f-new">
-          <CommitInput
-            id={`${id}-new`}
-            type="number"
-            min={0}
-            step={1}
-            value={num(e.newPerDay) > 0 ? e.newPerDay : ''}
-            placeholder={auto != null ? `${t('ex.auto')} ${auto}` : t('ex.auto')}
-            onCommit={(v) => up({ newPerDay: Math.max(0, Math.round(numOr(v))) })}
-          />
-        </Fld>
-      )}
       <button className="iconbtn del" onClick={() => setConfirm(e.id)} aria-label={t('ex.remove', label)}>
         ×
       </button>
@@ -519,36 +500,134 @@ export function CardsFields({ compact }: { compact?: boolean }) {
   const { data, i18n } = useCtx();
   const { t } = i18n;
   const c = data.settings.cards;
+  const turn = (on: boolean) => {
+    A.setSetting('cards.on', on);
+    if (on && !data.decks.length) addDeck(); // saying yes opens the first deck right away
+  };
   return (
     <>
-      <Toggle id="set-cards-on" checked={c.on} onChange={(v) => A.setSetting('cards.on', v)}>
+      <Toggle id="set-cards-on" checked={c.on} onChange={turn}>
         {t('fc.on')}
       </Toggle>
       {c.on && (
         <>
-          <div className="fgrid" style={{ marginTop: 12 }}>
-            <Fld id="set-cards-generalName" label={t('fc.general')}>
-              <CommitInput id="set-cards-generalName" value={c.generalName} placeholder={t('cards.general')} onCommit={(v) => A.setSetting('cards.generalName', v.trim())} />
-            </Fld>
-            <NumSet path="cards.generalNew" label={t('fc.generalNew')} min={0} max={300} step={1} />
-            <NumSet path="cards.reviewBase" label={t('fc.reviewBase')} min={0} max={240} step={5} />
-            {!compact && <NumSet path="cards.override" label={t('fc.override')} min={0} max={300} step={5} />}
-            {!compact && (
-              <Fld id="set-startDate" label={t('fc.start')}>
-                <PickInput id="set-startDate" type="date" value={data.settings.startDate} onCommit={(v) => A.setSetting('startDate', v)} />
-              </Fld>
-            )}
-          </div>
+          <DeckList />
           {!compact && (
-            <div style={{ marginTop: 8 }}>
-              <Toggle id="set-cards-throttle" checked={c.throttle} onChange={(v) => A.setSetting('cards.throttle', v)}>
-                {t('fc.throttle')}
-              </Toggle>
-            </div>
+            <>
+              <div className="fgrid" style={{ marginTop: 12 }}>
+                <NumSet path="cards.override" label={t('fc.override')} min={0} max={300} step={5} />
+                <Fld id="set-startDate" label={t('fc.start')}>
+                  <PickInput id="set-startDate" type="date" value={data.settings.startDate} onCommit={(v) => A.setSetting('startDate', v)} />
+                </Fld>
+              </div>
+              <div style={{ marginTop: 8 }}>
+                <Toggle id="set-cards-throttle" checked={c.throttle} onChange={(v) => A.setSetting('cards.throttle', v)}>
+                  {t('fc.throttle')}
+                </Toggle>
+              </div>
+            </>
           )}
         </>
       )}
     </>
+  );
+}
+
+const deckDom = (id: string) => `dk-${id.replace(/[^A-Za-z0-9_-]/g, '_')}`;
+function addDeck() {
+  const id = A.addDeck();
+  setTimeout(() => document.getElementById(`${deckDom(id)}-name`)?.focus(), 60);
+}
+
+function DeckList() {
+  const { data, i18n } = useCtx();
+  const { t } = i18n;
+  const [confirm, setConfirm] = useState<string | null>(null);
+  return (
+    <>
+      <div className="deck-list">
+        {data.decks.length ? (
+          data.decks.map((d, i) => <DeckRow key={d.id} d={d} k={i + 1} confirm={confirm === d.id} setConfirm={setConfirm} />)
+        ) : (
+          <p className="small muted">{t('deck.none')}</p>
+        )}
+      </div>
+      {data.decks.length < MAX_DECKS && (
+        <div className="row-actions">
+          <button className="btn soft" onClick={addDeck}>
+            {t('deck.add')}
+          </button>
+        </div>
+      )}
+      {data.decks.length > 0 && <Html as="p" className="small muted" html={t('deck.help')} />}
+    </>
+  );
+}
+
+function DeckRow({ d, k, confirm, setConfirm }: { d: Deck; k: number; confirm: boolean; setConfirm: (id: string | null) => void }) {
+  const { data, plan, i18n } = useCtx();
+  const { t } = i18n;
+  const id = deckDom(d.id);
+  const e = examById(data, d.exam);
+  const auto = e && isISO(e.date) && num(d.cards) > 0 ? deckPerDay(d, { ...e, dn: dn(e.date) }, plan.start) : null;
+  const up = (patch: Partial<Deck>) => A.updateDeck(d.id, patch);
+  const label = deckLabel(d, data, t);
+  return (
+    <div className="deck-row" style={av(e ? e.color : 'grey')}>
+      <span className="dot lg" />
+      <Fld id={`${id}-name`} label={t('deck.name')} className="f-name">
+        <CommitInput id={`${id}-name`} value={d.name} maxLength={60} placeholder={t('deck.namePh', k)} onCommit={(v) => up({ name: v.trim() })} />
+      </Fld>
+      <Fld id={`${id}-exam`} label={t('deck.exam')} className="f-exam">
+        <select id={`${id}-exam`} value={d.exam} onChange={(ev) => up({ exam: ev.target.value })}>
+          <option value="">{t('deck.noExam')}</option>
+          {data.exams.map((x, i) => (
+            <option key={x.id} value={x.id}>
+              {exFull(x, t) || t('ex.namePh', i + 1)}
+            </option>
+          ))}
+        </select>
+      </Fld>
+      <Fld id={`${id}-cards`} label={t('deck.cards')} className="f-cards">
+        <CommitInput id={`${id}-cards`} type="number" min={0} step={10} value={d.cards || ''} placeholder="0" onCommit={(v) => up({ cards: Math.max(0, Math.round(numOr(v))) })} />
+      </Fld>
+      <Fld id={`${id}-new`} label={t('deck.newPerDay')} className="f-new">
+        <CommitInput
+          id={`${id}-new`}
+          type="number"
+          min={0}
+          step={1}
+          value={num(d.newPerDay) > 0 ? d.newPerDay : ''}
+          placeholder={auto != null ? `${t('ex.auto')} ${auto}` : e ? t('ex.auto') : '0'}
+          onCommit={(v) => up({ newPerDay: Math.max(0, Math.round(numOr(v))) })}
+        />
+      </Fld>
+      <Fld id={`${id}-rev`} label={t('deck.reviews')} className="f-rev">
+        <CommitInput id={`${id}-rev`} type="number" min={0} max={240} step={5} value={d.reviews || ''} placeholder="0" onCommit={(v) => up({ reviews: Math.min(240, Math.max(0, numOr(v))) })} />
+      </Fld>
+      <button className="iconbtn del" onClick={() => setConfirm(d.id)} aria-label={t('deck.remove', label)}>
+        ×
+      </button>
+      {confirm && (
+        <div className="confirm">
+          <span>{t('deck.removeQ', label)}</span>
+          <span className="row-actions" style={{ margin: 0 }}>
+            <button
+              className="btn warn sm"
+              onClick={() => {
+                setConfirm(null);
+                A.deleteDeck(d.id);
+              }}
+            >
+              {t('ex.removeYes')}
+            </button>
+            <button className="btn soft sm" onClick={() => setConfirm(null)}>
+              {t('keep')}
+            </button>
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
 

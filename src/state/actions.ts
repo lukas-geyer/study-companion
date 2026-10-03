@@ -1,10 +1,10 @@
 // Everything the UI can change. Each action edits a copy of the data and triggers a save.
 import { dn, hm, isISO, isoOf, monOf, todayDn, toMin, weekKey } from '../core/dates';
-import { defaultSettings, makeExam, newAppData, SIZES } from '../core/defaults';
+import { defaultSettings, makeDeck, makeExam, newAppData, SIZES } from '../core/defaults';
 import { exampleData } from '../core/example';
 import { applyICS, type IcsPreview } from '../core/ics';
 import type { Mod } from '../core/planner';
-import type { AppData, Exam, Lang, Region, Size, TtItem } from '../core/types';
+import type { AppData, Deck, Exam, Lang, Region, Size, TtItem } from '../core/types';
 import { getState, setUI, updateData, wipeStorage } from './store';
 
 export function toggleDone(m: Mod, n: number): void {
@@ -44,6 +44,28 @@ export function deleteExam(id: string): void {
   updateData((d) => {
     d.exams = d.exams.filter((e) => e.id !== id);
     for (const c of Object.values(d.settings.courses)) if (c.exam === id) c.exam = '';
+    for (const k of d.decks) if (k.exam === id) k.exam = '';
+  });
+}
+
+export function addDeck(init: Partial<Deck> = {}): string {
+  let id = '';
+  updateData((d) => {
+    const k = makeDeck(init);
+    id = k.id;
+    d.decks.push(k);
+  });
+  return id;
+}
+export function updateDeck(id: string, patch: Partial<Deck>): void {
+  updateData((d) => {
+    const k = d.decks.find((x) => x.id === id);
+    if (k) Object.assign(k, patch);
+  });
+}
+export function deleteDeck(id: string): void {
+  updateData((d) => {
+    d.decks = d.decks.filter((k) => k.id !== id);
   });
 }
 
@@ -154,7 +176,7 @@ export function resetSettings(): void {
       breaks: keep.breaks,
       template: keep.template,
       reminders: keep.reminders,
-      cards: { ...s.cards, on: keep.cards.on, generalName: keep.cards.generalName },
+      cards: { ...s.cards, on: keep.cards.on },
     });
     d.settings = s;
   });

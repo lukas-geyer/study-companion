@@ -1,5 +1,5 @@
 import { DATA_VERSION } from '../config';
-import type { AppData, Exam, ModType, PaletteKey, Region, Settings, Size } from './types';
+import type { AppData, Deck, Exam, ModType, PaletteKey, Region, Settings, Size } from './types';
 
 export const PALETTE: PaletteKey[] = ['lav', 'butter', 'peach', 'rose', 'mint', 'sky', 'apricot', 'sage', 'lilac'];
 export const SIZES: Record<Size, { hours: number; weeks: number }> = {
@@ -11,6 +11,7 @@ export const SIZES: Record<Size, { hours: number; weeks: number }> = {
 export const COUNTED: ReadonlySet<ModType> = new Set<ModType>(['deep', 'focus', 'final', 'fu', 'x']);
 export const GLYPH: Record<ModType, string> = { deep: '◆', focus: '◇', final: '✦', fu: '↺', rev: '↻', new: '+', wr: '✎︎', x: '+' };
 export const MAX_EXAMS = 24;
+export const MAX_DECKS = 24;
 
 export function defaultSettings(region: Region = 'none'): Settings {
   return {
@@ -41,7 +42,7 @@ export function defaultSettings(region: Region = 'none'): Settings {
     autoExtend: true,
     followUp: { on: true, min: 30, minClassH: 3 },
     weekly: { on: true, dow: 0, min: 30 },
-    cards: { on: false, reviewBase: 20, generalName: '', generalNew: 0, throttle: true, override: 0 },
+    cards: { on: false, throttle: true, override: 0 },
     template: { '0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [] },
     breaks: [],
     courses: {},
@@ -66,12 +67,14 @@ export function makeExam(existing: Exam[], init: Partial<Exam> = {}): Exam {
     size,
     hours: SIZES[size].hours,
     weeks: SIZES[size].weeks,
-    cards: 0,
-    newPerDay: 0,
     color,
     order: Math.max(0, ...existing.map((x) => x.order || 0)) + 1,
     ...init,
   };
+}
+
+export function makeDeck(init: Partial<Deck> = {}): Deck {
+  return { id: newId('deck'), name: '', cards: 0, newPerDay: 0, reviews: 0, exam: '', ...init };
 }
 
 export function newAppData(region: Region = 'none'): AppData {
@@ -79,6 +82,7 @@ export function newAppData(region: Region = 'none'): AppData {
     v: DATA_VERSION,
     settings: defaultSettings(region),
     exams: [],
+    decks: [],
     weeks: {},
     done: {},
     meta: { onboarded: false, createdAt: Date.now() },
