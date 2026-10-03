@@ -2,6 +2,9 @@
 
 /* ============ app additions (same Pastell tokens) ============ */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Nothing may ever widen the page: whatever pokes out sideways is clipped (clip, unlike hidden, keeps the sticky
+   tab bar working), so the page can't be dragged sideways on phones. */
+html,body{overflow-x:clip}
 body{min-height:100vh;min-height:100dvh}
 .boot{min-height:100vh}
 .app{padding-top:max(16px,env(safe-area-inset-top));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
@@ -45,7 +48,7 @@ body{min-height:100vh;min-height:100dvh}
 
 /* onboarding */
 .ob{padding-top:4px}
-.ob-card{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--shadow);padding:26px clamp(18px,4vw,36px) 24px;max-width:880px;margin:0 auto}
+.ob-card{position:relative;overflow:hidden;overflow:clip;isolation:isolate;border-radius:24px;background:var(--sheet);box-shadow:var(--raise);padding:26px clamp(18px,4vw,36px) 24px;max-width:880px;margin:0 auto}
 .ob-body{position:relative}
 .ob-h1{margin:10px 0 0;font:300 clamp(30px,6vw,44px)/1.08 var(--f-head);color:var(--ink-strong);letter-spacing:-.015em;text-wrap:balance}
 .ob-h1:focus,.ob .h2:focus{outline:none}
