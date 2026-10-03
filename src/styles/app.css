@@ -12,7 +12,9 @@ body{min-height:100vh;min-height:100dvh}
 .note{margin:10px 0 0}
 .iconbtn.sm{width:34px;height:34px;font-size:17px}
 .ms b{color:var(--ink-strong);font-weight:700}
-.tab{padding:0 4px}
+.tab{padding:0 4px;font-weight:900}
+/* phones: each tab as wide as its word (so "Einstellungen" isn't squeezed), a bit smaller and bolder */
+@media (max-width:560px){.tab{flex:1 1 auto;font-size:11px;letter-spacing:.07em}}
 
 /* Tab bar → top bar. While it sticks to the top (.stuck, set in App.tsx) it widens to the window edges and up over
    the status bar, its corners square off and a hairline appears below. The widening is drawn with box-shadows
@@ -133,3 +135,8 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .fold.open .fold-h button{border-radius:20px 20px 0 0}
 .fold-body{padding:16px clamp(14px,3vw,22px) 20px;border-top:1px solid var(--line)}
 .fold-body > .sub:first-child{margin-top:0}
+
+/* Buttons inside a coloured box or banner take the box's colour instead of black */
+.box .btn:not(.soft):not(.ghost):not(.warn){background:var(--bx-fg,var(--ink-strong));color:var(--sheet)}
+.box .btn.soft{background:var(--sheet);color:var(--bx-fg,var(--ink-strong));box-shadow:0 0 0 1px var(--bx-ring,var(--line))}
+.ex-banner .btn:not(.soft):not(.ghost){background:var(--lav);color:var(--sheet)}
