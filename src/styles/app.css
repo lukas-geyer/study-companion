@@ -141,5 +141,9 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .box .btn.soft{background:var(--sheet);color:var(--bx-fg,var(--ink-strong));box-shadow:0 0 0 1px var(--bx-ring,var(--line))}
 .ex-banner .btn:not(.soft):not(.ghost){background:var(--lav);color:var(--sheet)}
 
-/* Info pills (e.g. under the date on Today) are labels, not buttons: very pale fill, dashed outline in their colour */
+/* Info pills and chips (under the date on Today, the totals on Week, imported weeks) are labels, not buttons:
+   very pale fill, dashed outline in their colour */
+.chip{padding:1px 10px;font:700 13px/1.5 var(--f-body);letter-spacing:.01em;color:var(--acc,var(--grey));box-shadow:none;
+  background:var(--acc-bg,var(--grey-bg));background:color-mix(in srgb,var(--acc-bg,var(--grey-bg)) 40%,var(--sheet));border:1px dashed var(--acc-mid,var(--grey-mid))}
+.chip b{color:inherit;font-weight:800}
 .pill{padding:1px 10px;background:var(--acc-bg,var(--grey-bg));background:color-mix(in srgb,var(--acc-bg,var(--grey-bg)) 40%,var(--sheet));border:1px dashed var(--acc-mid,var(--grey-mid))}

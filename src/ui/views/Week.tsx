@@ -69,11 +69,11 @@ export function WeekView() {
         <span className="chip">
           {t('week.chipClasses')} <b>{f.hrs(tot.classes)}</b>
         </span>
-        <span className="chip">
+        <span className="chip" style={av('lav')}>
           {t('week.chipStudy')} <b>{f.hrs(tot.study)}</b>
         </span>
         {st.cards.on && (
-          <span className="chip">
+          <span className="chip" style={av('sky')}>
             {t('week.chipCards')} <b>{f.hrs(tot.cards)}</b>
           </span>
         )}
