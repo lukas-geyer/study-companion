@@ -83,7 +83,9 @@ from `legacy.css`, so flyer and banner always use the app's real colours).
     until tapped; `gotoSetup(id)` opens the section it jumps to. Scripts that click into Setup open them first.
   - `Panes.tsx`: dialogs (on phones a bottom sheet with a grab handle; pull down to close).
   - `Onboarding.tsx`: the setup assistant. On the website its first step is a front page (`Landing.tsx`: hero with
-    a preview of a planned day, features, three steps, privacy, call to action); the iOS app shows just the card.
+    a preview of a planned day, features, three steps, privacy, call to action). In the iOS app the assistant fills
+    the screen (`.ob.fill`, buttons at the bottom); the welcome card shows the preview's study blocks only if they
+    fit whole (measured, so notch and screen size count).
   - `Legal.tsx`: imprint and privacy notice (quiet footer links, the legal pane; direct links `#imprint` and
     `#privacy`). The operator's name, address and e-mail are `IMPRINT` in `src/config.ts`. The main footer also
     has the Buy Me a Coffee link (`SUPPORT_URL`), on the website only: App Store guideline 3.1.1 forbids it in

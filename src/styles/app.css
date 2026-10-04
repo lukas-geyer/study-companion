@@ -47,6 +47,22 @@
 .ob-nav .btn.ghost{flex:none;white-space:nowrap}
 .ob .h2{margin-top:6px}
 .ob .ex-row:first-child{border-top:0}
+/* iOS app: the setup assistant fills the screen of whichever iPhone it runs on (visible height minus notch and home
+   bar). Text stays at the top; .ob-grow stretches, so settings and buttons sit at the bottom, within thumb reach. */
+.ob-grow{display:none}
+.ob.fill{display:flex;flex-direction:column;min-height:calc(100vh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)));min-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)))}
+.app:has(> .ob.fill){padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.ob.fill .ob-card{flex:1;display:flex;flex-direction:column;width:100%}
+.ob.fill .ob-body,.ob.fill .ob-intro{flex:1;display:flex;flex-direction:column}
+.ob.fill .ob-hero{display:flex}
+.ob.fill .ob-grow{display:block;flex:1}
+/* The free space on the welcome card shows the three study blocks of the day preview when they fit whole on this
+   iPhone (.fits, measured in Onboarding.tsx); otherwise it stays empty. */
+.ob.fill .ob-show{flex:1 1 0;min-height:0;display:grid;place-items:center}
+.ob-show .pv{max-width:340px;margin-block:4px 18px;visibility:hidden}
+.ob-show.fits .pv{visibility:visible}
+.ob-show .pv .pills,.ob-show .pv-cls,.ob-show .pv-soft,.ob-show .pv-card > .kicker,.ob-show .pv-title{display:none}
+.ob-show .pv-list{margin-top:0}
 
 /* imprint & privacy: quiet footer links, the legal pane */
 .legal-links{margin-top:6px;color:var(--ink-soft)}

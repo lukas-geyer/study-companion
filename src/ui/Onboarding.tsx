@@ -23,6 +23,18 @@ export function Onboarding() {
     const h = top.current?.querySelector<HTMLElement>('h2');
     h?.focus();
   }, [step]);
+  // iOS app: the free space on the welcome card shows the day preview only if it fits whole on this iPhone (measured,
+  // so notch, home bar and screen size are all accounted for). The space's size doesn't depend on its content.
+  const show = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = show.current;
+    const pv = el?.querySelector<HTMLElement>('.pv');
+    if (!el || !pv || !isNative) return;
+    const fit = () => el.classList.toggle('fits', el.clientHeight >= pv.offsetHeight + 24);
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [step]);
   const st = data.settings;
   const next = () => (step < STEPS ? setStep(step + 1) : A.finishOnboarding());
   const back = () => setStep(Math.max(0, step - 1));
@@ -44,7 +56,7 @@ export function Onboarding() {
   const landing = step === 0 && !isNative;
   const example = () => A.loadExample(i18n.lang, st.region);
   return (
-    <div className={landing ? 'ob landing' : 'ob'} ref={top}>
+    <div className={`ob${landing ? ' landing' : ''}${isNative ? ' fill' : ''}`} ref={top}>
       <div className="ob-card">
         <span className="blob b1" />
         <span className="blob b2" />
@@ -60,6 +72,9 @@ export function Onboarding() {
               </h2>
               <span className="rule" aria-hidden="true" />
               <p className="lede">{t('ob.lede')}</p>
+              <div className="ob-grow ob-show" ref={show}>
+                {isNative && <HeroPreview />}
+              </div>
               <div className="ob-prefs">
                 <LangRegion />
               </div>
@@ -180,6 +195,7 @@ export function Onboarding() {
                 {!isNative && <p className="small muted">{t('ob.install')}</p>}
               </>
             )}
+            <div className="ob-grow" />
             {nav}
           </div>
         )}
