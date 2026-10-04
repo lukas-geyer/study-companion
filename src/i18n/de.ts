@@ -26,7 +26,7 @@ export const de: Dict = {
   'banner.memory': 'In dieser Browser-Ansicht kann nichts gespeichert werden, Änderungen gehen beim Schließen verloren. Öffne die App in einem normalen Browser-Tab, um deinen Plan zu behalten.',
   'banner.example': 'Du siehst gerade einen Beispielplan.',
   'banner.exampleCta': 'Loslegen',
-  'foot': 'Dein Plan wird nur auf diesem Gerät gespeichert. Karteikarten-Zeiten sind Schätzungen: etwa zwei Minuten pro Tag für jede tägliche neue Karte, inklusive der Wiederholungen, die sie später erzeugt.',
+  'foot': 'Dein Plan wird nur auf diesem Gerät gespeichert. Karteikarten-Zeiten sind Schätzungen: etwa zwei Minuten pro Tag für jede neue Karte pro Tag, inklusive der Wiederholungen, die sie später erzeugt.',
 
   'kw': (n: number) => `KW ${n}`,
   'rel.today': 'Heute',
@@ -69,7 +69,7 @@ export const de: Dict = {
   'exam.fallback': 'Prüfung',
   'class.fallback': 'LV',
 
-  'tip.rev': 'Alle Stapel, nur fällige Karten. Vor allem Neuen erledigen.',
+  'tip.rev': 'Alle Stapel, nur fällige Karten. Erledige sie, bevor du Neues lernst.',
   'tip.new': (parts: string) => (parts ? `Neue Karten: ${parts}.` : 'Neue Karten für heute.'),
   'tip.newPart': (n: number, name: string) => `${n} × ${name}`,
   'tip.deck': (name: string) => `Stapel ${name}`,
@@ -87,7 +87,7 @@ export const de: Dict = {
 
   'status.ok': '✓ Im Plan',
   'status.tight': '~ Knapp',
-  'status.short': (h: number) => `! Fehlen ${h} h`,
+  'status.short': (h: number) => `! ${h} h fehlen`,
   'status.past': 'Vorbei',
   'status.nodate': 'Kein Datum',
   'statusText.ok': 'im Plan',
@@ -104,7 +104,7 @@ export const de: Dict = {
   'note.tomorrow': 'Prüfung morgen',
   'note.tomorrowBody': (e: string) => `${e} ist morgen. Heute nur eine ruhige Schlusswiederholung.`,
   'note.short': (e: string) => `${e} braucht mehr Zeit`,
-  'note.shortBody': (h: number, d: string) => `Bis ${d} fehlen etwa ${h} h. Früher beginnen (mehr Vorbereitungswochen), die Stunden senken oder in den Einstellungen mehr Lernzeit pro Tag erlauben.`,
+  'note.shortBody': (h: number, d: string) => `Bis zum ${d} fehlen etwa ${h} h. Früher beginnen (mehr Vorbereitungswochen), die Stunden senken oder in den Einstellungen mehr Lernzeit pro Tag erlauben.`,
   'examday.title': (e: string) => `Prüfung: ${e}`,
   'examday.body': 'Heute nur ein kurzes Karteikarten-Aufwärmen. Viel Erfolg!',
 
@@ -203,7 +203,7 @@ export const de: Dict = {
   'setup.step4b': 'Nicht abgehakte Blöcke wandern auf die nächsten Tage, eingetragenes Zusatzlernen zählt mit. Wird die Zeit knapp, wird die Prüfung gelb oder rot.',
 
   'ex.title': 'Deine Prüfungen',
-  'ex.sub': '<b>Stunden</b> ist die konzentrierte Lernzeit, die du vor der Prüfung willst, ohne Karteikarten. <b>Vorbereitungswochen</b> legt fest, wann diese Arbeit beginnt.',
+  'ex.sub': '<b>Stunden</b> ist die konzentrierte Lernzeit, die du vor der Prüfung einplanen willst, ohne Karteikarten. <b>Vorbereitungswochen</b> legt fest, wann diese Arbeit beginnt.',
   'ex.none': 'Noch keine Prüfungen.',
   'ex.add': 'Prüfung hinzufügen',
   'ex.short': 'Kürzel',
@@ -226,7 +226,7 @@ export const de: Dict = {
   'tt.knownUntil': 'Importierter Stundenplan endet am',
   'tt.weeks': 'Gespeicherte Wochen · Einträge',
   'tt.noWeeks': 'Noch kein Kalender importiert.',
-  'tt.found': (n: number, a: string, b: string, w: number, codes: string) => `<b>${n}</b> LV-Termine vom ${a} bis ${b} in ${w} ${pl(w, 'Woche', 'Wochen')} gefunden${codes}. Der Import ersetzt die LV dieser Wochen; deine eigenen Termine bleiben.`,
+  'tt.found': (n: number, a: string, b: string, w: number, codes: string) => `<b>${n}</b> ${pl(n, 'LV-Termin', 'LV-Termine')} vom ${a} bis ${b} in ${w} ${pl(w, 'Woche', 'Wochen')} gefunden${codes}. Der Import ersetzt die LV dieser Wochen; deine eigenen Termine bleiben.`,
   'tt.importBtn': 'Importieren',
   'cancel': 'Abbrechen',
   'tt.courses': 'Lehrveranstaltungen',
@@ -325,7 +325,7 @@ export const de: Dict = {
   'pref.termNamePh': 'z. B. Wintersemester 2026/27',
 
   'data.title': 'Deine Daten',
-  'data.sub': 'Alles bleibt auf diesem Gerät, nichts wird hochgeladen. Sichere deinen Plan ab und zu, oder um ihn auf ein anderes Gerät zu übertragen.',
+  'data.sub': 'Alles bleibt auf diesem Gerät, nichts wird hochgeladen. Sichere deinen Plan ab und zu, oder wenn du ihn auf ein anderes Gerät übertragen willst.',
   'data.backup': 'Sicherung herunterladen',
   'data.restore': 'Sicherung laden',
   'data.restoreQ': 'Deinen aktuellen Plan durch die Sicherung ersetzen?',
@@ -376,7 +376,7 @@ export const de: Dict = {
   'toast.logNoExam': 'Füge zuerst in den Einstellungen eine Prüfung hinzu.',
   'toast.apptNeed': 'Bitte Titel, Datum und ein Ende nach dem Beginn eingeben.',
   'toast.apptAdded': 'Termin hinzugefügt.',
-  'toast.imported': (n: number) => `${n} LV-Termine importiert.`,
+  'toast.imported': (n: number) => `${n} ${pl(n, 'LV-Termin', 'LV-Termine')} importiert.`,
   'toast.noEvents': 'In dieser Datei wurden keine LV mit Uhrzeit gefunden.',
   'toast.badIcs': 'Diese Datei konnte nicht als Kalender gelesen werden.',
   'toast.reset': 'Einstellungen auf Standardwerte zurückgesetzt.',
