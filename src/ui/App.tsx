@@ -4,7 +4,7 @@ import { monOf, nowMin, todayDn } from '../core/dates';
 import { buildPlan, streak, weekTotals } from '../core/planner';
 import { plannedReminders } from '../core/reminders';
 import { makeI18n, resolveLang } from '../i18n';
-import { isNative, syncReminders } from '../native';
+import { isNative, setNativeTheme, syncReminders } from '../native';
 import * as A from '../state/actions';
 import { setUI, useApp, type View } from '../state/store';
 import { CtxR, useCtx, type Ctx } from './ctx';
@@ -65,6 +65,13 @@ export function App() {
       else document.documentElement.removeAttribute('data-theme');
     }
     else document.documentElement.setAttribute('data-theme', th);
+    setNativeTheme(th);
+    // the browser's own bar (theme-color) follows a theme chosen in the app, not only the system's
+    const page = getComputedStyle(document.documentElement).getPropertyValue('--page').trim();
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => {
+      m.dataset.auto ??= m.content;
+      m.content = th === 'auto' ? m.dataset.auto : page;
+    });
   }, [lang, data.settings.theme]);
   // The hash names the view, or the open imprint/privacy notice, so each can be linked to.
   const hash = ui.pane?.k === 'legal' ? ui.pane.doc : ui.view;

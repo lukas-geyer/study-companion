@@ -24,14 +24,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-/// Capacitor switches the iOS rubber-band bounce off. Semestra turns it back on (up and down only), so scrolling to the
-/// top or bottom of a page eases out like in other iPhone apps instead of stopping dead.
-class SemestraViewController: CAPBridgeViewController {
+/// The app's native frame around the web view:
+/// - Capacitor switches the iOS rubber-band bounce off. Semestra turns it back on (up and down only), so scrolling to
+///   the top or bottom of a page eases out like in other iPhone apps instead of stopping dead.
+/// - What the bounce reveals is drawn here, not by the page, so it takes the page colour of light or dark mode
+///   (--page in legacy.css).
+/// - The app's own theme setting (light, dark or like the iPhone) arrives as a "theme" message from src/native.ts and
+///   is applied to the whole window, so the bounce area and the status bar follow it too.
+class SemestraViewController: CAPBridgeViewController, WKScriptMessageHandler {
+    private static let page = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x15 / 255, green: 0x18 / 255, blue: 0x21 / 255, alpha: 1)
+            : UIColor(red: 0xF7 / 255, green: 0xF6 / 255, blue: 0xFB / 255, alpha: 1)
+    }
+
     override func capacitorDidLoad() {
         super.capacitorDidLoad()
-        guard let scroll = webView?.scrollView else { return }
-        scroll.bounces = true
-        scroll.alwaysBounceVertical = true
-        scroll.alwaysBounceHorizontal = false
+        guard let webView = webView else { return }
+        webView.backgroundColor = Self.page
+        webView.scrollView.backgroundColor = Self.page
+        webView.scrollView.bounces = true
+        webView.scrollView.alwaysBounceVertical = true
+        webView.scrollView.alwaysBounceHorizontal = false
+        webView.configuration.userContentController.add(self, name: "theme")
+    }
+
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == "theme", let theme = message.body as? String else { return }
+        view.window?.overrideUserInterfaceStyle = theme == "dark" ? .dark : theme == "light" ? .light : .unspecified
     }
 }

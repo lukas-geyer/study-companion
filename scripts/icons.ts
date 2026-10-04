@@ -1,6 +1,6 @@
 // App icons from one SVG (pastel card with three study blocks):  bun scripts/icons.ts
 // Writes the web icons to public/icons and, when the iOS project exists, its app icon and launch image.
-import { access, mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
@@ -42,11 +42,16 @@ console.log('icons written to public/icons');
 const ios = join(import.meta.dir, '..', 'ios', 'App', 'App', 'Assets.xcassets');
 if (await access(ios).then(() => true, () => false)) {
   await sharp(Buffer.from(svg(0, false))).resize(1024, 1024).flatten({ background: '#f7f6fb' }).png().toFile(join(ios, 'AppIcon.appiconset', 'AppIcon-512@2x.png'));
+  // the launch image on the page colour of light and of dark mode (--page); iOS shows the one that matches
   const card = await sharp(Buffer.from(svg(8, true))).resize(560, 560).png().toBuffer();
-  const splash = await sharp({ create: { width: 2732, height: 2732, channels: 3, background: '#f7f6fb' } })
-    .composite([{ input: card, gravity: 'center' }])
-    .png()
-    .toBuffer();
-  for (const f of ['splash-2732x2732.png', 'splash-2732x2732-1.png', 'splash-2732x2732-2.png']) await writeFile(join(ios, 'Splash.imageset', f), splash);
+  const splash = (background: string) =>
+    sharp({ create: { width: 2732, height: 2732, channels: 3, background } }).composite([{ input: card, gravity: 'center' }]).png().toBuffer();
+  const set = join(ios, 'Splash.imageset');
+  for (const f of await readdir(set)) if (f.endsWith('.png')) await rm(join(set, f));
+  await writeFile(join(set, 'splash.png'), await splash('#f7f6fb'));
+  await writeFile(join(set, 'splash-dark.png'), await splash('#151821'));
+  const dark = [{ appearance: 'luminosity', value: 'dark' }];
+  const images = [{ idiom: 'universal', filename: 'splash.png' }, { idiom: 'universal', filename: 'splash-dark.png', appearances: dark }];
+  await writeFile(join(set, 'Contents.json'), JSON.stringify({ images, info: { version: 1, author: 'xcode' } }, null, 2) + '\n');
   console.log('iOS app icon and launch image written');
 }

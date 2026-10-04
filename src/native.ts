@@ -19,6 +19,13 @@ export async function shareFile(filename: string, text: string): Promise<'saved'
   }
 }
 
+/** Tells the app's native frame the theme (SemestraViewController in ios/App/App/SceneDelegate.swift), so the area the
+ *  iOS bounce reveals and the status bar match the page. No-op on the web. */
+export function setNativeTheme(theme: 'auto' | 'light' | 'dark'): void {
+  const w = window as { webkit?: { messageHandlers?: { theme?: { postMessage(v: string): void } } } };
+  if (isNative) w.webkit?.messageHandlers?.theme?.postMessage(theme);
+}
+
 // ---------------------------------------------------------------- reminders (local notifications)
 export interface Note { at: Date; title: string; body: string }
 export type NotifState = 'granted' | 'denied' | 'prompt';
