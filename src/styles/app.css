@@ -118,3 +118,36 @@ input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .box .btn:not(.soft):not(.ghost):not(.warn){background:var(--bx-fg,var(--ink-strong));color:var(--sheet)}
 .box .btn.soft{background:var(--sheet);color:var(--bx-fg,var(--ink-strong));box-shadow:0 0 0 1px var(--bx-ring,var(--line))}
 .ex-banner .btn:not(.soft):not(.ghost){background:var(--lav);color:var(--sheet)}
+
+/* Website front page (Landing.tsx): the welcome card spans the page with a preview of a planned day beside the text,
+   and the sections below fill the page. The iOS app keeps the plain card. */
+.ob.landing .ob-card{max-width:none}
+.ob-hero{display:grid;grid-template-columns:minmax(0,1fr)}
+.ob.landing .ob-hero{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,5vw,64px);align-items:center;padding-block:clamp(4px,2.5vw,28px)}
+@media (max-width:860px){.ob.landing .ob-hero{grid-template-columns:minmax(0,1fr)}}
+.pv{position:relative;max-width:420px;width:100%;justify-self:center;margin-bottom:14px}
+.pv-card{background:var(--sheet);border-radius:20px;box-shadow:var(--lift);padding:18px 18px 34px;transform:rotate(-1.2deg)}
+.pv-title{margin-top:6px;font:800 19px/1.25 var(--f-head);color:var(--ink-strong)}
+.pv-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px}
+.pv-row{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;align-items:center}
+.pv-t{font:700 12.5px/1 var(--f-body);color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.pv-b{display:flex;align-items:center;gap:7px;min-width:0;padding:9px 12px;border-radius:12px;font:700 13.5px/1.25 var(--f-body);color:var(--ink-strong)}
+.pv-b i{font-style:normal;color:var(--acc)}
+.pv-b small{margin-left:auto;font-weight:600;color:var(--ink-soft);white-space:nowrap}
+.pv-cls .pv-b{background:var(--grey-bg);box-shadow:inset 3px 0 0 var(--grey-mid)}
+.pv-soft .pv-b{padding-block:2px;font-weight:400;color:var(--ink-faint)}
+.pv-blk .pv-b{background:var(--acc-bg);box-shadow:inset 3px 0 0 var(--acc-mid)}
+.pv-exam{position:absolute;right:-8px;bottom:-14px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:var(--sheet);box-shadow:var(--lift);font-size:14px;color:var(--ink-strong);transform:rotate(1.5deg)}
+.land{display:grid;gap:clamp(28px,5vw,48px);max-width:none;margin-top:clamp(28px,5vw,48px)}
+.land-sec > .h2{margin-top:6px}
+.land-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:18px}
+@media (max-width:999px){.land-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:559px){.land-grid{grid-template-columns:minmax(0,1fr)}}
+.land-ico,.land-num{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--acc-bg,var(--lav-bg));color:var(--acc,var(--lav));font:800 16px/1 var(--f-head)}
+.land-h{margin:12px 0 4px;font:800 17px/1.3 var(--f-head);color:var(--ink-strong)}
+.land-feat p,.land-steps p{margin:0;font-size:15px;color:var(--ink-soft)}
+.land-steps{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.land-two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.land-two .pills{margin-top:0}
+.land-more{margin:14px 0 0}
+.ob.landing > .legal-links{margin-top:clamp(28px,5vw,48px)}

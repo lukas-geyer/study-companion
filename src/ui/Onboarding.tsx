@@ -5,6 +5,7 @@ import { isNative } from '../native';
 import { toast } from '../state/store';
 import * as A from '../state/actions';
 import { useCtx } from './ctx';
+import { HeroPreview, LandingSections } from './Landing';
 import { LegalLinks } from './Legal';
 import { av, Fld, numOr, CommitInput, PickInput } from './parts/common';
 import { CardsFields, ExamsSection, IcsImport, LangRegion, TemplateWeek } from './views/Setup';
@@ -39,53 +40,59 @@ export function Onboarding() {
       </button>
     </div>
   );
+  // On the website the welcome card becomes a front page: wide, with a preview and sections below.
+  const landing = step === 0 && !isNative;
+  const example = () => A.loadExample(i18n.lang, st.region);
   return (
-    <div className="ob" ref={top}>
+    <div className={landing ? 'ob landing' : 'ob'} ref={top}>
       <div className="ob-card">
         <span className="blob b1" />
         <span className="blob b2" />
         <span className="blob b3" />
         {step === 0 ? (
-          <div className="ob-body">
-            <div className="kicker">
-              {APP_NAME} · {t('ob.kicker')}
+          <div className="ob-body ob-hero">
+            <div className="ob-intro">
+              <div className="kicker">
+                {APP_NAME} · {t('ob.kicker')}
+              </div>
+              <h2 className="ob-h1" tabIndex={-1}>
+                {t('ob.title')}
+              </h2>
+              <span className="rule" aria-hidden="true" />
+              <p className="lede">{t('ob.lede')}</p>
+              <div className="ob-prefs">
+                <LangRegion />
+              </div>
+              <div className="row-actions ob-start">
+                <button className="btn" onClick={() => setStep(1)}>
+                  {t('ob.start')}
+                </button>
+                <button className="btn soft" onClick={example}>
+                  {t('ob.example')}
+                </button>
+                <button className="btn ghost" onClick={() => file.current?.click()}>
+                  {t('ob.restore')}
+                </button>
+                <input
+                  ref={file}
+                  type="file"
+                  accept=".json,application/json"
+                  hidden
+                  onChange={async (ev) => {
+                    const f = ev.target.files?.[0];
+                    if (!f) return;
+                    try {
+                      A.restoreData(fromBackup(await f.text()));
+                      toast('toast.restored');
+                    } catch {
+                      toast('toast.badBackup');
+                    }
+                  }}
+                />
+              </div>
+              <p className="small muted">{t('ob.private')}</p>
             </div>
-            <h2 className="ob-h1" tabIndex={-1}>
-              {t('ob.title')}
-            </h2>
-            <span className="rule" aria-hidden="true" />
-            <p className="lede">{t('ob.lede')}</p>
-            <div className="ob-prefs">
-              <LangRegion />
-            </div>
-            <div className="row-actions ob-start">
-              <button className="btn" onClick={() => setStep(1)}>
-                {t('ob.start')}
-              </button>
-              <button className="btn soft" onClick={() => A.loadExample(i18n.lang, st.region)}>
-                {t('ob.example')}
-              </button>
-              <button className="btn ghost" onClick={() => file.current?.click()}>
-                {t('ob.restore')}
-              </button>
-              <input
-                ref={file}
-                type="file"
-                accept=".json,application/json"
-                hidden
-                onChange={async (ev) => {
-                  const f = ev.target.files?.[0];
-                  if (!f) return;
-                  try {
-                    A.restoreData(fromBackup(await f.text()));
-                    toast('toast.restored');
-                  } catch {
-                    toast('toast.badBackup');
-                  }
-                }}
-              />
-            </div>
-            <p className="small muted">{t('ob.private')}</p>
+            {landing && <HeroPreview />}
           </div>
         ) : (
           <div className="ob-body">
@@ -177,7 +184,8 @@ export function Onboarding() {
           </div>
         )}
       </div>
-      <LegalLinks />
+      {landing && <LandingSections onStart={() => setStep(1)} onExample={example} />}
+      <LegalLinks support={landing} />
     </div>
   );
 }
