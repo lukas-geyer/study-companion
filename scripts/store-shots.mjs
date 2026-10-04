@@ -22,7 +22,7 @@ const TEXT = {
   de: {
     locale: 'de-AT',
     plan: 'Medizin · WS 2026/27',
-    example: 'Zuerst ein Beispiel ansehen',
+    example: 'Beispiel ansehen',
     tabs: ['Heute', 'Woche', 'Jahr', 'Einstellungen'],
     now: 'jetzt',
     note: ['PM IV · Vertiefungsblock in 10 min', '14:00–15:30 · 1 h 30'],
@@ -38,7 +38,7 @@ const TEXT = {
   en: {
     locale: 'en-GB',
     plan: 'Medicine · Winter term',
-    example: 'Explore an example first',
+    example: 'See an example',
     tabs: ['Today', 'Week', 'Year', 'Setup'],
     now: 'now',
     note: ['PM IV · deep block in 10 min', '14:00–15:30 · 1 h 30'],

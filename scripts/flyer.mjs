@@ -21,7 +21,7 @@ await ctx.clock.setFixedTime(new Date('2026-10-05T07:40:00+02:00'));
 await asIosApp(ctx);
 const app = await ctx.newPage();
 await app.goto(base);
-await app.getByRole('button', { name: 'Zuerst ein Beispiel ansehen' }).click();
+await app.getByRole('button', { name: 'Beispiel ansehen' }).click();
 await app.addStyleTag({ content: '.ex-banner{display:none!important}' });
 await app.getByRole('tab', { name: 'Einstellungen' }).click();
 await app.locator('#sec-prefs-toggle').click(); // Setup sections are folded

@@ -172,8 +172,12 @@ button{cursor:pointer}
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;border:0;border-radius:12px;padding:0 16px;font:800 12px/1 var(--f-head);letter-spacing:.1em;text-transform:uppercase;background:var(--ink-strong);color:var(--sheet);white-space:nowrap}
 .btn.soft{background:var(--sunk);color:var(--ink-strong);box-shadow:0 0 0 1px var(--line)}
-.btn.ghost{background:transparent;color:var(--ink-soft);padding:0 8px}
+/* a button that reads as a link inside a sentence (e.g. „Wiederherstellen“ on the welcome card) */
+.linkbtn{border:0;padding:0;background:none;font:inherit;color:var(--ink-strong);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:3px;cursor:pointer}
+.linkbtn:hover{text-decoration-color:currentColor}
 .btn.sm{min-height:34px;padding:0 12px}
+/* borderless buttons (any size) sit flush with the text around them */
+.btn.ghost{background:transparent;color:var(--ink-soft);padding-inline:0}
 .btn.warn{background:var(--achtung-fg);color:var(--sheet)}
 /* long labels (German, narrow phones) wrap inside the button instead of widening the page */
 @media (max-width:640px){.btn{max-width:100%;white-space:normal;text-align:center;line-height:1.25;padding-block:6px}}

@@ -155,7 +155,7 @@ Sign-in required: **No**. Contact: Lukas Geyer, hallo@semestra.at (add your phon
 Semestra is a study planner that works entirely on the device. There is no login, no account and no server; the app makes no network requests.
 
 How to review it quickly:
-1. On the welcome screen, tap "Explore an example first". This loads a complete example plan (four exams, a timetable, flashcards) with dates around today.
+1. On the welcome screen, tap "See an example". This loads a complete example plan (four exams, a timetable, flashcards) with dates around today.
 2. Today, Week and Year show the plan. Tap a block for details, or tap its circle to tick it off; the plan updates immediately.
 3. Setup → Reminders: switch on any of the four reminders. iOS asks for permission the first time. "Before each block" sends a notification the chosen number of minutes before each planned block (the example plan has blocks every day).
 4. Setup → Your data → "Download backup" opens the share sheet with a JSON backup; "Export .ics" does the same with a calendar file.

@@ -33,7 +33,7 @@ async def main():
         await pg.goto('http://127.0.0.1:8765/')
         await pg.wait_for_timeout(900)
         await pg.screenshot(path=f'{OUT}/{tag}-0-welcome.png', full_page=True)
-        await pg.get_by_role('button', name='Explore an example first').or_(pg.get_by_role('button', name='Zuerst ein Beispiel ansehen')).click()
+        await pg.get_by_role('button', name='See an example').or_(pg.get_by_role('button', name='Beispiel ansehen')).first.click()
         await pg.wait_for_timeout(500)
         await pg.screenshot(path=f'{OUT}/{tag}-1-today.png', full_page=True)
         for i, name in enumerate(['Week', 'Year', 'Setup'], 2):

@@ -85,9 +85,6 @@ export function Onboarding() {
                 <button className="btn soft" onClick={example}>
                   {t('ob.example')}
                 </button>
-                <button className="btn ghost" onClick={() => file.current?.click()}>
-                  {t('ob.restore')}
-                </button>
                 <input
                   ref={file}
                   type="file"
@@ -105,7 +102,14 @@ export function Onboarding() {
                   }}
                 />
               </div>
-              <p className="small muted">{t('ob.private')}</p>
+              <p className="small muted">
+                {t('ob.private')}
+                <br />
+                {t('ob.restoreQ')}{' '}
+                <button type="button" className="linkbtn" onClick={() => file.current?.click()}>
+                  {t('ob.restore')}
+                </button>
+              </p>
             </div>
             {landing && <HeroPreview />}
           </div>
