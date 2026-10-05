@@ -197,7 +197,7 @@ export const en = {
   'setup.step4b': 'Unticked blocks move to the next days, and extra study you log counts. If time runs short, the exam turns amber or red.',
 
   'ex.title': 'Your exams',
-  'ex.sub': '<b>Hours</b> is the focused study you want before the exam, not counting flashcards. <b>Prep weeks</b> sets when that work starts.',
+  'ex.sub': '<b>Hours</b> is the study time you want before the exam. Flashcards from decks linked to the exam count toward it. <b>Prep weeks</b> sets when that work starts.',
   'ex.none': 'No exams yet.',
   'ex.add': 'Add exam',
   'ex.short': 'Short',
@@ -297,7 +297,7 @@ export const en = {
   'deck.remove': (d: string) => `Remove ${d}`,
   'deck.removeQ': (d: string) => `Remove the deck ${d}?`,
   'deck.help':
-    '<b>New cards left</b>: cards in the deck you haven’t studied yet. If the deck is linked to an exam, the plan spreads it out so it’s done a week before the exam; otherwise set <b>New / day</b> yourself. <b>Reviews due</b>: how many cards Anki shows as due in this deck on a normal day (the “Due” number in the deck list; 0 for a new deck). The plan counts about 45 seconds per card.',
+    '<b>New cards left</b>: cards in the deck you haven’t studied yet. If the deck is linked to an exam, the plan spreads it out so it’s done a week before the exam; otherwise set <b>New / day</b> yourself. <b>Reviews due</b>: how many cards Anki shows as due in this deck on a normal day (the “Due” number in the deck list; 0 for a new deck). The plan counts about 45 seconds per card. The time for a deck linked to an exam counts toward that exam’s hours.',
   'fc.override': 'Your real flashcard time (min/day, 0 = estimate)',
   'fc.start': 'New cards start on',
   'fc.throttle': 'Decks without an exam: halve new cards 4 weeks before an exam, pause them in the last 2 weeks',
@@ -345,6 +345,7 @@ export const en = {
 
   'pane.close': 'Close',
   'pane.anytime': 'anytime',
+  'pane.cardsCount': (list: string) => `Counts toward the exam’s hours: ${list}`,
   'pane.examOn': (name: string, day: string, status: string) => `${name} on ${day}${status ? ` · ${status}` : ''}`,
   'cls.est': 'Estimated class',
   'cls.estBody': 'Estimated from your typical week. Import a newer calendar file in Setup to replace it.',

@@ -61,7 +61,9 @@ from `legacy.css`, so flyer and banner always use the app's real colours).
     - `ics.ts` / `icsExport.ts`: calendar import and export.
     - `cards.ts`: flashcard load per day from the user's decks (`AppData.decks`; a deck linked to an exam is
       spread to finish a week before it, others run at their own new-cards-per-day). Reviews are entered as due
-      cards per day, as Anki shows them, and timed at `REVIEW_MIN` (45 s) each.
+      cards per day, as Anki shows them, and timed at `REVIEW_MIN` (45 s) each. Card time from a deck linked to an
+      exam counts toward that exam's hours (`revBy`/`newBy` shares; the planner plans that much less deep/focus
+      time, and ticked card blocks count as done for it).
     - `intervals.ts`.
     - `backup.ts`: `normalize()` is the one place that accepts old or foreign data.
     - `example.ts`: the example plan, with dates relative to today.

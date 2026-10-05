@@ -1,6 +1,6 @@
 // The planner: fixed daily blocks first, then each exam's hours spread over its prep window and
 // packed into deep (90 min) and focus (45 min) blocks that fit the free slots. Pure function of the data.
-import { cardsFor, type CardsDay } from './cards';
+import { cardsFor, cardShare, type CardsDay } from './cards';
 import { dn, isISO, isoOf, num, todayDn, toMin, weekKey } from './dates';
 import { COUNTED, SIZES } from './defaults';
 import { placeFirst, placeLast, type Iv } from './intervals';
@@ -26,6 +26,8 @@ export interface PlanDay {
   n: number;
   info: DayInfo;
   cards: CardsDay;
+  /** Minutes of today's card blocks that count toward each exam (decks linked to it). */
+  cardsBy: Record<string, number>;
   free: Iv[];
   mods: Mod[];
   avail: number;
@@ -92,14 +94,21 @@ export function buildPlan(data: AppData, T: number): Plan {
 
   const doneBefore: Record<string, number> = {};
   const doneAll: Record<string, number> = {};
+  const addDone = (x: string, m: number, n: number) => {
+    doneAll[x] = (doneAll[x] || 0) + m;
+    if (n < T) doneBefore[x] = (doneBefore[x] || 0) + m;
+  };
   for (const wk in data.done) {
     const items = (data.done[wk] || { items: {} }).items || {};
     for (const id in items) {
       const it = items[id];
-      if (!it || !it.x || !COUNTED.has(it.t) || !isISO(it.d)) continue;
-      const m = num(it.min);
-      doneAll[it.x] = (doneAll[it.x] || 0) + m;
-      if (dn(it.d) < T) doneBefore[it.x] = (doneBefore[it.x] || 0) + m;
+      if (!it || !isISO(it.d)) continue;
+      const n = dn(it.d);
+      if (it.t === 'rev' || it.t === 'new') {
+        // a ticked card block counts toward the exams of its linked decks, split as the decks are today
+        const by = cardShare(cardsFor(st, data.decks, n, dated, start), it.t, num(it.min));
+        for (const x in by) addDone(x, by[x], n);
+      } else if (it.x && COUNTED.has(it.t)) addDone(it.x, num(it.min), n);
     }
   }
 
@@ -167,7 +176,13 @@ export function buildPlan(data: AppData, T: number): Plan {
     else if (afterExam) budget = Math.floor(budget / 2);
     const units = free.reduce((a, [s, e]) => a + Math.floor((e - s + brk) / (focus + brk)), 0);
     const avail = Math.min(budget, units * focus);
-    const d: PlanDay = { n, info, cards, free, mods, avail, avail0: avail, examToday: examToday ? examToday.id : null, finalFor: null, finalMin: 0 };
+    const cardsBy: Record<string, number> = {};
+    for (const m of mods) {
+      if (m.type !== 'rev' && m.type !== 'new') continue;
+      const by = cardShare(cards, m.type, m.min);
+      for (const x in by) cardsBy[x] = (cardsBy[x] || 0) + by[x];
+    }
+    const d: PlanDay = { n, info, cards, cardsBy, free, mods, avail, avail0: avail, examToday: examToday ? examToday.id : null, finalFor: null, finalMin: 0 };
     if (examTomorrow) {
       d.finalFor = examTomorrow.id;
       d.finalMin = Math.min(avail, 2 * focus);
@@ -177,6 +192,11 @@ export function buildPlan(data: AppData, T: number): Plan {
     days.set(n, d);
   }
 
+  // Card time from decks linked to an exam counts toward its hours, so fewer study blocks are needed.
+  const planned: Record<string, number> = {};
+  for (const d of days.values()) for (const x in d.cardsBy) planned[x] = (planned[x] || 0) + d.cardsBy[x];
+  for (const x in planned) planned[x] = Math.round(planned[x]);
+
   // Pass 1: spread each exam's remaining hours over its prep window, in proportion to free time; nearest exam first.
   const res: Record<string, Record<number, number>> = {};
   const meta: Record<string, ExamMeta> = {};
@@ -184,7 +204,7 @@ export function buildPlan(data: AppData, T: number): Plan {
     const need0 = Math.max(0, num(e.hours) * 60 - (doneBefore[e.id] || 0));
     const fd = days.get(e.dn - 1);
     const finalMin = fd && fd.finalFor === e.id ? fd.finalMin : 0;
-    const need = Math.max(0, need0 - finalMin);
+    const need = Math.max(0, need0 - finalMin - (planned[e.id] || 0));
     const weeks = Math.max(1, num(e.weeks, (SIZES[e.size] || SIZES.M).weeks));
     const end = e.dn - 2;
     const nominal = e.dn - weeks * 7;
@@ -214,7 +234,6 @@ export function buildPlan(data: AppData, T: number): Plan {
 
   // Pass 2: turn reservations into deep/focus blocks that fit the free slots.
   const carry: Record<string, number> = {};
-  const planned: Record<string, number> = {};
   for (let n = T; n <= last; n++) {
     const d = days.get(n)!;
     if (d.finalFor && d.finalMin >= 30) {

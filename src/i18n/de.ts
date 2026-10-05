@@ -203,7 +203,7 @@ export const de: Dict = {
   'setup.step4b': 'Nicht abgehakte Blöcke wandern auf die nächsten Tage, eingetragenes Zusatzlernen zählt mit. Wird die Zeit knapp, wird die Prüfung gelb oder rot.',
 
   'ex.title': 'Deine Prüfungen',
-  'ex.sub': '<b>Stunden</b> ist die konzentrierte Lernzeit, die du vor der Prüfung einplanen willst, ohne Karteikarten. <b>Vorbereitungswochen</b> legt fest, wann diese Arbeit beginnt.',
+  'ex.sub': '<b>Stunden</b> ist die Lernzeit, die du vor der Prüfung einplanen willst. Karteikarten aus Stapeln, die mit der Prüfung verknüpft sind, zählen mit. <b>Vorbereitungswochen</b> legt fest, wann diese Arbeit beginnt.',
   'ex.none': 'Noch keine Prüfungen.',
   'ex.add': 'Prüfung hinzufügen',
   'ex.short': 'Kürzel',
@@ -303,7 +303,7 @@ export const de: Dict = {
   'deck.remove': (d: string) => `${d} entfernen`,
   'deck.removeQ': (d: string) => `Den Stapel ${d} entfernen?`,
   'deck.help':
-    '<b>Neue Karten offen</b>: Karten im Stapel, die du noch nicht gelernt hast. Gehört der Stapel zu einer Prüfung, verteilt der Plan sie automatisch, sodass er eine Woche vor der Prüfung fertig ist; sonst legst du <b>Neu / Tag</b> selbst fest. <b>Fällige Wiederholungen</b>: wie viele Karten Anki in diesem Stapel an einem normalen Tag als fällig anzeigt (die Zahl unter „Fällig“ in der Stapelübersicht; 0 bei einem neuen Stapel). Der Plan rechnet mit etwa 45 Sekunden pro Karte.',
+    '<b>Neue Karten offen</b>: Karten im Stapel, die du noch nicht gelernt hast. Gehört der Stapel zu einer Prüfung, verteilt der Plan sie automatisch, sodass er eine Woche vor der Prüfung fertig ist; sonst legst du <b>Neu / Tag</b> selbst fest. <b>Fällige Wiederholungen</b>: wie viele Karten Anki in diesem Stapel an einem normalen Tag als fällig anzeigt (die Zahl unter „Fällig“ in der Stapelübersicht; 0 bei einem neuen Stapel). Der Plan rechnet mit etwa 45 Sekunden pro Karte. Die Zeit für einen Stapel, der zu einer Prüfung gehört, zählt zu deren Stunden.',
   'fc.override': 'Deine echte Karteikarten-Zeit (min/Tag, 0 = schätzen)',
   'fc.start': 'Neue Karten ab',
   'fc.throttle': 'Stapel ohne Prüfung: neue Karten 4 Wochen vor einer Prüfung halbieren, in den letzten 2 Wochen pausieren',
@@ -351,6 +351,7 @@ export const de: Dict = {
 
   'pane.close': 'Schließen',
   'pane.anytime': 'jederzeit',
+  'pane.cardsCount': (list: string) => `Zählt zu den Stunden der Prüfung: ${list}`,
   'pane.examOn': (name: string, day: string, status: string) => `${name} am ${day}${status ? ` · ${status}` : ''}`,
   'cls.est': 'Geschätzte LV',
   'cls.estBody': 'Aus deiner typischen Woche geschätzt. Importiere in den Einstellungen eine neuere Kalenderdatei, um sie zu ersetzen.',

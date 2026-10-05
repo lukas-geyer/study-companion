@@ -2,12 +2,13 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type R
 import { APP_NAME } from '../config';
 import { dn, hm, isISO, isoOf, toMin } from '../core/dates';
 import { GLYPH } from '../core/defaults';
-import { dayView } from '../core/planner';
+import { cardShare } from '../core/cards';
+import { cardsAt, dayView } from '../core/planner';
 import * as A from '../state/actions';
 import { setUI, toast, type LegalDoc } from '../state/store';
 import { useCtx } from './ctx';
 import { LegalText } from './Legal';
-import { exFull, exName, Fld, statusText, Toggle, xv } from './parts/common';
+import { exFull, exLabel, exName, Fld, statusText, Toggle, xv } from './parts/common';
 import { examById, modClass, modTip, modTitle } from './parts/labels';
 
 const close = () => setUI({ pane: null });
@@ -152,6 +153,13 @@ function ModPane({ id, n }: { id: string; n: number }) {
   const when = m.s != null && m.e != null ? `${hm(m.s)}–${hm(m.e)}` : t('pane.anytime');
   const title = modTitle(m, data, t);
   const [lead, tip] = modTip(m, n, data, plan, t);
+  // card blocks: the part that counts toward exams (decks linked to them)
+  const counts =
+    m.type === 'rev' || m.type === 'new'
+      ? Object.entries(cardShare(cardsAt(data, plan, n), m.type, m.min))
+          .filter(([, min]) => Math.round(min) > 0)
+          .map(([x, min]) => `${exLabel(examById(data, x), t)} · ${f.dur(Math.round(min))}`)
+      : [];
   return (
     <Shell label={title}>
       <PaneHead ico={GLYPH[m.type] || '·'} exam={modClass(m, data) === 'ex'} style={xv(e)} kicker={`${f.day(n)} · ${when} · ${f.dur(m.min)}`} title={title} />
@@ -159,6 +167,7 @@ function ModPane({ id, n }: { id: string; n: number }) {
         {lead && <b>{lead} </b>}
         {tip}
       </p>
+      {counts.length > 0 && <p className="small muted">{t('pane.cardsCount', counts.join(', '))}</p>}
       {e && isISO(e.date) && <p className="small muted">{t('pane.examOn', exName(e, t), f.day(dn(e.date)), statusText(plan.stats[e.id], t))}</p>}
       <div className="row-actions">
         {m.type !== 'x' && (

@@ -210,6 +210,35 @@ describe('flashcard decks', () => {
     expect(cardsFor(st(), [open], T + 30, [exam], T)).toMatchObject({ throttled: 'paused', newTotal: 0 });
   });
 
+  test('card time from a linked deck counts toward its exam, from other decks not', () => {
+    const linked = makeDeck({ id: 'd-a', cards: 300, due: 20, exam: 'ex-a' });
+    const other = makeDeck({ id: 'd-b', newPerDay: 10, due: 20 });
+    const c = cardsFor(st(), [linked, other], T, [exam], T);
+    expect(Object.keys(c.revBy)).toEqual(['ex-a']);
+    expect(c.revBy['ex-a']).toBeCloseTo((20 * REVIEW_MIN + 1.2 * 10) / (40 * REVIEW_MIN + 1.2 * 20)); // half of the reviews
+    expect(c.newBy['ex-a']).toBeCloseTo(0.5); // 10 of 20 new cards
+    expect(cardsFor(st(), [linked], T + 38, [exam], T).revBy).toEqual({}); // after the exam: no longer its time
+
+    const base = exampleData('de', 'AT', T);
+    const without = buildPlan({ ...base, decks: base.decks.map((d) => ({ ...d, exam: '' })) }, T);
+    const plan = buildPlan(base, T);
+    const day = plan.days.get(T)!;
+    const cardMin = day.mods.filter((m) => m.type === 'rev' || m.type === 'new').reduce((s, m) => s + m.min, 0);
+    expect(day.cardsBy['ex-pm4']).toBeGreaterThan(0);
+    expect(day.cardsBy['ex-pm4']).toBeLessThan(cardMin); // the Anatomie deck has no exam
+    // the planner needs fewer study blocks for PM IV, and the card time shows up in its planned hours
+    expect(plan.meta['ex-pm4'].need).toBeLessThan(without.meta['ex-pm4'].need);
+    const blocks = (p: typeof plan) => [...p.days.values()].flatMap((d) => d.mods).filter((m) => m.exam === 'ex-pm4').length;
+    expect(blocks(plan)).toBeLessThan(blocks(without));
+
+    // a ticked card block counts as done for the exam of its linked deck
+    const rev = day.mods.find((m) => m.type === 'rev')!;
+    const wk = weekKey(T);
+    const ticked = { ...base, done: { ...base.done, [wk]: { items: { ...(base.done[wk]?.items || {}), [rev.id]: { d: rev.d, t: 'rev' as const, min: rev.min } } } } };
+    const after = buildPlan(ticked, T).stats['ex-pm4'].done - plan.stats['ex-pm4'].done;
+    expect(after).toBeCloseTo(rev.min * day.cards.revBy['ex-pm4']);
+  });
+
   test('several decks add up; deleting an exam unlinks its deck', () => {
     const d = exampleData('de', 'AT', T);
     const plan = buildPlan(d, T);
