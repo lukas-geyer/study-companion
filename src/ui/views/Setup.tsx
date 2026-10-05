@@ -117,7 +117,7 @@ function ExamRow({ e, k, confirm, setConfirm }: { e: Exam; k: number; confirm: b
       </Fld>
       <Fld id={`${id}-size`} label={t('ex.size')} className="f-size">
         <select id={`${id}-size`} value={e.size} onChange={(ev) => up({ size: ev.target.value as Size })}>
-          {(['S', 'M', 'L'] as Size[]).map((s) => (
+          {(Object.keys(SIZES) as Size[]).map((s) => (
             <option key={s} value={s}>
               {s} · {SIZES[s].hours} h
             </option>

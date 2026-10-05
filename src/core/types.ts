@@ -2,7 +2,7 @@ export type PaletteKey = 'lav' | 'butter' | 'peach' | 'rose' | 'mint' | 'sky' | 
 export type Region = 'AT' | 'DE' | 'CH' | 'none';
 export type Lang = 'en' | 'de';
 export type DayType = 'free' | 'half' | 'full' | 'sat' | 'sun';
-export type Size = 'S' | 'M' | 'L';
+export type Size = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
 export type ModType = 'rev' | 'new' | 'fu' | 'wr' | 'deep' | 'focus' | 'final' | 'x';
 
 export interface Meal { label: string; from: string; to: string }

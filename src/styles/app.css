@@ -85,7 +85,7 @@
   .ag-group{padding-left:52px}
   .modcard{grid-template-columns:auto minmax(0,1fr);padding-right:10px}
   .modcard .md{grid-column:2;margin:-4px 0 8px}
-  .ex-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". short size ." ". date date ." ". hours weeks ."}
+  .ex-row{grid-template-columns:22px minmax(0,4fr) minmax(0,5fr) 38px;grid-template-areas:"dot name name del" ". short size ." ". date date ." ". hours weeks ."}
   .deck-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 38px;grid-template-areas:"dot name name del" ". exam exam ." ". cards newd ." ". rev rev ."}
   .brk-row{grid-template-columns:minmax(0,1fr) 38px}
   .brk-row .fld:first-child{grid-column:1/-1}

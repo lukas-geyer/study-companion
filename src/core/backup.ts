@@ -46,7 +46,7 @@ function normSettings(raw: unknown): Settings {
 
 function normExam(raw: unknown, i: number, used: Set<string>): Exam | null {
   if (!isObj(raw)) return null;
-  const size: Size = raw.size === 'S' || raw.size === 'L' ? raw.size : 'M';
+  const size: Size = typeof raw.size === 'string' && raw.size in SIZES ? (raw.size as Size) : 'M';
   let color = String(raw.color || '') as PaletteKey;
   if (!PALETTE.includes(color)) color = PALETTE.find((c) => !used.has(c)) || PALETTE[i % PALETTE.length];
   used.add(color);

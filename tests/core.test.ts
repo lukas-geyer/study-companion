@@ -180,6 +180,17 @@ describe('backup', () => {
     expect(() => fromBackup('nope')).toThrow();
     expect(makeExam([]).color).toBe('lav');
   });
+
+  test('all exam sizes survive a backup, unknown ones become M', () => {
+    const d = newAppData('AT');
+    d.exams = (['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const).map((size, i) => makeExam(d.exams, { id: `e${i}`, size, date: isoOf(T + 20 + i * 14) }));
+    expect(fromBackup(toBackup(d)).exams.map((e) => [e.size, e.hours])).toEqual([['XS', 6], ['S', 25], ['M', 40], ['L', 60], ['XL', 80], ['XXL', 100]]);
+    expect(normalize({ exams: [{ id: 'x', size: 'XXXL' }] }).exams[0].size).toBe('M');
+    // a short test (XS) is fully planned within its one prep week
+    const xs = newAppData('AT');
+    xs.exams = [makeExam([], { id: 'xs', size: 'XS', date: isoOf(T + 10) })];
+    expect(buildPlan(xs, T).stats.xs.status).toBe('ok');
+  });
 });
 
 describe('flashcard decks', () => {

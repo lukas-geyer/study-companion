@@ -2,10 +2,14 @@ import { DATA_VERSION } from '../config';
 import type { AppData, Deck, Exam, ModType, PaletteKey, Region, Settings, Size } from './types';
 
 export const PALETTE: PaletteKey[] = ['lav', 'butter', 'peach', 'rose', 'mint', 'sky', 'apricot', 'sage', 'lilac'];
+/** Quick picks for an exam's study hours and prep weeks, smallest first (XS: a short test, learnable the day before). */
 export const SIZES: Record<Size, { hours: number; weeks: number }> = {
+  XS: { hours: 6, weeks: 1 },
   S: { hours: 25, weeks: 3 },
   M: { hours: 40, weeks: 5 },
   L: { hours: 60, weeks: 8 },
+  XL: { hours: 80, weeks: 10 },
+  XXL: { hours: 100, weeks: 12 },
 };
 /** Block types whose minutes count toward an exam's hours. */
 export const COUNTED: ReadonlySet<ModType> = new Set<ModType>(['deep', 'focus', 'final', 'fu', 'x']);
